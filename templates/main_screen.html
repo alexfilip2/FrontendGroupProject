@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" charset="UTF-8" >
+    <link  rel="stylesheet" type="text/css" href="../static/stylesheets/style.css">
+    <script src="{{ url_for('static', filename='js/graphs.js') }}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/xrange.js"></script>
+
+
+</head>
+
+<body style="background-color:#fff; margin:0;">
+
+<div class="box" style = "background-color: #312A2A;">
+    <div id="pageTitle" style = "width:25%; float: left">
+        <h2><span style="display: grid; color: #111111 ;"><strong>Predictive aircraft maintenance</strong></span></h2>
+    </div>
+</div>
+
+
+<div id="topMenu" class ="box" style ="background-color:#596061;">
+    <div class="topnav">
+        <a class="active" href="#Graphs">Home</a>
+        <a href="#Graphs" >Info</a>
+    </div>
+</div>
+
+
+<div class ="box" style =" padding-top: 1px ;background-color:#1D364E;">
+    <h1 style="font-size: 50px; color: #1C2A38;">Welcome to the predictive aircraft maintenance engine  </h1>
+    <h2 style="color: #5e9ca0;">How to use the editor:</h2>
+    <p>Paste your documents in the visual editor on the left or your HTML code in the source editor in the right. <br/>
+        Edit any of the two areas and see the other changing in real time.&nbsp;</p>
+    <p>Click the <span style="background-color: #5e9ca0; color: #fff; display: inline-block; padding: 3px 10px; font-weight: bold; border-radius: 5px;">Clean</span> button to clean your source code.</p>
+    <h2 style="color: #5e9ca0;">&nbsp;</h2>
+</div>
+
+
+<div id="secondaryMenu" class ="box" style ="background-color:#fff; padding-bottom: 30px ;border: none">
+    <div class="topnav">
+        <a class="active"  onclick="back()">Graphs</a>
+        <a style="background-color: #596061;" onclick="showGraph('2')">Predictions</a>
+    </div>
+</div>
+
+
+<div class="box" id="mainContainer" style="padding-bottom: 200px" >
+
+    <div id="predictionsContainer" style="  background-color: #e6e6e6">
+
+        <div id="graphContainer"></div>
+
+        <div class="box"  id="stats_predic_Container" style="  min-height: 300px ; display: none">
+            <form action=" " style="  width: 100px; padding-top: 60px">
+                <label for="fname">First Name</label>
+                <input type="text" id="fname" name="Input1" placeholder="Your name..">
+                <label for="lname">Last Name</label>
+                <input type="text" id="lname" name="Input2" placeholder="Your last name..">
+                <input type="submit" value="Submit">
+            </form>
+        </div>
+
+    </div>
+
+    <div id="tilesContainer" style="background-color: #e6e6e6">
+        <div class="first" onclick="showGraph('1')"> Dust graph</div>
+        <div class="third"></div>
+        <div class="second">second</div>
+        <div class="fourth">fourth</div>
+        <div class="last">last</div>
+    </div>​
+</div>
+
+</body>
+</html>
