@@ -8,6 +8,12 @@
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
     <script src="https://code.highcharts.com/modules/xrange.js"></script>
+    <script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
+<script src="https://www.amcharts.com/lib/3/serial.js"></script>
+<script src="https://www.amcharts.com/lib/3/gantt.js"></script>
+<script src="https://www.amcharts.com/lib/3/themes/light.js"></script>
+<script src="https://www.amcharts.com/lib/3/plugins/export/export.min.js"></script>
+<link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
 
 
 </head>
@@ -66,9 +72,9 @@
     </div>
 
     <div id="tilesContainer" style="background-color: #e6e6e6">
-        <div class="first" onclick="showGraph('1')"> Dust graph</div>
-        <div class="third"></div>
-        <div class="second">second</div>
+        <div class="first" onclick="showGraph('1')"> Dust exposure</div>
+        <div class="third" onclick="showGraph('3')"> Cycles histogram</div>
+        <div class="second" onclick="showGraph('4')"> Failure time: dust exposure</div>
         <div class="fourth">fourth</div>
         <div class="last">last</div>
     </div>​

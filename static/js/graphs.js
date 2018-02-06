@@ -1,5 +1,98 @@
 var BASE_URL = 'http://127.0.0.1:5000'
 
+
+
+
+
+function riskPlot(){
+var chart = AmCharts.makeChart( "graphContainer", {
+    "type": "gantt",
+    "theme": "light",
+    "marginRight": 70,
+    "period": "DD",
+    "dataDateFormat":"YYYY-MM-DD",
+    "balloonDateFormat": "JJ:NN",
+    "columnWidth": 0.5,
+    "valueAxis": {
+        "type": "date"
+    },
+    "brightnessStep": 10,
+    "graph": {
+        "fillAlphas": 1,
+        "balloonText": "<b>[[task]]</b>: [[open]] [[value]]"
+    },
+    "rotate": true,
+    "categoryField": "category",
+    "segmentsField": "segments",
+    "colorField": "color",
+    "startDate": "2015-01-01",
+    "startField": "start",
+    "endField": "end",
+    "durationField": "duration",
+    "dataProvider": [ {
+        "category": "Alan",
+        "segments": [ {
+            "start": 17,
+            "duration": 2,
+            "color": "#46615e",
+            "task": "Task #1"
+        }, {
+            "duration": 2,
+            "color": "#727d6f",
+            "task": "Task #2"
+        }, {
+            "duration": 2,
+            "color": "#8dc49f",
+            "task": "Task #3"
+        } ]
+    }, {
+        "category": "Ruth",
+        "segments": [ {
+            "start": 13,
+            "duration": 2,
+            "color": "#727d6f",
+            "task": "Task #2"
+        }, {
+            "duration": 1,
+            "color": "#8dc49f",
+            "task": "Task #3"
+        }, {
+            "duration": 4,
+            "color": "#46615e",
+            "task": "Task #1"
+        } ]
+    }, {
+        "category": "Simon",
+        "segments": [ {
+            "start": 40,
+            "duration": 3,
+            "color": "#727d6f",
+            "task": "Task #2"
+        }, {
+            "start": 17,
+            "duration": 4,
+            "color": "#FFE4C4",
+            "task": "Task #4"
+        } ]
+    } ],
+    "valueScrollbar": {
+        "autoGridCount":true
+    },
+    "chartCursor": {
+        "cursorColor":"#55bb76",
+        "valueBalloonsEnabled": false,
+        "cursorAlpha": 0,
+        "valueLineAlpha":0.5,
+        "valueLineBalloonEnabled": true,
+        "valueLineEnabled": true,
+        "zoomable":false,
+        "valueZoomable":true
+    },
+    "export": {
+        "enabled": true
+     }
+} );
+}
  function getJSON(path,functions) {
             url = BASE_URL + path;
             xhr = new XMLHttpRequest();
@@ -15,6 +108,107 @@ var BASE_URL = 'http://127.0.0.1:5000'
              };
             xhr.send(null);
  }
+
+
+ function failurePointOnDust() {
+
+    Highcharts.chart('graphContainer', {
+    chart: {
+        type: 'line'
+    },
+    title: {
+        text: 'Chance of failure (applying to any aircfrat)'
+
+    },
+    subtitle: {
+        text: 'Depending on working cycles'
+    },
+    xAxis: {
+        categories: [3.9, 4.2, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6, 14.2, 10.3, 6.6, 4.8]
+    },
+    yAxis: {
+        title: {
+            text: 'Chance in percentage'
+        }
+    },
+    plotOptions: {
+        line: {
+            dataLabels: {
+                enabled: true
+            },
+            enableMouseTracking: false
+        }
+    },
+    series: [
+    {
+        name: 'Working cycles',
+        data: [3.9, 4.2, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6, 14.2, 10.3, 6.6, 4.8]
+    }]
+});
+
+ }
+
+
+
+ function  histoCycles() {
+
+Highcharts.chart('graphContainer', {
+    chart: {
+        type: 'column'
+    },
+    title: {
+        text: 'Distribution of cycles'
+    },
+    xAxis: {
+        categories: [
+            'engine1',
+            'engine2',
+            'engine3',
+            'engine4',
+            'engine5',
+
+        ],
+        crosshair: true
+    },
+    yAxis: {
+        min: 0,
+        title: {
+            text: 'Cycles number'
+        }
+    },
+   colors: ['#35508F', '#3A5DAD', '#253355'],
+    tooltip: {
+        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+            '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
+        footerFormat: '</table>',
+        shared: true,
+        useHTML: true
+    },
+    plotOptions: {
+        column: {
+            pointPadding: 0.2,
+            borderWidth: 0
+        }
+    },
+    series: [{
+        name: 'Working',
+        data: [49.9, 71.5, 106.4, 129.2, 144.0]
+
+    }, {
+        /*data has lenght of how many engines are plotted*/
+        name: 'Predicted until failure',
+        data: [83.6, 78.8, 98.5, 93.4, 106.0]
+
+    }, {
+        name: 'Total',
+        data: [48.9, 38.8, 39.3, 41.4, 47.0]
+
+    }]
+});
+
+ }
+
 // draw the first graph into container graphContainer located in main_screen.html
 function graph1(data) {
 /*$.getJSON(
@@ -29,18 +223,21 @@ function graph1(data) {
                     zoomType: 'x'
                 },
                 title: {
-                    text: 'USD to EUR exchange rate over time'
+                    text: 'Dust exposure on cycle number'
                 },
                 subtitle: {
                     text: document.ontouchstart === undefined ?
                         'Click and drag in the plot area to zoom in' : 'Pinch the chart to zoom in'
                 },
                 xAxis: {
+                    title: {
+                        text: 'Cycle number'
+                    },
                     type: 'linear'
                 },
                 yAxis: {
                     title: {
-                        text: 'Exchange rate'
+                        text: 'Dust amount'
                     }
                 },
                 legend: {
@@ -75,69 +272,13 @@ function graph1(data) {
 
                 series: [{
                     type: 'area',
-                    name: 'USD to EUR',
+                    name: 'Dust at cycle:',
                     data: data
                 }]
             });
 
 }
-function graphPredicton() {
 
-    Highcharts.chart('graphContainer', {
-        chart: {
-            type: 'xrange'
-        },
-        title: {
-            text: 'Risk plot'
-        },
-        xAxis: {
-            type: 'datetime',
-            dateTimeLabelFormats: { // don't display the dummy year
-                month: '%e. %b',
-                year: '%b'}
-        },
-        yAxis: {
-            title: {
-                text: ''
-            },
-            categories: ['Prototyping', 'Development', 'Testing'],
-            reversed: true
-        },
-        series: [{
-            name: 'Timeline',
-            // pointPadding: 0,
-            // groupPadding: 0,
-            borderColor: 'gray',
-            pointWidth: 20,
-            data: [{
-                x: Date.UTC(2014, 11, 1),
-                x2: Date.UTC(2018, 11, 6),
-                y: 0,
-                partialFill: 0.9
-            }, {
-                x: Date.UTC(2014, 11, 2),
-                x2: Date.UTC(2017, 11, 5),
-                y: 1
-            }, {
-                x: Date.UTC(2014, 11, 8),
-                x2: Date.UTC(2018, 11, 9),
-                y: 2
-            }, {
-                x: Date.UTC(2014, 11, 9),
-                x2: Date.UTC(2014, 11, 19),
-                y: 1
-            }, {
-                x: Date.UTC(2014, 11, 10),
-                x2: Date.UTC(2014, 11, 23),
-                y: 2
-            }],
-            dataLabels: {
-                enabled: true
-            }
-        }]
-
-    });
-}
 //choose between graphs and draw it by hidding the tiles from the mainContainer
 function showGraph(idGraph) {
 
@@ -146,8 +287,16 @@ function showGraph(idGraph) {
 
         if (idGraph == 1) getJSON('/dataGraph',graph1);
         if (idGraph == 2) {
-            graphPredicton();
+            riskPlot();
             $("#stats_predic_Container").show();
+        }
+        if(idGraph ==3)
+        {
+            histoCycles();
+        }
+        if(idGraph ==4)
+        {
+            failurePointOnDust();
         }
 
 }
