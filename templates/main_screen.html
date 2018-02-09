@@ -3,6 +3,7 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" charset="UTF-8" >
     <link  rel="stylesheet" type="text/css" href="../static/stylesheets/style.css">
+    <link  rel="stylesheet" type="text/css" href="../static/stylesheets/topnavStyle.css">
     <script src="{{ url_for('static', filename='js/graphs.js') }}"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://code.highcharts.com/highcharts.js"></script>
@@ -20,36 +21,45 @@
 
 <body style="background-color:#fff; margin:0;">
 
-<div class="box" style = "background-color: #312A2A;">
+<div id="containerTitle">
     <div id="pageTitle" style = "width:25%; float: left">
         <h2><span style="display: grid; color: #111111 ;"><strong>Predictive aircraft maintenance</strong></span></h2>
     </div>
 </div>
 
 
-<div id="topMenu" class ="box" style ="background-color:#596061;">
-    <div class="topnav">
-        <a class="active" href="#Graphs">Home</a>
-        <a href="#Graphs" >Info</a>
-    </div>
-</div>
 
 
-<div class ="box" style =" padding-top: 1px ;background-color:#1D364E;">
+
+<div class ="box" style =" padding-top: 15px ;background-color:#1D364E;">
+      <a href="#" class="btn">Home</a>
+    <a href="#" class="btn">About</a>
+    <a href="#" class="btn">Services</a>
+    <a href="#" class="btn">Contact</a>
+
     <h1 style="font-size: 50px; color: #1C2A38;">Welcome to the predictive aircraft maintenance engine  </h1>
-    <h2 style="color: #5e9ca0;">How to use the editor:</h2>
-    <p>Paste your documents in the visual editor on the left or your HTML code in the source editor in the right. <br/>
+    <h2 style="color: #5e9ca0;">How to use the service:</h2>
+    <p>SEARCH FOR TRENDS AND DEPENDENCIES. <br/>
         Edit any of the two areas and see the other changing in real time.&nbsp;</p>
-    <p>Click the <span style="background-color: #5e9ca0; color: #fff; display: inline-block; padding: 3px 10px; font-weight: bold; border-radius: 5px;">Clean</span> button to clean your source code.</p>
+    <p>Click the <span style="background-color: #5e9ca0; color: #fff; display: inline-block; padding: 3px 10px; font-weight: bold; border-radius: 5px;">
+        Graphs</span> button to vizualize the charts.</p>
     <h2 style="color: #5e9ca0;">&nbsp;</h2>
 </div>
 
 
-<div id="secondaryMenu" class ="box" style ="background-color:#fff; padding-bottom: 30px ;border: none">
-    <div class="topnav">
-        <a class="active"  onclick="back()">Graphs</a>
-        <a style="background-color: #596061;" onclick="showGraph('2')">Predictions</a>
-    </div>
+<div id="secondaryMenu" class ="box" style ="background-color:#fff;border: none">
+
+
+    <input id="tab1" type="radio" name="tabs" checked>
+  <label for="tab1" onclick="back()">Graphs</label>
+
+  <input id="tab2" type="radio" name="tabs">
+  <label for="tab2"  onclick="showGraph('2')">Predictions</label>
+
+
+
+
+
 </div>
 
 
