@@ -1,9 +1,5 @@
 var BASE_URL = 'http://127.0.0.1:5000'
 
-
-
-
-
 function riskPlot(){
 var chart = AmCharts.makeChart( "graphContainer", {
     "type": "gantt",
