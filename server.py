@@ -107,6 +107,11 @@ def first_tile_graph():
 def risk_graph_upload():
     if request.method == 'GET':
              return  jsonify(risk_graph_data)
+@app.route('/riskGraphArg', methods=['GET', 'POST'])
+def rerender_risk():
+    if request.method == 'GET':
+        print (request.args.get('engine'))
+        return  jsonify(risk_graph_data)
 
 @app.route('/histogram', methods=['GET', 'POST'])
 def second_tile_graph():

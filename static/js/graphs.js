@@ -219,21 +219,21 @@ function showGraph(idGraph) {
 
     $("#graphContainer").show();
 
-        if (idGraph == 1) getJSON('/dustExposureGraph',dustGraph);
+        if (idGraph == 1) getJSON('/dustExposureGraph',dustGraph,"");
         if (idGraph == 5) {
-            getJSON('/riskGraph',riskPlot);
+            getJSON('/riskGraph',riskPlot,"");
             $("#searchBox").show();
 
             $("#stats_predic_Container").show();
         }
         if(idGraph ==3)
         {
-            getJSON('/histogram',histoCycles);
+            getJSON('/histogram',histoCycles,"");
 
         }
         if(idGraph ==4)
         {
-            getJSON('/dustVariation',dustVariation);
+            getJSON('/dustVariation',dustVariation,"");
         }
 
 }
@@ -247,10 +247,12 @@ function back() {
     $("#tilesContainer").show();
 
 }
-function getJSON(path,functions) {
+function getJSON(path,functions,argument) {
+
+
             url = BASE_URL + path;
             xhr = new XMLHttpRequest();
-            xhr.open("GET", url, true);
+            xhr.open("GET", url+ argument, true);
 
             xhr.onreadystatechange = function () {
                 if (xhr.status == 200) {
@@ -297,5 +299,14 @@ function textDisplay() {
        var text = document.getElementById("textInput").value;
 
     alert(text);
+
+}
+function riskPlotRerender() {
+
+     var text = "?engine="+ document.getElementById("textInput").value;
+     alert(text);
+     getJSON('/riskGraphArg',riskPlot,text);
+
+
 
 }
