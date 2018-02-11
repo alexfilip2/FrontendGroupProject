@@ -13,6 +13,79 @@ function clearCache() {
     setTimeout(clearCache, 1000 * 60 * 10);
 }
 
+/*GET request to the server that takes the data necessary for plotting "functions" and the
+ * argmuent in case some part of data is requested by the user (only one aircraft for example)
+ * this function also takes the cachetype which is the key of the element of the cache where this
+ * particular graph data is stored
+ */
+function getJSON(path, functions, argument, cachetype) {
+
+    url = BASE_URL + path;
+    xhr = new XMLHttpRequest();
+    xhr.open("GET", url + argument, true);
+
+    xhr.onreadystatechange = function () {
+        if (xhr.status == 200) {
+            if (!xhr.response) return;
+            cache[cachetype] = JSON.parse(xhr.response);
+            functions(cache[cachetype]);
+        }
+    };
+    xhr.send(null);
+}
+
+/*choose graph by id and get its plot data either from the cache or request it from the server
+ * then call its rendering method
+ */
+function showGraph(idGraph) {
+
+    /*hide the right elements and show the graphContainer so the graph will appear on the page*/
+    $("#tilesContainer").hide();
+    $("#graphContainer").show();
+
+    if (idGraph == 1) {
+        if (cache['data_dust'] == undefined)
+            getJSON('/dustExposureGraph', dustGraph, "", 'data_dust');
+        else
+            dustGraph(cache['data_dust']);
+    }
+
+    if (idGraph == 5) {
+        if (cache['data_risk_graph'] == undefined)
+            getJSON('/riskGraph', riskPlot, "", 'data_risk_graph');
+        else
+            riskPlot(cache['data_risk_graph']);
+        $("#searchBox").show();
+        $("#stats_predic_Container").show();
+    }
+
+    if (idGraph == 3) {
+        if (cache['data_histogram'] == undefined)
+            getJSON('/histogram', histoCycles, "", 'data_histogram');
+        else
+            histoCycles(cache['data_histogram']);
+    }
+
+    if (idGraph == 4) {
+        if (cache['data_dust_variation'] == undefined)
+            getJSON('/dustVariation', dustVariation, "", 'data_dust_variation');
+        else
+            dustVariation(cache['data_dust_variation']);
+    }
+}
+
+/* show back to the menu of the mainContainer by hidding the current displayed graph
+ * which is in graphContainer
+ */
+function back() {
+    /*hide all the HTML elements of the "Predictions" panel*/
+    $("#graphContainer").hide();
+    $("#stats_predic_Container").hide()
+    $("#searchBox").hide()
+    /*show the tiles menu*/
+    $("#tilesContainer").show();
+}
+
 //PLOTS THE RISK GRAPH THAT SHOWS FOR EACH ENGINE THE FAILURE DATE IN A VISUAL WAY
 function riskPlot(data) {
     var chart = AmCharts.makeChart("graphContainer", {
@@ -58,8 +131,12 @@ function riskPlot(data) {
         }
     });
 }
-
-
+//PLOTS THE RISK GRAPH THAT SHOWS FOR A PARTICULAR ENGINE GIVEN AS INPUT BY THE USER
+function riskPlotRerender() {
+    var text = "?engine=" + document.getElementById("textInput").value;
+    getJSON('/riskGraphArg', riskPlot, text);
+}
+//PLOTS THE DUST VARIATION GRAPH: MEAN AND RANGE PER CYCLE
 function dustVariation(data) {
     var len = data.length;
     var average = [];
@@ -113,7 +190,6 @@ function dustVariation(data) {
     });
 }
 
-
 function histoCycles(data) {
     Highcharts.chart('graphContainer', {
         chart: {
@@ -158,7 +234,6 @@ function histoCycles(data) {
     });
 
 }
-
 // draw the first graph into container graphContainer located in main_screen.html
 function dustGraph(data) {
 
@@ -224,119 +299,7 @@ function dustGraph(data) {
 
 }
 
-//choose between graphs and draw it by hidding the tiles from the mainContainer
-function showGraph(idGraph) {
-
-    $("#tilesContainer").hide();
-
-    $("#graphContainer").show();
-
-    if (idGraph == 1) {
-        if (cache['data_dust'] == undefined)
-            getJSON('/dustExposureGraph', dustGraph, "", 'data_dust');
-        else
-            dustGraph(cache['data_dust']);
-
-    }
-    if (idGraph == 5) {
 
 
-        if (cache['data_risk_graph'] == undefined)
-            getJSON('/riskGraph', riskPlot, "", 'data_risk_graph');
-        else
-            riskPlot(cache['data_risk_graph']);
-
-        $("#searchBox").show();
-
-        $("#stats_predic_Container").show();
-    }
-    if (idGraph == 3) {
-        if (cache['data_histogram'] == undefined)
-            getJSON('/histogram', histoCycles, "", 'data_histogram');
-        else
-            histoCycles(cache['data_histogram']);
 
 
-    }
-    if (idGraph == 4) {
-        if (cache['data_dust_variation'] == undefined)
-            getJSON('/dustVariation', dustVariation, "", 'data_dust_variation');
-        else
-            dustVariation(cache['data_dust_variation']);
-
-    }
-
-}
-
-// go back to the menu of the mainContainer by hidding the current displayed graph
-// which is in graphContainer
-function back() {
-    $("#graphContainer").hide();
-    $("#stats_predic_Container").hide()
-    $("#searchBox").hide()
-
-    $("#tilesContainer").show();
-
-}
-
-function getJSON(path, functions, argument, cachetype) {
-
-    url = BASE_URL + path;
-    xhr = new XMLHttpRequest();
-    xhr.open("GET", url + argument, true);
-
-    xhr.onreadystatechange = function () {
-        if (xhr.status == 200) {
-            if (!xhr.response) return;
-
-            cache[cachetype] = JSON.parse(xhr.response);
-
-            functions(cache[cachetype]);
-
-        }
-    };
-    xhr.send(null);
-}
-
-
-function csvJSON(csv) {
-
-    var lines = csv.split("\n");
-
-    var result = [];
-
-    var headers = lines[0].split(",");
-
-    for (var i = 1; i < lines.length; i++) {
-
-        var obj = {};
-        var currentline = lines[i].split(",");
-
-        for (var j = 0; j < headers.length; j++) {
-            obj[headers[j]] = currentline[j];
-        }
-
-        result.push(obj);
-
-    }
-
-    //return result; //JavaScript object
-    return JSON.stringify(result); //JSON
-}
-
-function textDisplay() {
-
-    var text = document.getElementById("textInput").value;
-
-    alert(text);
-
-}
-
-function riskPlotRerender() {
-
-    var text = "?engine=" + document.getElementById("textInput").value;
-    alert(text);
-    getJSON('/riskGraphArg', riskPlot, text);
-
-
-}
