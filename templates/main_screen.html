@@ -3,10 +3,6 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" charset="UTF-8">
 
-    <!-- Latest compiled and minified CSS
-      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-     -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -15,7 +11,7 @@
     <link rel="stylesheet" type="text/css" href="../static/stylesheets/style.css">
     <link rel="stylesheet" type="text/css" href="../static/stylesheets/topnavStyle.css">
     <script src="{{ url_for('static', filename='js/graphs.js') }}"></script>
-<script src="{{ url_for('static', filename='js/selection.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/selection.js') }}"></script>
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://code.highcharts.com/highcharts-more.js"></script>
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
@@ -51,8 +47,8 @@
     <h2 style="color: #5e9ca0;">How to use the service:</h2>
     <p>SEARCH FOR TRENDS AND DEPENDENCIES. <br/>
         Edit any of the two areas and see the other changing in real time.&nbsp;</p>
-    <p>Click the <span
-            style="background-color: #5e9ca0; color: #fff; display: inline-block; padding: 3px 10px; font-weight: bold; border-radius: 5px;">
+    <p>Click the <span style="background-color: #5e9ca0; color: #fff; display: inline-block;
+    padding: 3px 10px; font-weight: bold; border-radius: 5px;">
         Graphs</span> button to vizualize the charts.</p>
     <h2 style="color: #5e9ca0;">&nbsp;</h2>
 </div>
@@ -82,46 +78,40 @@
 
         <div id="stats_predic_Container" style="display: none; padding-top: 60px;">
             <button type="button" id="collapseButton" class="btn btn-info" data-toggle="collapse" data-target="#info"
-               onclick="newContent();"style="background-color: #1D364E; width: 200px;margin-left: 150px;">
+                    onclick="newContent();" style="background-color: #1D364E; width: 200px;margin-left: 150px;">
                 Show detailed data
             </button>
-               <button type="button" class="btn btn-info" onclick="addContent();"  style="background-color: #1D364E;
+
+            <button type="button" class="btn btn-info" onclick="addContent();" style="background-color: #1D364E;
              width: 200px;margin-left: 150px;">
-               Add new date
+                Add new date
             </button>
 
-
-
-            <form id="info" class="collapse"  style="background-color:#e6e6e6;  width: 100%; padding-top: 60px">
-                <div id="newContent" ></div>
-
-
+            <form id="info" class="collapse" style="background-color:#e6e6e6;  width: 100%; padding-top: 60px">
+                <div id="newContent"></div>
             </form>
-
         </div>
-          </div>
-
-        <div id="tilesContainer" style="background-color: #e6e6e6">
-
-            <div class="first" style="background-image: url('../static/photos/chart1.png');
-        background-size:100%;" onclick="showGraph('1')">
-                <h2 style="color: #5e9ca0; position: absolute; "> Dust exposure at cycle number</h2>
-
-            </div>
-
-            <div class="third" style=" background-image: url('../static/photos/chart2.png');
-        background-size:cover;" onclick="showGraph('3')">
-                <h2 style="color: #5e9ca0; position: absolute; "> Predicted and working cycles</h2>
-
-            </div>
-            <div class="second" style="background-image: url('../static/photos/chart3.png');
-        background-size:100%;" onclick="showGraph('4')"></div>
-            <div class="fourth">fourth</div>
-            <div class="last">last</div>
-        </div>
-        ​
     </div>
 
+    <div id="tilesContainer" style="background-color: #e6e6e6">
+
+        <div class="first" style="background-image: url('../static/photos/chart1.png');
+        background-size:100%;" onclick="showGraph('1')">
+            <h2 style="color: #5e9ca0; position: absolute; "> Dust exposure at cycle number</h2>
+        </div>
+        <div class="third" style=" background-image: url('../static/photos/chart2.png');
+        background-size:cover;" onclick="showGraph('3')">
+            <h2 style="color: #5e9ca0; position: absolute; "> Predicted and working cycles</h2>
+        </div>
+        <div class="second" style="background-image: url('../static/photos/chart3.png');
+        background-size:100%;" onclick="showGraph('4')">
+        </div>
+        <div class="fourth">fourth
+        </div>
+        <div class="last">last
+        </div>
+    </div>  ​
+</div>
 
 </body>
 </html>
