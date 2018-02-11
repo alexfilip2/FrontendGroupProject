@@ -1,7 +1,7 @@
 var BASE_URL = 'http://127.0.0.1:5000'
 
-function riskPlot(){
-var chart = AmCharts.makeChart( "graphContainer", {
+function riskPlot(data){
+var chart = AmCharts.makeChart("graphContainer", {
     "type": "gantt",
     "theme": "light",
     "marginRight": 70,
@@ -25,52 +25,7 @@ var chart = AmCharts.makeChart( "graphContainer", {
     "startField": "start",
     "endField": "end",
     "durationField": "duration",
-    "dataProvider": [ {
-        "category": "Alan",
-        "segments": [ {
-            "start": 17,
-            "duration": 2,
-            "color": "#46615e",
-            "task": "Task #1"
-        }, {
-            "duration": 2,
-            "color": "#727d6f",
-            "task": "Task #2"
-        }, {
-            "duration": 2,
-            "color": "#8dc49f",
-            "task": "Task #3"
-        } ]
-    }, {
-        "category": "Ruth",
-        "segments": [ {
-            "start": 13,
-            "duration": 2,
-            "color": "#727d6f",
-            "task": "Task #2"
-        }, {
-            "duration": 1,
-            "color": "#8dc49f",
-            "task": "Task #3"
-        }, {
-            "duration": 4,
-            "color": "#46615e",
-            "task": "Task #1"
-        } ]
-    }, {
-        "category": "Simon",
-        "segments": [ {
-            "start": 40,
-            "duration": 3,
-            "color": "#727d6f",
-            "task": "Task #2"
-        }, {
-            "start": 17,
-            "duration": 4,
-            "color": "#FFE4C4",
-            "task": "Task #4"
-        } ]
-    } ],
+    "dataProvider": data,
     "valueScrollbar": {
         "autoGridCount":true
     },
@@ -89,66 +44,66 @@ var chart = AmCharts.makeChart( "graphContainer", {
      }
 } );
 }
- function getJSON(path,functions) {
-            url = BASE_URL + path;
-            xhr = new XMLHttpRequest();
-            xhr.open("GET", url, true);
-
-            xhr.onreadystatechange = function () {
-                if (xhr.status == 200) {
-                    if (!xhr.response) return;
-                    var obj = JSON.parse(xhr.response);
-                    functions(obj);
-
-                }
-             };
-            xhr.send(null);
- }
 
 
- function failurePointOnDust() {
 
-    Highcharts.chart('graphContainer', {
-    chart: {
-        type: 'line'
-    },
+ function dustVariation(data) {
+var len = data.length;
+var average = [];
+for (i = 0; i < len; i++) {
+    var elem = [data[i][0], data[i][3]];
+    average.push(elem);
+}
+Highcharts.chart('graphContainer', {
+
     title: {
-        text: 'Chance of failure (applying to any aircfrat)'
-
-    },
-    subtitle: {
-        text: 'Depending on working cycles'
-    },
-    xAxis: {
-        categories: [3.9, 4.2, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6, 14.2, 10.3, 6.6, 4.8]
+        text: 'Dust exposure'
     },
     yAxis: {
         title: {
-            text: 'Chance in percentage'
+            text: null
         }
     },
-    plotOptions: {
-        line: {
-            dataLabels: {
-                enabled: true
-            },
-            enableMouseTracking: false
-        }
+
+    tooltip: {
+        crosshairs: true,
+        shared: true,
+
     },
+
+    legend: {
+    },
+
     series: [
+
     {
-        name: 'Working cycles',
-        data: [3.9, 4.2, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6, 14.2, 10.3, 6.6, 4.8]
+        name: 'Mean dust amount',
+        data: average,
+        zIndex: 1,
+        marker: {
+            fillColor: 'white',
+            lineWidth: 2,
+            lineColor: Highcharts.getOptions().colors[0]
+        }
+    }, {
+        name: 'Range',
+        data: data,
+        type: 'arearange',
+        lineWidth: 0,
+        linkedTo: ':previous',
+        color: Highcharts.getOptions().colors[0],
+        fillOpacity: 0.3,
+        zIndex: 0,
+        marker: {
+            enabled: false
+        }
     }]
 });
-
  }
 
 
-
- function  histoCycles() {
-
-Highcharts.chart('graphContainer', {
+ function  histoCycles(data) {
+    Highcharts.chart('graphContainer', {
     chart: {
         type: 'column'
     },
@@ -187,32 +142,14 @@ Highcharts.chart('graphContainer', {
             borderWidth: 0
         }
     },
-    series: [{
-        name: 'Working',
-        data: [49.9, 71.5, 106.4, 129.2, 144.0]
-
-    }, {
-        /*data has lenght of how many engines are plotted*/
-        name: 'Predicted until failure',
-        data: [83.6, 78.8, 98.5, 93.4, 106.0]
-
-    }, {
-        name: 'Total',
-        data: [48.9, 38.8, 39.3, 41.4, 47.0]
-
-    }]
+    series: data
 });
 
  }
 
 // draw the first graph into container graphContainer located in main_screen.html
-function graph1(data) {
-/*$.getJSON(
-    'https://cdn.rawgit.com/highcharts/highcharts/v6.0.5/samples/data/usdeur.json',
-    function (data) { console.log(data);}); */
+function dustGraph(data) {
 
-
-            Highcharts.theme;
 
             Highcharts.chart('graphContainer', {
                 chart: {
@@ -279,20 +216,24 @@ function graph1(data) {
 function showGraph(idGraph) {
 
     $("#tilesContainer").hide();
+
     $("#graphContainer").show();
 
-        if (idGraph == 1) getJSON('/dataGraph',graph1);
-        if (idGraph == 2) {
-            riskPlot();
+        if (idGraph == 1) getJSON('/dustExposureGraph',dustGraph);
+        if (idGraph == 5) {
+            getJSON('/riskGraph',riskPlot);
+            $("#searchBox").show();
+
             $("#stats_predic_Container").show();
         }
         if(idGraph ==3)
         {
-            histoCycles();
+            getJSON('/histogram',histoCycles);
+
         }
         if(idGraph ==4)
         {
-            failurePointOnDust();
+            getJSON('/dustVariation',dustVariation);
         }
 
 }
@@ -301,9 +242,31 @@ function showGraph(idGraph) {
 function back() {
     $("#graphContainer").hide();
     $("#stats_predic_Container").hide()
+    $("#searchBox").hide()
+
     $("#tilesContainer").show();
 
 }
+function getJSON(path,functions) {
+            url = BASE_URL + path;
+            xhr = new XMLHttpRequest();
+            xhr.open("GET", url, true);
+
+            xhr.onreadystatechange = function () {
+                if (xhr.status == 200) {
+                    if (!xhr.response) return;
+
+                    var obj = JSON.parse(xhr.response);
+                    functions(obj);
+
+                }
+             };
+            xhr.send(null);
+ }
+
+
+
+
 function csvJSON(csv){
 
     var lines=csv.split("\n");
@@ -329,3 +292,10 @@ function csvJSON(csv){
     return JSON.stringify(result); //JSON
 }
 
+function textDisplay() {
+
+       var text = document.getElementById("textInput").value;
+
+    alert(text);
+
+}

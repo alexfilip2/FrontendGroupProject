@@ -6,8 +6,7 @@
 body {
   font: 14px/1 'Open Sans', sans-serif;
   color: #555;
-  background: #eee;
-}
+ }
 
 h1 {
   padding: 50px 0;
@@ -29,7 +28,7 @@ main {
 }
 
 section {
-  display: none;
+
   padding: 20px 0 0;
   border-top: 1px solid #ddd;
 }
@@ -90,7 +89,7 @@ input:checked + label {
     padding: 15px;
   }
 }
-.btn{
+.mybtn{
   color:#999;
   background:rgba(0, 0, 0, 0.5);
   padding:10px 20px;
@@ -100,10 +99,11 @@ input:checked + label {
   text-transform:uppercase;
 }
 
-.btn:hover{
+.mybtn:hover{
   border:none;
   background:rgba(0, 0, 0, 0.4);
   background:#fff;
   padding:20px 20px;
   color:#1b1b1b;
 }
+

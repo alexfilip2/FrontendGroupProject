@@ -1,122 +1,153 @@
-.box {
-        width: 80%;
-	padding-left:10%;
-	padding-right: 10%;
-	clear: left;
-    display: block;
-	margin: 0 auto;
-	border-bottom: 1px solid #777777;
+* {
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
 }
 
-#containerTitle{
+*:before,
+*:after {
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+}
+
+:after, :before {
+    box-sizing: content-box;
+}
+
+.h2, h2 {
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.mybox {
+    width: 80%;
+    padding-left: 10%;
+    padding-right: 10%;
+    clear: left;
+    display: block;
+
+}
+
+#containerTitle {
     background-color: #312A2A;
     width: 80%;
-	padding-left:10%;
-	padding-right: 10%;
-	clear: left;
+    padding-left: 10%;
+    padding-right: 10%;
+    height: 100%;
+    clear: left;
     display: block;
-	margin: 0 auto;
-	border-bottom: 1px solid #777777;
 
 }
 
-#tilesContainer
-{
-
+#tilesContainer {
     padding-left: 10%;
     padding-right: 10%;
     padding-top: 60px;
-    padding-bottom:60px;
+    padding-bottom: 60px;
     height: 500px;
     min-height: 100%;
+
 }
 
+#graphContainer {
+    min-width: 310px;
+    height: 500px;
+    display: none;
 
+    padding-right: 5%;
+
+    margin: 0;
+}
 
 .first {
     float: left;
     width: 47%;
     height: 40%;
-    background-color:  #ADAAAE;
-	margin-bottom:3%;
+    background-color: #777;
+    margin-bottom: 3%;
     border-radius: 10px;
+    opacity: 0.5;
+    background: no-repeat;
+
 }
 
-.second{
+.second {
     float: left;
     width: 31%;
     height: 57%;
-    background-color: #ADAAAE;
-      border-radius: 10px;
+    background-color: #777;
+    border-radius: 10px;
+    background: no-repeat;
+     opacity: 0.5;
 }
 
-
-.third{
+.third {
 
     float: right;
     width: 47%;
     height: 40%;
-	margin-bottom:3%;
-      border-radius: 10px;
+    margin-bottom: 3%;
+    border-radius: 10px;
+    background: no-repeat;
+    background-color: #777;
+     opacity: 0.5;
 
-    background-color: #ADAAAE;
 }
 
 .fourth {
     float: right;
     width: 31%;
     height: 57%;
-    background-color: #ADAAAE;
-	margin-left:3.5%;
-      border-radius: 10px;
+    background-color: #777;
+    margin-left: 3.5%;
+    border-radius: 10px;
+    background: no-repeat;
 }
 
-.last{
+.last {
     float: right;
     width: 31%;
     height: 57%;
-    background-color: #ADAAAE;
-      border-radius: 10px;
+    background-color: #777;
+    border-radius: 10px;
+    background: no-repeat;
 }
-
-
-
 
 .first:hover {
-	transform: scale(1.2);
+    transform: scale(1.2);
     background-color: #8c8c8c;
+    opacity: 1;
     color: #5e9ca0;
+
 }
-
-
 
 .second:hover {
-	transform: scale(1.2);
+    transform: scale(1.2);
     background-color: #8c8c8c;
     color: #5e9ca0;
+    opacity: 1;
+
 }
-
-
 
 .third:hover {
-	transform: scale(1.2);
+    transform: scale(1.2);
     background-color: #8c8c8c;
     color: #5e9ca0;
+    opacity: 1;
 }
-
 
 .fourth:hover {
-	transform: scale(1.2);
+    transform: scale(1.2);
     background-color: #8c8c8c;
     color: #5e9ca0;
 }
-
 
 .last:hover {
-	transform: scale(1.2);
+    transform: scale(1.2);
     background-color: #8c8c8c;
     color: #5e9ca0;
 }
+
 input[type=text] {
     width: 100%;
     padding: 12px 20px;
@@ -131,6 +162,7 @@ input[type=text] {
 input[type=text]:focus {
     border: 3px solid #555;
 }
+
 input[type=submit] {
     width: 100%;
     background-color: #555;
@@ -144,15 +176,4 @@ input[type=submit] {
 
 input[type=submit]:hover {
     background-color: #111;
-}
-#graphContainer {
-    min-width: 310px;
-    height: 500px;
-    display: none;
-    padding-left: 5%;
-    padding-right: 5%;
-    padding-top: 50px;
-     margin: 0 auto
-
-
 }
