@@ -80,8 +80,8 @@ function showCalendarOnce() {
     function addContent() {
     fieldId+=1;
 
-    document.getElementById('newInputDate').innerHTML+=   "\t<h3  style = \" clear: left; display: block;\"> Introduce date </h3>\n" +
-          "     <div class=\"form-group\"  style = \" clear: left;display: block;\">\n" +
+    document.getElementById('newInputDate').innerHTML+=   "\t<h3 id ='introDate"+fieldId+"' style = \" clear: left; display: block;\"> Introduce date </h3>\n" +
+          "     <div class=\"form-group\" id = 'formDate" + fieldId+"' style = \" clear: left;display: block;\">\n" +
           "       <div class=\"col-sm-10\">\n" +
           "       <div class=\"input-group\">\n" +
           "        <div class=\"input-group-addon\">\n" +
@@ -100,5 +100,17 @@ function showCalendarOnce() {
         var input = document.getElementById("field"+i).value;
         alert(input);
     }
+
+    }
+    function removeLastField() {
+    if (fieldId==1) return;
+    var form = document.getElementById("formDate"+fieldId);
+    var intro = document.getElementById("introDate"+fieldId);
+    form.outerHTML = "";
+    intro.outerHTML = "";
+    delete form;
+    delete intro;
+
+    fieldId-=1;
 
     }
