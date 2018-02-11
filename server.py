@@ -18,7 +18,7 @@ url = urllib.request.urlopen("https://cdn.rawgit.com/highcharts/highcharts/v6.0.
 dust_exposure_data = json.loads(url.read().decode())
 #data for the risk (when engines will fail on a horizontal stacked bar) plot
 risk_graph_data = [ {
-        "category": "Aircraf1",
+        "category": "Aircraft1",
         "segments": [ {
             "start": 17,
             "duration": 2,
@@ -34,7 +34,7 @@ risk_graph_data = [ {
             "task": "Task #3"
         } ]
     }, {
-        "category": "Aircraf2",
+        "category": "Aircraft2",
         "segments": [ {
             "start": 13,
             "duration": 2,
@@ -50,7 +50,7 @@ risk_graph_data = [ {
             "task": "Task #1"
         } ]
     }, {
-        "category": "Aircraf2",
+        "category": "Aircraft3",
         "segments": [ {
             "start": 40,
             "duration": 3,
@@ -110,8 +110,12 @@ def risk_graph_upload():
 @app.route('/riskGraphArg', methods=['GET', 'POST'])
 def rerender_risk():
     if request.method == 'GET':
-        print (request.args.get('engine'))
-        return  jsonify(risk_graph_data)
+        tosend =[]
+        aircraft =request.args.get('engine')
+        for elem in risk_graph_data:
+            if elem['category'] == aircraft:
+                tosend.append(elem)
+        return  jsonify(tosend)
 
 @app.route('/histogram', methods=['GET', 'POST'])
 def second_tile_graph():
