@@ -189,7 +189,7 @@ function dustVariation(data) {
             }]
     });
 }
-
+//PLOTS A HISTOGRAM WITH THE PREDICTED,WORKING UNTIL KNOW AND TOTAL FOR EACH ENGINE
 function histoCycles(data) {
     Highcharts.chart('graphContainer', {
         chart: {
@@ -234,7 +234,7 @@ function histoCycles(data) {
     });
 
 }
-// draw the first graph into container graphContainer located in main_screen.html
+//PLOTS AN AREA GRAPH OF THE DUST EXPOSURE PER CYCLE
 function dustGraph(data) {
 
 

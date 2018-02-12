@@ -9,6 +9,11 @@
     -webkit-box-sizing: content-box;
     -moz-box-sizing: content-box;
 }
+.bootstrap-iso {
+
+    background-color: #e6e6e6;
+
+}
 
 :after, :before {
     box-sizing: content-box;
@@ -17,6 +22,12 @@
 .h2, h2 {
     font-size: 20px;
     font-weight: 500;
+    -webkit-font-smoothing: antialiased;
+
+}
+.col-sm-offset-2 {
+    margin-left: 0%;
+    margin-top: 50px;
 }
 
 .mybox {
@@ -36,7 +47,6 @@
     height: 100%;
     clear: left;
     display: block;
-
 }
 
 #tilesContainer {
@@ -46,16 +56,13 @@
     padding-bottom: 60px;
     height: 500px;
     min-height: 100%;
-
 }
 
 #graphContainer {
     min-width: 310px;
-    height: 500px;
+    height: 100%;
     display: none;
-
     padding-right: 5%;
-
     margin: 0;
 }
 
@@ -68,7 +75,6 @@
     border-radius: 10px;
     opacity: 0.5;
     background: no-repeat;
-
 }
 
 .second {
@@ -78,11 +84,10 @@
     background-color: #777;
     border-radius: 10px;
     background: no-repeat;
-     opacity: 0.5;
+    opacity: 0.5;
 }
 
 .third {
-
     float: right;
     width: 47%;
     height: 40%;
@@ -90,8 +95,7 @@
     border-radius: 10px;
     background: no-repeat;
     background-color: #777;
-     opacity: 0.5;
-
+    opacity: 0.5;
 }
 
 .fourth {
@@ -151,7 +155,7 @@
 input[type=text] {
     width: 100%;
     padding: 12px 20px;
-    margin: 8px 0;
+    margin: 0;
     box-sizing: border-box;
     border: 3px solid #ccc;
     -webkit-transition: 0.5s;

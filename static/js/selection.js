@@ -1,16 +1,13 @@
-
-var once =0;
-var fieldId =1;
-
-function newContent() {
-    if (once == 0)
-        showCalendarOnce();
-}
-
+var once = true;
+var fieldId = 1;
+ /* the button that produces the default field and the submit button
+ * when pressed the second time should only collapse the panel
+ * that's why the "once" variable
+ */
 function showCalendarOnce() {
-
-    once =1;
-     document.getElementById('newContent').innerHTML+= "<!DOCTYPE html>\n" +
+      if (!once) return;
+    once = false;
+    document.getElementById('newContent').innerHTML += "<!DOCTYPE html>\n" +
           "<html lang=\"en\">\n" +
           "\n" +
           "<head>\n" +
@@ -19,14 +16,6 @@ function showCalendarOnce() {
           "  <title>FormDen Example</title>\n" +
           "</head>\n" +
           "<body>\n" +
-          " \n" +
-          "\n" +
-          "<!-- Special version of Bootstrap that is isolated to content wrapped in .bootstrap-iso -->\n" +
-          "<link rel=\"stylesheet\" href=\"https://formden.com/static/cdn/bootstrap-iso.css\" />\n" +
-          "\n" +
-          "<!--Font Awesome (added because you use icons in your prepend/append)-->\n" +
-          "<link rel=\"stylesheet\" href=\"https://formden.com/static/cdn/font-awesome/4.4.0/css/font-awesome.min.css\" />\n" +
-          "\n" +
           "<!-- Inline CSS based on choices in \"Settings\" tab -->\n" +
           "<style>.bootstrap-iso .formden_header h2, .bootstrap-iso .formden_header p, .bootstrap-iso form{font-family: Arial, Helvetica, sans-serif; color: black}.bootstrap-iso form button, .bootstrap-iso form button:hover{color: white !important;} .asteriskField{color: red;}</style>\n" +
           "\n" +
@@ -44,7 +33,7 @@ function showCalendarOnce() {
           "         <i class=\"fa fa-calendar\">\n" +
           "         </i>\n" +
           "        </div>\n" +
-          "        <input id='field" + fieldId +"' class=\"form-control\"  placeholder=\"MM/DD/YYYY\" type=\"text\"/>\n" +
+          "        <input id='field" + fieldId +"' name='field"+fieldId+"' class=\"form-control\"  placeholder=\"MM/DD/YYYY\" type=\"text\"/>\n" +
           "       </div>\n" +
           "      </div>\n" +
           "     </div>\n" +
@@ -61,56 +50,49 @@ function showCalendarOnce() {
           "  </div>\n" +
           " </div>\n" +
           "</div>\n" +
-          "\n" +
-          "\n" +
-          "<!-- Extra JavaScript/CSS added manually in \"Settings\" tab -->\n" +
-          "<!-- Include jQuery -->\n" +
-          "<script type=\"text/javascript\" src=\"https://code.jquery.com/jquery-1.11.3.min.js\"></script>\n" +
-          "\n" +
-          "<!-- Include Date Range Picker -->\n" +
-          "<script type=\"text/javascript\" src=\"https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js\"></script>\n" +
-          "<link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css\"/>\n" +
-          "\n" +
-          "\n" +
           "</body>\n" +
-          "\n" +
           "</html> ";
 
+     interactiveCalendar();
     }
-    function addContent() {
-    fieldId+=1;
-
-    document.getElementById('newInputDate').innerHTML+=   "\t<h3 id ='introDate"+fieldId+"' style = \" clear: left; display: block;\"> Introduce date </h3>\n" +
-          "     <div class=\"form-group\" id = 'formDate" + fieldId+"' style = \" clear: left;display: block;\">\n" +
-          "       <div class=\"col-sm-10\">\n" +
-          "       <div class=\"input-group\">\n" +
-          "        <div class=\"input-group-addon\">\n" +
-          "         <i class=\"fa fa-calendar\">\n" +
-          "         </i>\n" +
-          "        </div>\n" +
-          "        <input id='field" + fieldId +"' class=\"form-control\"  placeholder=\"MM/DD/YYYY\" type=\"text\"/>\n" +
-          "       </div>\n" +
-          "      </div>\n" +
-          "     </div>\n"  ;
-        
-    }
-    function getAllDates() {
-
-    for(i=1;i<=fieldId;i++) {
-        var input = document.getElementById("field"+i).value;
+// adds a new filed on the page, there will be still one submit button
+function addNewField() {
+    fieldId += 1;
+    document.getElementById('newInputDate').innerHTML += "\t<h3 id ='introDate" + fieldId + "' style = \" clear: left; display: block;\"> Introduce date </h3>\n" +
+        "     <div class=\"form-group\" id = 'formDate" + fieldId + "' style = \" clear: left;display: block; background-color: #e6e6e6;\">\n" +
+        "       <div class=\"col-sm-10\">\n" +
+        "       <div class=\"input-group\">\n" +
+        "        <div class=\"input-group-addon\">\n" +
+        "         <i class=\"fa fa-calendar\">\n" +
+        "         </i>\n" +
+        "        </div>\n" +
+        "        <input id='field" + fieldId +"' name='field"+fieldId+"'  class=\"form-control\"  placeholder=\"MM/DD/YYYY\" type=\"text\"/>\n" +
+        "       </div>\n" +
+        "      </div>\n" +
+        "     </div>\n";
+    interactiveCalendar();
+}
+/* get the input typed by the user into the fields
+ */
+function getAllDates() {
+    for (i = 1; i <= fieldId; i++) {
+        var input = document.getElementById("field" + i).value;
         alert(input);
     }
-
-    }
-    function removeLastField() {
-    if (fieldId==1) return;
-    var form = document.getElementById("formDate"+fieldId);
-    var intro = document.getElementById("introDate"+fieldId);
+}
+/*remove the last input filed for the Date of prediction if there
+ * are extra fields apart from the default one
+ * decrement also the fieldId that keeps track of how many were created
+ */
+function removeLastField() {
+    if (fieldId == 1) return;
+    var form = document.getElementById("formDate" + fieldId);
+    var intro_text = document.getElementById("introDate" + fieldId);
     form.outerHTML = "";
-    intro.outerHTML = "";
+    intro_text.outerHTML = "";
     delete form;
     delete intro;
+    fieldId -= 1;
+}
 
-    fieldId-=1;
 
-    }

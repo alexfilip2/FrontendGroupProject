@@ -2,60 +2,67 @@
 <html lang="en">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" charset="UTF-8">
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- Include CSS files: custom or libraries; the order of the imports matters as some default attributes
+    are overwritten by custom ones-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
     <link rel="stylesheet" type="text/css" href="../static/stylesheets/searchBar.css">
-    <link rel="stylesheet" type="text/css" href="../static/stylesheets/style.css">
     <link rel="stylesheet" type="text/css" href="../static/stylesheets/topnavStyle.css">
+    <link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="../static/stylesheets/style.css">
+
+    <!-- Include the javascript libraries for: jquery, ajax, bootstrap, datepicker-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
+    <!-- Include the javascript custom files for the custom functions-->
     <script src="{{ url_for('static', filename='js/graphs.js') }}"></script>
     <script src="{{ url_for('static', filename='js/selection.js') }}"></script>
+    <!-- Include the javascript libraries for plots from highcharts and amcharts-->
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://code.highcharts.com/highcharts-more.js"></script>
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
     <script src="https://code.highcharts.com/modules/xrange.js"></script>
-
     <script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
     <script src="https://www.amcharts.com/lib/3/serial.js"></script>
     <script src="https://www.amcharts.com/lib/3/gantt.js"></script>
     <script src="https://www.amcharts.com/lib/3/themes/light.js"></script>
     <script src="https://www.amcharts.com/lib/3/plugins/export/export.min.js"></script>
-    <link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all"/>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-
 
 </head>
 
 <body style="background-color:#fff; margin:0;">
 
 <div id="containerTitle">
-    <div id="pageTitle" style="width:25%; float: left">
+    <div id="pageTitle" style="width:15%; float: left">
         <h2><span style="display: grid; color: #111111 ;"><strong>Predictive aircraft maintenance</strong></span></h2>
     </div>
 </div>
 
-
+<!-- top navigation with links buttons that move to another web page-->
 <div class="mybox" style="padding-top: 15px ;background-color:#1D364E;">
     <a href="#" class="mybtn">Home</a>
     <a href="#" class="mybtn">About</a>
     <a href="#" class="mybtn">Services</a>
     <a href="#" class="mybtn">Contact</a>
-
-    <h1 style="font-size: 50px; color: #1C2A38;">Welcome to the predictive aircraft maintenance engine </h1>
+    <!-- welcome and intructions container-->
+    <h1 style="font-size: 50px; color: #1C2A38;">Welcome to the predictive aircraft maintenance engine!</h1>
     <h2 style="color: #5e9ca0;">How to use the service:</h2>
     <p>SEARCH FOR TRENDS AND DEPENDENCIES. <br/>
         Edit any of the two areas and see the other changing in real time.&nbsp;</p>
     <p>Click the <span style="background-color: #5e9ca0; color: #fff; display: inline-block;
     padding: 3px 10px; font-weight: bold; border-radius: 5px;">
-        Graphs</span> button to vizualize the charts.</p>
+        Graphs</span> button to vizualize the tiles panel.</p>
+    <p>Click the <span style="background-color: #5e9ca0; color: #fff; display: inline-block;
+    padding: 3px 10px; font-weight: bold; border-radius: 5px;">
+        Predictions</span> button to vizualize the predicted failure points.</p>
     <h2 style="color: #5e9ca0;">&nbsp;</h2>
 </div>
 
-
+<!-- buttons for main panels controls: Graphs and Predictions -->
 <div id="secondaryMenu" class="mybox" style="background-color:#fff;border: none">
     <input id="tab1" type="radio" name="tabs" checked>
     <label for="tab1" onclick="back()">Graphs</label>
@@ -64,9 +71,9 @@
     <label for="tab2" onclick="showGraph('5')">Predictions</label>
 </div>
 
-
-<div class="mybox" id="mainContainer" style="padding-bottom: 200px; height: 600px">
-
+<!-- the main container of the page that includes the graphs and prediction sub-panels-->
+<div class="mybox" id="mainContainer" style="margin-bottom: 200px;  height: 100%">
+    <!-- container showed on Predictions panel which contains the failure predictions-->
     <div id="predictionsContainer" style=" background-color: #e6e6e6 ; ">
         <section id="searchBox" style="display: none">
             <form id="aircraftSearch" action="">
@@ -74,29 +81,68 @@
                 <button type="reset" onclick="riskPlotRerender();">Search</button>
             </form>
         </section>
-        <!-- not put spaces inside an id field as js won't find it-->
-        <div id="graphContainer" style="  padding-top: 30px;  "></div>
+
+        <!-- not put spaces inside an id field as js won't find it
+            this is the wrapper for the graph plots-->
+        <div id="graphContainer" style="padding-top: 30px; height: 500px;"></div>
 
 
-        <div id="stats_predic_Container" style="display: none; padding-top: 60px;">
+        <div id="stats_predic_Container" style="display: none;background-color: #e6e6e6; padding-top: 60px;">
+
+            <h2 style="font-size: 35px; color: #1C2A38; margin-left: 10px">Failure time prediction</h2>
+
+            <!-- container for displaying information about the predicted failure time (machine learning model 1)-->
+            <div class="container bootstrap snippet">
+                <div class="panel-body inf-content">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <strong style="font-size: 20px; margin-bottom: 10px; -webkit-font-smoothing: antialiased ">Information</strong><br>
+                            <div class="table-responsive" style="margin-top: 20px">
+                                <table class="table table-condensed table-responsive table-user-information">
+                                    <tbody>
+                                    <tr>
+                                        <td>
+                                            <p>
+                                                <span class="glyphicon glyphicon-hourglass"></span>
+                                                Predicted date of failure:
+                                            </p>
+                                        </td>
+                                        <td class="text-primary">
+                                            123456789
+                                        </td>
+                                    </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h2 style="font-size: 35px; color: #1C2A38; margin-left: 10px">Multi-way prediction</h2>
+
+            <!-- buttons for controlling the Date fields -->
             <button type="button" id="collapseButton" class="btn btn-info" data-toggle="collapse" data-target="#info"
-                    onclick="newContent();" style="background-color: #1D364E; width: 200px;margin-left: 50px;">
-                Show detailed data
+                    onclick="showCalendarOnce();" style=" margin-bottom: 60px;width: 200px;margin-left: 10px;">
+                                            Show detailed data
+                <span class="glyphicon glyphicon-menu-down" style="margin-left: 20px "></span>
+            </button>
+            <button type="button" class="btn btn-info" onclick="addNewField();" style=" margin-bottom: 60px;background-color: #1D364E;
+             width: 200px;margin-left: 10px;"> Add content
+            </button>
+            <button type="button" class="btn btn-info" onclick="removeLastField();" style=" margin-bottom: 60px;background-color: #1D364E;
+             width: 200px;margin-left: 10px;">Remove last date
             </button>
 
-            <button type="button" class="btn btn-info" onclick="addContent();" style="background-color: #1D364E;
-             width: 200px;margin-left: 10px;"> Add content</button>
-                 <button type="button" class="btn btn-info" onclick="removeLastField();" style="background-color: #1D364E;
-             width: 200px;margin-left: 10px;">
-                Remove last date
-            </button>
-
-            <form id="info" class="collapse" style="background-color:#e6e6e6;  width: 100%; padding-top: 60px">
+            <!-- panel that contains the Date fields -->
+            <form id="info" class="collapse" style="background-color:#e6e6e6;  width: 100%;">
+                <!--wrapper for multiple fields-->
                 <div id="newContent"></div>
             </form>
         </div>
     </div>
-
+    <!-- container showed on Graphs panel which contains the tile menu-->
     <div id="tilesContainer" style="background-color: #e6e6e6">
 
         <div class="first" style="background-image: url('../static/photos/chart1.png');
@@ -110,12 +156,32 @@
         <div class="second" style="background-image: url('../static/photos/chart3.png');
         background-size:100%;" onclick="showGraph('4')">
         </div>
-        <div class="fourth">fourth
+        <div class="fourth">Income graph
         </div>
         <div class="last">last
         </div>
-    </div>  ​
+    </div>
+    ​
 </div>
+
+<script>
+    /*function that assign a date picker calendar to each text field each time a new one is added*/
+    function interactiveCalendar() {
+        $(document).ready(function () {
+            for (i = 1; i <= fieldId; i++) {
+                var nameField = "field" + i;
+                var date_input = $('input[name=' + nameField + ']'); //our date input has the name "field"+ its number
+                var container = $('.bootstrap-iso form').length > 0 ? $('.bootstrap-iso form').parent() : "body";
+                date_input.datepicker({
+                    format: 'mm/dd/yyyy',
+                    container: container,
+                    todayHighlight: true,
+                    autoclose: true,
+                });
+            }
+        });
+    }
+</script>
 
 </body>
 </html>
