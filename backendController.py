@@ -1,4 +1,5 @@
 import urllib.request
+import urllib
 import json
 import csv
 
@@ -14,8 +15,10 @@ api_key3c = 'cAmIZyceyWVTsdW/OUqRUXfCRu1MtUqx9ZqWhk32wrxkGgMHQSoeAyCQ5xxG5WDANcJ
 headers3c = {'Content-Type':'application/json', 'Authorization':('Bearer '+ api_key3c)}
 
 def getMultiClassPredictorForCSVdata(data):
-    readerObject = csv.reader(data, delimiter=' ')
-    dataArray =[x for x in readerObject]
+    dataRows = data.split('\n')
+    dataArray = []
+    for i in range(0, len(dataRows)):
+        dataArray.append(dataRows[i].split(' '))
     return getMultiClassPredictorForValues(dataArray)
 
 def csvTest():
@@ -31,11 +34,14 @@ def getMultiClassPredictorForValues(arrayOfValues):
 
 def getDataObjectForValues(arrayOfValues):
     object = {
+
         "Inputs": {
 
             "input1":
                 {
-                    "ColumnNames": ["cycle", "setting1", "setting2", "setting3", "s1", "s2", "s3", "s4", "s5", "s6", "s7", "s8", "s9", "s10", "s11", "s12", "s13", "s14", "s15", "s16", "s17", "s18", "s19", "s20", "s21", "s22", "s23"],
+                    "ColumnNames": ["id", "cycle", "setting1", "setting2", "setting3", "s1", "s2", "s3", "s4", "s5",
+                                    "s6", "s7", "s8", "s9", "s10", "s11", "s12", "s13", "s14", "s15", "s16", "s17",
+                                    "s18", "s19", "s20", "s21", "s22", "s23"],
                     "Values": arrayOfValues
                 }, },
         "GlobalParameters": {
@@ -45,6 +51,14 @@ def getDataObjectForValues(arrayOfValues):
 
 def makeMultiClassRequestForData(data):
     body = str.encode(json.dumps(data))
+    # try:
+    #     req = urllib.request.Request(url3c, body, headers3c)
+    #     response = urllib.request.urlopen(req)
+    #     return response
+    # except urllib.error.HTTPError as err:
+    #     print(err)
+    #     return ""
+    #
     req = urllib.request.Request(url3c, body, headers3c)
     response = urllib.request.urlopen(req)
     return response

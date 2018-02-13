@@ -128,5 +128,12 @@ def third_tile_graph():
     if request.method == 'GET':
              return  jsonify(dust_data)
 
+@app.route('/getPlanePredictions', methods=['POST'])
+def planePredictions():
+    if request.method == 'POST':
+        csvString = request.form['data']
+        predictions = backendController.getMultiClassPredictorForCSVdata(csvString)
+        return jsonify(predictions)
+
 if __name__ == "__main__":
      app.run(debug=True)
