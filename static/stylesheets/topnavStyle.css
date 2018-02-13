@@ -1,5 +1,5 @@
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:400,600,700');
-@import url('https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css');
+
 
 body {
   font: 14px/1 'Open Sans', sans-serif;
@@ -51,8 +51,10 @@ label:before {
   font-weight: normal;
   margin-right: 10px;
 }
-label[for*='1']:before { content: '\f080'; }
-label[for*='2']:before { content: "\f0ce"; }
+label[for*='1']:before { content: '\f093'; }
+label[for*='2']:before { content: '\f080'; }
+label[for*='3']:before { content: '\f0ce'; }
+
 
 label:hover {
   color: #888;
@@ -63,12 +65,13 @@ input:checked + label {
   color: #555;
   border: 1px solid #ddd;
   border-top: 3px solid orange;
-    background-color: #e6e6e6;
+  background-color: #e6e6e6;
 }
 
 #tab1:checked ~ #content1,
-#tab2:checked ~ #content2
- {
+#tab2:checked ~ #content2,
+#tab3:checked ~ #content3
+{
   display: block;
 }
 
@@ -87,7 +90,7 @@ input:checked + label {
     padding: 15px;
   }
 }
-.mybtn{
+.topbtn{
   color:#999;
   background:rgba(0, 0, 0, 0.5);
   padding:10px 20px;
@@ -97,11 +100,18 @@ input:checked + label {
   text-transform:uppercase;
 }
 
-.mybtn:hover{
+.topbtn:hover{
   border:none;
   background:rgba(0, 0, 0, 0.4);
   background:#fff;
   padding:20px 20px;
   color:#1b1b1b;
+}
+
+.btn-info {
+  margin-top: 40px;
+  background-color:#1D364E;
+  width:200px;
+  margin-left: 10px;
 }
 

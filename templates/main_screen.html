@@ -4,13 +4,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" charset="UTF-8">
     <!-- Include CSS files: custom or libraries; the order of the imports matters as some default attributes
     are overwritten by custom ones-->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../static/stylesheets/searchBar.css">
     <link rel="stylesheet" type="text/css" href="../static/stylesheets/topnavStyle.css">
+    <link rel="stylesheet" type="text/css" href="../static/stylesheets/style.css">
     <link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="../static/stylesheets/style.css">
+
 
     <!-- Include the javascript libraries for: jquery, ajax, bootstrap, datepicker-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -37,66 +39,98 @@
 <body style="background-color:#fff; margin:0;">
 
 <div id="containerTitle">
-    <div id="pageTitle" style="width:15%; float: left">
-        <h2><span style="display: grid; color: #111111 ;"><strong>Predictive aircraft maintenance</strong></span></h2>
+    <div id="pageTitle">
+        <h2 style="text-align: left"><span><strong>Predictive aircraft maintenance</strong></span></h2>
     </div>
 </div>
 
 <!-- top navigation with links buttons that move to another web page-->
 <div class="mybox" style="padding-top: 15px ;background-color:#1D364E;">
-    <a href="#" class="mybtn">Home</a>
-    <a href="#" class="mybtn">About</a>
-    <a href="#" class="mybtn">Services</a>
-    <a href="#" class="mybtn">Contact</a>
+    <a href="#" class="topbtn">Home</a>
+    <a href="#" class="topbtn">About</a>
+    <a href="#" class="topbtn">Services</a>
+    <a href="#" class="topbtn">Contact</a>
+
     <!-- welcome and intructions container-->
     <h1 style="font-size: 50px; color: #1C2A38;">Welcome to the predictive aircraft maintenance engine!</h1>
-    <h2 style="color: #5e9ca0;">How to use the service:</h2>
-    <p>SEARCH FOR TRENDS AND DEPENDENCIES. <br/>
-        Edit any of the two areas and see the other changing in real time.&nbsp;</p>
-    <p>Click the <span style="background-color: #5e9ca0; color: #fff; display: inline-block;
+    <p>1. <span style="background-color: #5e9ca0; color: #fff; display: inline-block;
+    padding: 3px 10px; font-weight: bold; border-radius: 5px;">
+        Upload</span> the file containing the data describing the engine <br/>
+        Submit it and get the failure point predictions.&nbsp;</p>
+    <p>2. Click the <span style="background-color: #5e9ca0; color: #fff; display: inline-block;
     padding: 3px 10px; font-weight: bold; border-radius: 5px;">
         Graphs</span> button to vizualize the tiles panel.</p>
-    <p>Click the <span style="background-color: #5e9ca0; color: #fff; display: inline-block;
+    <p>3. Click the <span style="background-color: #5e9ca0; color: #fff; display: inline-block;
     padding: 3px 10px; font-weight: bold; border-radius: 5px;">
         Predictions</span> button to vizualize the predicted failure points.</p>
     <h2 style="color: #5e9ca0;">&nbsp;</h2>
 </div>
 
+
 <!-- buttons for main panels controls: Graphs and Predictions -->
-<div id="secondaryMenu" class="mybox" style="background-color:#fff;border: none">
+<div id="secondaryMenu" class="mybox">
     <input id="tab1" type="radio" name="tabs" checked>
-    <label for="tab1" onclick="back()">Graphs</label>
+    <label for="tab1" onclick="tilesPanelShow()">Upload</label>
 
     <input id="tab2" type="radio" name="tabs">
-    <label for="tab2" onclick="showGraph('5')">Predictions</label>
+    <label for="tab2" onclick="tilesPanelShow()">Graphs</label>
+
+    <input id="tab3" type="radio" name="tabs">
+    <label for="tab3"  onclick="showGraph('6')">Predictions</label>
+
 </div>
+
 
 <!-- the main container of the page that includes the graphs and prediction sub-panels-->
 <div class="mybox" id="mainContainer" style="margin-bottom: 200px;  height: 100%">
+
+
+        <div class="panel panel-default" id="uploadPanel">
+
+            <div class="panel-heading"><strong>Upload Files</strong>
+                <small>Upload the dataset</small>
+            </div>
+
+            <div class="panel-body">
+                <!-- Upload core panel -->
+                <h4>Select files from your computer</h4>
+                <div style="display: block; text-align: left">
+                    <input type="file" id="file-select" name="thefile">
+                    <button type="button" type="reset" id="upload-button" class="btn btn-info"
+                            onclick="sendTrainInput('file-select');" > Upload</button>
+                </div>
+            </div>
+
+        </div>
+
+
+
     <!-- container showed on Predictions panel which contains the failure predictions-->
-    <div id="predictionsContainer" style=" background-color: #e6e6e6 ; ">
+    <div id="predictionsContainer">
         <section id="searchBox" style="display: none">
-            <form id="aircraftSearch" action="">
-                <input id="textInput" placeholder="What are you looking for?">
-                <button type="reset" onclick="riskPlotRerender();">Search</button>
+            <form id="aircraftSearch">
+                <input id="searchAircraft" placeholder="Which aircraft are you looking for?">
+                <button type="reset" onclick="secificGraph()">Search</button>
             </form>
         </section>
 
         <!-- not put spaces inside an id field as js won't find it
             this is the wrapper for the graph plots-->
-        <div id="graphContainer" style="padding-top: 30px; height: 500px;"></div>
+        <div id="graphContainer"></div>
 
 
-        <div id="stats_predic_Container" style="display: none;background-color: #e6e6e6; padding-top: 60px;">
+        <div id="stats_predic_Container" style="display: none;">
 
-            <h2 style="font-size: 35px; color: #1C2A38; margin-left: 10px">Failure time prediction</h2>
+            <h1 style="text-align: left">Failure time prediction</h1>
 
             <!-- container for displaying information about the predicted failure time (machine learning model 1)-->
             <div class="container bootstrap snippet">
                 <div class="panel-body inf-content">
                     <div class="row">
                         <div class="col-md-6">
-                            <strong style="font-size: 20px; margin-bottom: 10px; -webkit-font-smoothing: antialiased ">Information</strong><br>
+
+                            <strong style="font-size: 20px; margin-bottom: 10px">Information</strong><br>
+
                             <div class="table-responsive" style="margin-top: 20px">
                                 <table class="table table-condensed table-responsive table-user-information">
                                     <tbody>
@@ -104,61 +138,54 @@
                                         <td>
                                             <p>
                                                 <span class="glyphicon glyphicon-hourglass"></span>
-                                                Predicted date of failure:
+                                                Predicted cycle of failure from now on:
                                             </p>
                                         </td>
                                         <td class="text-primary">
-                                            123456789
+                                            34
                                         </td>
                                     </tr>
 
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+   </tbody></table></div></div></div></div></div>
 
-            <h2 style="font-size: 35px; color: #1C2A38; margin-left: 10px">Multi-way prediction</h2>
+
+            <h1 style="text-align: left">Multi-way prediction</h1>
 
             <!-- buttons for controlling the Date fields -->
             <button type="button" id="collapseButton" class="btn btn-info" data-toggle="collapse" data-target="#info"
-                    onclick="showCalendarOnce();" style=" margin-bottom: 60px;width: 200px;margin-left: 10px;">
-                                            Show detailed data
+                    onclick="showCalendarOnce();">Show detailed data
                 <span class="glyphicon glyphicon-menu-down" style="margin-left: 20px "></span>
             </button>
-            <button type="button" class="btn btn-info" onclick="addNewField();" style=" margin-bottom: 60px;background-color: #1D364E;
-             width: 200px;margin-left: 10px;"> Add content
+            <button type="button" class="btn btn-info" onclick="addNewField();"> Add content
             </button>
-            <button type="button" class="btn btn-info" onclick="removeLastField();" style=" margin-bottom: 60px;background-color: #1D364E;
-             width: 200px;margin-left: 10px;">Remove last date
+            <button type="button" class="btn btn-info" onclick="removeLastField();">Remove last date
             </button>
 
             <!-- panel that contains the Date fields -->
-            <form id="info" class="collapse" style="background-color:#e6e6e6;  width: 100%;">
+            <form id="info" class="collapse">
                 <!--wrapper for multiple fields-->
                 <div id="newContent"></div>
             </form>
+
         </div>
     </div>
     <!-- container showed on Graphs panel which contains the tile menu-->
-    <div id="tilesContainer" style="background-color: #e6e6e6">
+    <div id="tilesContainer" style="display: none">
 
-        <div class="first" style="background-image: url('../static/photos/chart1.png');
-        background-size:100%;" onclick="showGraph('1')">
-            <h2 style="color: #5e9ca0; position: absolute; "> Dust exposure at cycle number</h2>
+        <div class="first" onclick="showGraph('1')">
+            <h2> Dust exposure per cycle for each aircraft</h2>
         </div>
-        <div class="third" style=" background-image: url('../static/photos/chart2.png');
-        background-size:cover;" onclick="showGraph('3')">
-            <h2 style="color: #5e9ca0; position: absolute; "> Predicted and working cycles</h2>
+        <div class="third" onclick="showGraph('3')">
+            <h2> Predicted and working cycles for aircrafts</h2>
         </div>
-        <div class="second" style="background-image: url('../static/photos/chart3.png');
-        background-size:100%;" onclick="showGraph('4')">
+        <div class="second" onclick="showGraph('2')">
+            <h2> Chance of failure per cycle for each aircraft</h2>
         </div>
-        <div class="fourth">Income graph
+        <div class="fourth" onclick="showGraph('4')">
+            <h2> Remaining cycles depending on how many working ones until now</h2>
         </div>
-        <div class="last">last
+        <div class="last">
+              <h2> Last tile</h2>
         </div>
     </div>
     ​

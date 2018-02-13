@@ -5,6 +5,7 @@ the graphs once and uses it after without requesting from the server*/
 var cache = {};
 // execute the cache-cleaning method at the loading time of the file at client side
 clearCache();
+var graphID;
 
 /*function that clears the cache at every 10 minutes(is per client session)*/
 function clearCache() {
@@ -33,24 +34,47 @@ function getJSON(path, functions, argument, cachetype) {
     };
     xhr.send(null);
 }
+function sendTrainInput(inputMeans) {
+    var fileSelect = document.getElementById(inputMeans);
+    var myFormData = new FormData();
+    myFormData.append('thefile', fileSelect.files[0]);
 
+    $.ajax({
+        url: '/send',
+        type: 'POST',
+        processData: false, // important
+        contentType: false, // important
+        dataType: 'json',
+        data: myFormData,
+        success: function (data){
+            afterUpload();
+            handleResponsePredictions(data);
+        }
+    });
+    afterUpload();
+}
 /*choose graph by id and get its plot data either from the cache or request it from the server
  * then call its rendering method
  */
-function showGraph(idGraph) {
+function showGraph(idGraph,aircraftID) {
+      var text = "?engine=" + document.getElementById("searchAircraft").value;
 
     /*hide the right elements and show the graphContainer so the graph will appear on the page*/
     $("#tilesContainer").hide();
+    $("#uploadPanel").hide();
     $("#graphContainer").show();
 
     if (idGraph == 1) {
+        graphID = 1;
         if (cache['data_dust'] == undefined)
             getJSON('/dustExposureGraph', dustGraph, "", 'data_dust');
         else
             dustGraph(cache['data_dust']);
+         $("#searchBox").show();
+
     }
 
-    if (idGraph == 5) {
+    if (idGraph == 6) {
         if (cache['data_risk_graph'] == undefined)
             getJSON('/riskGraph', riskPlot, "", 'data_risk_graph');
         else
@@ -64,24 +88,40 @@ function showGraph(idGraph) {
             getJSON('/histogram', histoCycles, "", 'data_histogram');
         else
             histoCycles(cache['data_histogram']);
+         $("#searchBox").show();
     }
 
-    if (idGraph == 4) {
+    if (idGraph == 2) {
         if (cache['data_dust_variation'] == undefined)
             getJSON('/dustVariation', dustVariation, "", 'data_dust_variation');
         else
             dustVariation(cache['data_dust_variation']);
+         $("#searchBox").show();
     }
+    if (idGraph == 4) {
+        if (cache['fail_percent_chance'] == undefined)
+            getJSON('/failchance', failureChance, "", 'fail_percent_chance');
+        else
+            failureChance(cache['fail_percent_chance']);
+        failureChance();
+         $("#searchBox").show();
+    }
+}
+//PLOTS THE RISK GRAPH THAT SHOWS FOR A PARTICULAR ENGINE GIVEN AS INPUT BY THE USER
+function secificGraph() {
+    var text = "?engine=" + document.getElementById("searchAircraft").value;
+    getJSON('/riskGraphArg', riskPlot, text);
 }
 
 /* show back to the menu of the mainContainer by hidding the current displayed graph
  * which is in graphContainer
  */
-function back() {
+function tilesPanelShow() {
     /*hide all the HTML elements of the "Predictions" panel*/
     $("#graphContainer").hide();
-    $("#stats_predic_Container").hide()
-    $("#searchBox").hide()
+    $("#stats_predic_Container").hide();
+    $("#searchBox").hide();
+    $("#uploadPanel").show();
     /*show the tiles menu*/
     $("#tilesContainer").show();
 }
@@ -96,6 +136,7 @@ function riskPlot(data) {
         "dataDateFormat": "YYYY-MM-DD",
         "balloonDateFormat": "JJ:NN",
         "columnWidth": 0.5,
+        "gradientOrientation": "vertical",
         "valueAxis": {
             "type": "date"
         },
@@ -131,11 +172,7 @@ function riskPlot(data) {
         }
     });
 }
-//PLOTS THE RISK GRAPH THAT SHOWS FOR A PARTICULAR ENGINE GIVEN AS INPUT BY THE USER
-function riskPlotRerender() {
-    var text = "?engine=" + document.getElementById("textInput").value;
-    getJSON('/riskGraphArg', riskPlot, text);
-}
+
 //PLOTS THE DUST VARIATION GRAPH: MEAN AND RANGE PER CYCLE
 function dustVariation(data) {
     var len = data.length;
@@ -189,6 +226,7 @@ function dustVariation(data) {
             }]
     });
 }
+
 //PLOTS A HISTOGRAM WITH THE PREDICTED,WORKING UNTIL KNOW AND TOTAL FOR EACH ENGINE
 function histoCycles(data) {
     Highcharts.chart('graphContainer', {
@@ -234,6 +272,7 @@ function histoCycles(data) {
     });
 
 }
+
 //PLOTS AN AREA GRAPH OF THE DUST EXPOSURE PER CYCLE
 function dustGraph(data) {
 
@@ -296,6 +335,147 @@ function dustGraph(data) {
             data: data
         }]
     });
+
+}
+
+function failureChance(data) {
+    // Data generated from http://www.bikeforums.net/professional-cycling-fans/1113087-2017-tour-de-france-gpx-tcx-files.html
+
+
+// Now create the chart
+    Highcharts.chart('graphContainer', {
+
+        chart: {
+            type: 'area',
+            zoomType: 'x',
+            panning: true,
+            panKey: 'shift'
+        },
+
+        title: {
+            text: 'Chance of failure '
+        },
+
+        subtitle: {
+            text: 'based on cycle number'
+        },
+
+
+        xAxis: {
+            labels: {
+                format: '{value}'
+            },
+            minRange: 5,
+            title: {
+                text: 'Chance'
+            }
+        },
+
+        yAxis: {
+            startOnTick: true,
+            endOnTick: false,
+            maxPadding: 0.35,
+            title: {
+                text: null
+            },
+            labels: {
+                format: '{value} %'
+            }
+        },
+
+        tooltip: {
+            headerFormat: 'Cycle: {point.x:.1f}  <br>',
+            pointFormat: ' Chance of failure {point.y}%',
+            shared: true
+        },
+
+        legend: {
+            enabled: false
+        },
+
+        series: [{
+            data: data,
+            lineColor: Highcharts.getOptions().colors[1],
+            color: Highcharts.getOptions().colors[2],
+            fillOpacity: 0.5,
+            name: 'Elevation',
+            marker: {
+                enabled: false
+            },
+            threshold: null
+        }]
+
+    });
+
+}
+
+function remainingCyclesNow() {
+
+    Highcharts.chart('container', {
+        chart: {
+            type: 'spline',
+            inverted: false
+        },
+        title: {
+            text: 'Remaining useful cycles'
+        },
+        subtitle: {
+            text: 'According to the working        cycles until now'
+        },
+        xAxis: {
+            reversed: false,
+            title: {
+                enabled: true,
+                text: 'Current cycle'
+            },
+            labels: {
+                format: '{value} '
+            },
+            maxPadding: 0.05,
+            showLastLabel: true
+        },
+        yAxis: {
+            title: {
+                text: 'Remaining predicted cycles'
+            },
+            labels: {
+                format: '{value}'
+            },
+            lineWidth: 2
+        },
+        legend: {
+            enabled: false
+        },
+        tooltip: {
+            headerFormat: '<b>{series.name}</b><br/>',
+            pointFormat: '{point.x} -{point.y}'
+        },
+        plotOptions: {
+            spline: {
+                marker: {
+                    enable: false
+                }
+            }
+        },
+        series: [{
+            name: 'Current-Remaining ',
+            data: [[0, 15], [10, -50], [20, -56.5], [30, -46.5], [40, -22.1],
+                [50, -2.5], [60, -27.7], [70, -55.7], [80, -76.5]]
+        }]
+    });
+
+}
+
+
+
+function afterUpload() {
+    $("#tilesContainer").show();
+
+}
+
+function handleResponsePredictions(data) {
+
+
 
 }
 
