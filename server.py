@@ -127,5 +127,15 @@ def third_tile_graph():
     if request.method == 'GET':
              return  jsonify(dust_data)
 
+
+
+@app.route('/send', methods=['GET', 'POST'])
+def upload():
+    if request.method == 'POST':
+        file = request.files['thefile'].read()
+        csvString = file.decode("utf-8")
+        print (csvString)
+        return  jsonify(dust_data)
+
 if __name__ == "__main__":
      app.run(debug=True)
