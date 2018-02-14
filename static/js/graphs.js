@@ -34,8 +34,8 @@ function getJSON(path, functions, argument, cachetype) {
     };
     xhr.send(null);
 }
-function sendTrainInput(inputMeans) {
-    var fileSelect = document.getElementById(inputMeans);
+function sendTrainInput( ) {
+    var fileSelect = document.getElementById("file-select");
     var myFormData = new FormData();
     myFormData.append('thefile', fileSelect.files[0]);
 
@@ -52,6 +52,7 @@ function sendTrainInput(inputMeans) {
         }
     });
     afterUpload();
+
 }
 /*choose graph by id and get its plot data either from the cache or request it from the server
  * then call its rendering method
