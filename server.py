@@ -1,6 +1,6 @@
-import   os
+import  os
 import csv
-
+import backendController
 try: # Windows needs stdio set for binary mode.
      import msvcrt
      msvcrt.setmode (0, os.O_BINARY) # stdin  = 0
@@ -134,7 +134,7 @@ def upload():
     if request.method == 'POST':
         file = request.files['thefile'].read()
         csvString = file.decode("utf-8")
-        print (csvString)
+        print (backendController.getMultiClassPredictorForCSVdata(csvString))
         return  jsonify(dust_data)
 
 if __name__ == "__main__":
