@@ -95,9 +95,9 @@
                 <!-- Upload core panel -->
                 <h4>Select files from your computer</h4>
                 <div style="display: block; text-align: left">
-                    <input type="file" id="file-select" name="thefile">
+                    <input type="file" enctype="multipart/form-data" id="file-select" name="thefile">
                     <button type="button" type="reset" id="upload-button" class="btn btn-info"
-                            onclick="sendTrainInput('file-select');" > Upload</button>
+                            onclick="sendTrainInput();" > Upload</button>
                 </div>
             </div>
 
