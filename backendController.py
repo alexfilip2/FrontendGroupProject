@@ -16,6 +16,7 @@ headers3c = {'Content-Type':'application/json', 'Authorization':('Bearer '+ api_
 
 def getMultiClassPredictorForCSVdata(data):
     dataRows = data.split('\n')
+    dataRows = dataRows[:-1]
     dataArray = []
     for i in range(0, len(dataRows)):
         dataArray.append(dataRows[i].split(' '))
@@ -34,9 +35,7 @@ def getMultiClassPredictorForValues(arrayOfValues):
 
 def getDataObjectForValues(arrayOfValues):
     object = {
-
         "Inputs": {
-
             "input1":
                 {
                     "ColumnNames": ["id", "cycle", "setting1", "setting2", "setting3", "s1", "s2", "s3", "s4", "s5",
