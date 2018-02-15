@@ -100,33 +100,27 @@
 <!-- buttons for main panels controls: Graphs and Predictions -->
 <div id="secondaryMenu" class="mybox">
     <input id="tab1" type="radio" name="tabs" checked>
-    <label for="tab1" onclick="tilesPanelShow()">Upload</label>
+    <label for="tab1" onclick="aircraftListAction()">Aircraft List</label>
 
     <input id="tab2" type="radio" name="tabs">
     <label for="tab2" onclick="tilesPanelShow()">Graphs</label>
 
     <input id="tab3" type="radio" name="tabs">
-    <label for="tab3"  onclick="showGraph('6')">Predictions</label>
+    <label for="tab3"  onclick="predictionTabAction()">Predictions</label>
 
 </div>
 
 
 <!-- the main container of the page that includes the graphs and prediction sub-panels-->
-<div class="mybox" id="mainContainer" style="margin-bottom: 200px;  height: 100%">
+<div class="mybox" id="mainContainer" style="margin-bottom: 200px;  height: 230px; ">
 
-
-
-
-
-
-
-    <div class="mybox" style= "height: 200px">
+    <div id="planeList" class="mybox" style= "height: 300px; background: #e6e6e6">
     <ul class="list-group" style="width: 80%">
-  <li class="list-group-item">Cras justo odio</li>
-  <li class="list-group-item">Dapibus ac facilisis in</li>
-  <li class="list-group-item">Morbi leo risus</li>
-  <li class="list-group-item">Porta ac consectetur ac</li>
-  <li class="list-group-item">Vestibulum at eros</li>
+  <li class="list-group-item highlight-on-hover">Cras justo odio</li>
+  <li class="list-group-item highlight-on-hover">Dapibus ac facilisis in</li>
+  <li class="list-group-item highlight-on-hover">Morbi leo risus</li>
+  <li class="list-group-item highlight-on-hover">Porta ac consectetur ac</li>
+  <li class="list-group-item highlight-on-hover">Vestibulum at eros</li>
 </ul>
     </div>
 
@@ -217,7 +211,7 @@
         </div>
     </div>
     ​
-</div>
+</>
 
 <script>
     /*function that assign a date picker calendar to each text field each time a new one is added*/

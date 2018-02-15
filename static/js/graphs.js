@@ -57,6 +57,16 @@ function sendTrainInput( ) {
 /*choose graph by id and get its plot data either from the cache or request it from the server
  * then call its rendering method
  */
+
+ function predictionTabAction(){
+    showGraph('6');
+    $("#graphContainer").show();
+    $("#stats_predic_Container").show();
+    $("#searchBox").show();
+    $("#planeList").hide();
+    $("#tilesContainer").hide();
+ }
+
 function showGraph(idGraph,aircraftID) {
       var text = "?engine=" + document.getElementById("searchAircraft").value;
 
@@ -126,7 +136,7 @@ function tilesPanelShow() {
     $("#graphContainer").hide();
     $("#stats_predic_Container").hide();
     $("#searchBox").hide();
-    $("#uploadPanel").show();
+    $("#planeList").hide();
     /*show the tiles menu*/
     $("#tilesContainer").show();
 }
@@ -487,4 +497,12 @@ function handleResponsePredictions(data) {
 
 
 
+function aircraftListAction(){
+    $("#graphContainer").hide();
+    $("#stats_predic_Container").hide();
+    $("#searchBox").hide();
+    $("#planeList").show();
+    $("#tilesContainer").hide();
+    $("#mainContainer").show();
 
+}

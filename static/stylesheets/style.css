@@ -266,3 +266,7 @@ li {
 
 
 }
+
+.highlight-on-hover:hover{
+    background: #e6ffff
+}
