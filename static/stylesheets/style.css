@@ -1,3 +1,5 @@
+
+
 * {
     -webkit-box-sizing: content-box;
     -moz-box-sizing: content-box;
@@ -229,4 +231,38 @@ input[type=submit]:hover {
 .upload-drop-zone.drop {
     color: #222;
     border-color: #222;
+}
+
+#uploadPanel{
+
+    position:absolute;
+margin-left: 40%;
+
+
+}
+ul {
+  position: relative;
+  top: 20px;
+  bottom: 20px;
+  left: 20px;
+  right: 20px;
+  overflow: scroll;
+  margin: 0;
+  padding: 0;
+
+  border: 2px solid #ccc;
+
+  font-size: 16px;
+  font-family: Arial, sans-serif;
+   list-style-position: inside;
+  // Again, this is where the magic happens
+  -webkit-overflow-scrolling: touch;
+}
+
+li {
+  padding: 10px 20px;
+
+  border-bottom: 1px solid #ccc;
+
+
 }

@@ -113,6 +113,10 @@ function secificGraph() {
     var text = "?engine=" + document.getElementById("searchAircraft").value;
     getJSON('/riskGraphArg', riskPlot, text);
 }
+function displayUpload() {
+    $("#collapsedUploadPanel").show();
+
+}
 
 /* show back to the menu of the mainContainer by hidding the current displayed graph
  * which is in graphContainer
