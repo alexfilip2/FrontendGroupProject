@@ -38,9 +38,15 @@
     <script src="https://www.amcharts.com/lib/3/themes/light.js"></script>
     <script src="https://www.amcharts.com/lib/3/plugins/export/export.min.js"></script>
 
+
+
 </head>
 
+<<<<<<< HEAD
 <body>
+=======
+<body style="background-color:#fff; margin:0;" onload="addListItems({{ itemslist }})">
+>>>>>>> master
 
 <div id="containerTitle">
     <div id="pageTitle">
@@ -55,7 +61,11 @@
     <a href="#" class="topbtn">About</a>
     <a href="#" class="topbtn">Services</a>
     <a href="#" class="topbtn">Contact</a>
+<<<<<<< HEAD
     <button type="button" id="buttonUpload" class="btn-default topbtn" data-toggle="collapse" data-target="#uploadPanel">Upload
+=======
+    <button type="button" id="buttonUpload" class=" topbtn" data-toggle="collapse" data-target="#uploadPanel">Upload
+>>>>>>> master
     </button>
     <div id="uploadPanel" class="collapse" style="width: 40%; float: right">
         <div>
@@ -70,20 +80,48 @@
                     <h4>Select files from your computer</h4>
                     <div style="display: block; text-align: left">
                         <input type="file" enctype="multipart/form-data" id="file-select" name="thefile">
+<<<<<<< HEAD
                         <button type="button" type="reset" id="upload-button" class="btn btn-default"
                                 onclick="sendCSVToBackend();"> Upload
+=======
+                        <button type="button" type="reset" id="upload-button" class="btn btn-info"
+                                onclick="sendTrainInput();"> Upload
+>>>>>>> master
                         </button>
                     </div>
                 </div>
 
             </div>
         </div>
+<<<<<<< HEAD
 
     </div>
+=======
+
+    </div>
+
+
+    <!-- welcome and intructions container-->
+    <h1 style="font-size: 50px; color: #1C2A38;">Welcome to the predictive aircraft maintenance engine!</h1>
+
+
+    <p>1.<span style="background-color: #5e9ca0; color: #fff; display: inline-block;
+    padding: 3px 10px; font-weight: bold; border-radius: 5px;">
+        Upload</span> the file containing the data describing the engine <br/>
+        Submit it and get the failure point predictions.&nbsp;</p>
+    <p>2. Click the <span style="background-color: #5e9ca0; color: #fff; display: inline-block;
+    padding: 3px 10px; font-weight: bold; border-radius: 5px;">
+        Graphs</span> button to vizualize the tiles panel.</p>
+    <p>3. Click the <span style="background-color: #5e9ca0; color: #fff; display: inline-block;
+    padding: 3px 10px; font-weight: bold; border-radius: 5px;">
+        Predictions</span> button to vizualize the predicted failure points.</p>
+    <h2 style="color: #5e9ca0;">&nbsp;</h2>
+>>>>>>> master
 
     <h1 class="welcomeTitle">Welcome to the predictive aircraft maintenance engine!</h1>
 </div>
 
+<<<<<<< HEAD
     <div id="instructionsContainer" class="container instructionsContainer">
         <ul class = "instructionsList">
             <li class="list-group-item"><span style="background-color: #5e9ca0; color: #fff; display: inline-block;
@@ -99,6 +137,9 @@
         </ul>
     </div>
 
+=======
+</div>
+>>>>>>> master
 
 
 <!-- buttons for main panels controls: Graphs and Predictions -->
@@ -110,13 +151,18 @@
     <label for="tab2" onclick="graphTabShow()">Graphs</label>
 
     <input id="tab3" type="radio" name="tabs">
+<<<<<<< HEAD
     <label for="tab3" onclick="predictionTabShow()">Predictions</label>
+=======
+    <label for="tab3" onclick="predictionTabAction()">Predictions</label>
+>>>>>>> master
 
 </div>
 
 
 <!-- the main container of the page that includes the graphs and prediction sub-panels-->
 <div class="mybox" id="mainContainer" style="margin-bottom: 200px;  height: 230px; ">
+<<<<<<< HEAD
 
     <div id="planeList" class="mybox" style="height: 300px; background: #e6e6e6">
         <ul class="list-group" style="width: 80%">
@@ -125,6 +171,12 @@
             <li class="list-group-item highlight-on-hover">Morbi leo risus</li>
             <li class="list-group-item highlight-on-hover">Porta ac consectetur ac</li>
             <li class="list-group-item highlight-on-hover">Vestibulum at eros</li>
+=======
+    <button onclick="addListItem('new')">ADD</button>
+    <div class="mybox" id="planeList" style="height: 350px; background: #e6e6e6">
+        <ul class="list-group" id="itemlist"
+            style=" overflow: scroll;width: 80%; max-height: 250px; margin-bottom: 200px">
+>>>>>>> master
         </ul>
     </div>
 
