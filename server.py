@@ -92,11 +92,11 @@ dust_data =[
         [12, 11.6, 21.8,15],
         [15, 10.7, 23.7,16],
         [15, 11.0, 23.3,17] ]
-
+aircraft_list =  ["frsr","feasrd1","erdbf"]
 
 @app.route("/")
 def main():
-    return render_template('main_screen.html')
+    return render_template('main_screen.html', itemslist = aircraft_list)
 
 @app.route('/dustExposureGraph', methods=['GET', 'POST'])
 def first_tile_graph():

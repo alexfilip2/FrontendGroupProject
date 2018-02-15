@@ -57,16 +57,6 @@ function sendTrainInput( ) {
 /*choose graph by id and get its plot data either from the cache or request it from the server
  * then call its rendering method
  */
-
- function predictionTabAction(){
-    showGraph('6');
-    $("#graphContainer").show();
-    $("#stats_predic_Container").show();
-    $("#searchBox").show();
-    $("#planeList").hide();
-    $("#tilesContainer").hide();
- }
-
 function showGraph(idGraph,aircraftID) {
       var text = "?engine=" + document.getElementById("searchAircraft").value;
 
@@ -136,7 +126,7 @@ function tilesPanelShow() {
     $("#graphContainer").hide();
     $("#stats_predic_Container").hide();
     $("#searchBox").hide();
-    $("#planeList").hide();
+    $("#uploadPanel").show();
     /*show the tiles menu*/
     $("#tilesContainer").show();
 }
@@ -494,28 +484,7 @@ function handleResponsePredictions(data) {
 
 }
 
-    function interactiveCalendar() {
-        $(document).ready(function () {
-            for (i = 1; i <= fieldId; i++) {
-                var nameField = "field" + i;
-                var date_input = $('input[name=' + nameField + ']'); //our date input has the name "field"+ its number
-                var container = $('.bootstrap-iso form').length > 0 ? $('.bootstrap-iso form').parent() : "body";
-                date_input.datepicker({
-                    format: 'mm/dd/yyyy',
-                    container: container,
-                    todayHighlight: true,
-                    autoclose: true,
-                });
-            }
-        });
-    }
 
-function aircraftListAction(){
-    $("#graphContainer").hide();
-    $("#stats_predic_Container").hide();
-    $("#searchBox").hide();
-    $("#planeList").show();
-    $("#tilesContainer").hide();
-    $("#mainContainer").show();
 
-}
+
+

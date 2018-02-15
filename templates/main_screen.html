@@ -34,9 +34,11 @@
     <script src="https://www.amcharts.com/lib/3/themes/light.js"></script>
     <script src="https://www.amcharts.com/lib/3/plugins/export/export.min.js"></script>
 
+
+
 </head>
 
-<body style="background-color:#fff; margin:0;">
+<body style="background-color:#fff; margin:0;" onload="addListItems({{ itemslist }})">
 
 <div id="containerTitle">
     <div id="pageTitle">
@@ -51,36 +53,38 @@
     <a href="#" class="topbtn">About</a>
     <a href="#" class="topbtn">Services</a>
     <a href="#" class="topbtn">Contact</a>
-      <button type="button" id="buttonUpload" class=" topbtn" data-toggle="collapse" data-target="#uploadPanel">Upload</button>
- <div id="uploadPanel" class="collapse" style="width: 40%; float: right">
-     <div >
-    <div class="panel panel-default"   style="width: 100%; ">
+    <button type="button" id="buttonUpload" class=" topbtn" data-toggle="collapse" data-target="#uploadPanel">Upload
+    </button>
+    <div id="uploadPanel" class="collapse" style="width: 40%; float: right">
+        <div>
+            <div class="panel panel-default" style="width: 100%; ">
 
-            <div class="panel-heading"><strong>Upload Files</strong>
-                <small>Upload the dataset</small>
-            </div>
-
-            <div class="panel-body">
-                <!-- Upload core panel -->
-                <h4>Select files from your computer</h4>
-                <div style="display: block; text-align: left">
-                    <input type="file" enctype="multipart/form-data" id="file-select" name="thefile">
-                    <button type="button" type="reset" id="upload-button" class="btn btn-info"
-                            onclick="sendTrainInput();" > Upload</button>
+                <div class="panel-heading"><strong>Upload Files</strong>
+                    <small>Upload the dataset</small>
                 </div>
+
+                <div class="panel-body">
+                    <!-- Upload core panel -->
+                    <h4>Select files from your computer</h4>
+                    <div style="display: block; text-align: left">
+                        <input type="file" enctype="multipart/form-data" id="file-select" name="thefile">
+                        <button type="button" type="reset" id="upload-button" class="btn btn-info"
+                                onclick="sendTrainInput();"> Upload
+                        </button>
+                    </div>
+                </div>
+
             </div>
-
         </div>
-         </div>
 
-</div>
+    </div>
 
 
     <!-- welcome and intructions container-->
     <h1 style="font-size: 50px; color: #1C2A38;">Welcome to the predictive aircraft maintenance engine!</h1>
 
 
-     <p>1.<span style="background-color: #5e9ca0; color: #fff; display: inline-block;
+    <p>1.<span style="background-color: #5e9ca0; color: #fff; display: inline-block;
     padding: 3px 10px; font-weight: bold; border-radius: 5px;">
         Upload</span> the file containing the data describing the engine <br/>
         Submit it and get the failure point predictions.&nbsp;</p>
@@ -91,7 +95,6 @@
     padding: 3px 10px; font-weight: bold; border-radius: 5px;">
         Predictions</span> button to vizualize the predicted failure points.</p>
     <h2 style="color: #5e9ca0;">&nbsp;</h2>
-
 
 
 </div>
@@ -106,24 +109,19 @@
     <label for="tab2" onclick="tilesPanelShow()">Graphs</label>
 
     <input id="tab3" type="radio" name="tabs">
-    <label for="tab3"  onclick="predictionTabAction()">Predictions</label>
+    <label for="tab3" onclick="predictionTabAction()">Predictions</label>
 
 </div>
 
 
 <!-- the main container of the page that includes the graphs and prediction sub-panels-->
 <div class="mybox" id="mainContainer" style="margin-bottom: 200px;  height: 230px; ">
-
-    <div id="planeList" class="mybox" style= "height: 300px; background: #e6e6e6">
-    <ul class="list-group" style="width: 80%">
-  <li class="list-group-item highlight-on-hover">Cras justo odio</li>
-  <li class="list-group-item highlight-on-hover">Dapibus ac facilisis in</li>
-  <li class="list-group-item highlight-on-hover">Morbi leo risus</li>
-  <li class="list-group-item highlight-on-hover">Porta ac consectetur ac</li>
-  <li class="list-group-item highlight-on-hover">Vestibulum at eros</li>
-</ul>
+    <button onclick="addListItem('new')">ADD</button>
+    <div class="mybox" id="planeList" style="height: 350px; background: #e6e6e6">
+        <ul class="list-group" id="itemlist"
+            style=" overflow: scroll;width: 80%; max-height: 250px; margin-bottom: 200px">
+        </ul>
     </div>
-
 
 
     <!-- container showed on Predictions panel which contains the failure predictions-->
@@ -168,7 +166,13 @@
                                         </td>
                                     </tr>
 
-   </tbody></table></div></div></div></div></div>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
 
             <h1 style="text-align: left">Multi-way prediction</h1>
@@ -207,7 +211,7 @@
             <h2> Remaining cycles depending on how many working ones until now</h2>
         </div>
         <div class="last hover-expand">
-              <h2> Last tile</h2>
+            <h2> Last tile</h2>
         </div>
     </div>
     ​
