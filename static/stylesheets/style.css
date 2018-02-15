@@ -1,4 +1,7 @@
-
+body{
+    background-color:#fff;
+    margin:0;
+}
 
 * {
     -webkit-box-sizing: content-box;
@@ -34,11 +37,14 @@
 }
 
 h1 {
-
     font-size: 35px;
     color: #1C2A38;
     margin-left: 10px;
+}
 
+.welcomeTitle {
+    color: mintcream;
+    font-size: 50px
 }
 
 .col-sm-offset-2 {
@@ -52,7 +58,28 @@ h1 {
     padding-right: 10%;
     clear: left;
     display: block;
+}
 
+.titlesContainer {
+    padding-top: 15px;
+    background-color:#1D364E;
+    position: relative;
+    height: 350px
+}
+
+.instructionsList li:before {
+    content: "\e080";
+    font-family: 'Glyphicons Halflings';
+    float: left;
+    margin-right: 5px
+}
+
+.instructionsList {
+    border:none
+}
+
+.instructionsContainer {
+    margin-bottom: 50px
 }
 
 #containerTitle {
@@ -76,7 +103,7 @@ h1 {
     padding-right: 10%;
     padding-top: 60px;
     padding-bottom: 60px;
-    height: 500px;
+    height: 200px;
     min-height: 100%;
     background-color: #e6e6e6;
 }
@@ -238,6 +265,6 @@ li {
 
 }
 
-.highlight-on-hover: hover{
+.highlight-on-hover:hover {
     background: #e6ffff
 }

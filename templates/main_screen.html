@@ -21,8 +21,12 @@
     <script type="text/javascript"
             src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
     <!-- Include the javascript custom files for the custom functions-->
-    <script src="{{ url_for('static', filename='js/graphs.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/constants.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/graphs-data-fetch.js') }}"></script>
     <script src="{{ url_for('static', filename='js/selection.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/calendar.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/tabs.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/graphs.js') }}"></script>
     <!-- Include the javascript libraries for plots from highcharts and amcharts-->
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://code.highcharts.com/highcharts-more.js"></script>
@@ -36,77 +40,77 @@
 
 </head>
 
-<body style="background-color:#fff; margin:0;">
+<body>
 
 <div id="containerTitle">
     <div id="pageTitle">
-        <h2 style="text-align: left"><span><strong>Predictive aircraft maintenance</strong></span></h2>
+        <h2 class="display-2"><span><strong>Predictive aircraft maintenance</strong></span></h2>
     </div>
 </div>
 
 <!-- top navigation with links buttons that move to another web page-->
-<div class="mybox" style="padding-top: 15px ;background-color:#1D364E; position: relative;  height: 500px">
+<div class="mybox titlesContainer">
 
     <a href="#" class="topbtn">Home</a>
     <a href="#" class="topbtn">About</a>
     <a href="#" class="topbtn">Services</a>
     <a href="#" class="topbtn">Contact</a>
-      <button type="button" id="buttonUpload" class=" topbtn" data-toggle="collapse" data-target="#uploadPanel">Upload</button>
- <div id="uploadPanel" class="collapse" style="width: 40%; float: right">
-     <div >
-    <div class="panel panel-default"   style="width: 100%; ">
+    <button type="button" id="buttonUpload" class="btn-default topbtn" data-toggle="collapse" data-target="#uploadPanel">Upload
+    </button>
+    <div id="uploadPanel" class="collapse" style="width: 40%; float: right">
+        <div>
+            <div class="panel panel-default" style="width: 100%; ">
 
-            <div class="panel-heading"><strong>Upload Files</strong>
-                <small>Upload the dataset</small>
-            </div>
-
-            <div class="panel-body">
-                <!-- Upload core panel -->
-                <h4>Select files from your computer</h4>
-                <div style="display: block; text-align: left">
-                    <input type="file" enctype="multipart/form-data" id="file-select" name="thefile">
-                    <button type="button" type="reset" id="upload-button" class="btn btn-info"
-                            onclick="sendTrainInput();" > Upload</button>
+                <div class="panel-heading"><strong>Upload Files</strong>
+                    <small>Upload the dataset</small>
                 </div>
+
+                <div class="panel-body">
+                    <!-- Upload core panel -->
+                    <h4>Select files from your computer</h4>
+                    <div style="display: block; text-align: left">
+                        <input type="file" enctype="multipart/form-data" id="file-select" name="thefile">
+                        <button type="button" type="reset" id="upload-button" class="btn btn-default"
+                                onclick="sendCSVToBackend();"> Upload
+                        </button>
+                    </div>
+                </div>
+
             </div>
-
         </div>
-         </div>
 
+    </div>
+
+    <h1 class="welcomeTitle">Welcome to the predictive aircraft maintenance engine!</h1>
 </div>
 
+    <div id="instructionsContainer" class="container instructionsContainer">
+        <ul class = "instructionsList">
+            <li class="list-group-item"><span style="background-color: #5e9ca0; color: #fff; display: inline-block;
+            padding: 3px 10px; font-weight: bold; border-radius: 5px;">
+                Upload</span> the file containing the data describing the engine <br/>
+                Submit it and get the failure point predictions.&nbsp;</li>
+            <li class="list-group-item">Click the <span style="background-color: #5e9ca0; color: #fff; display: inline-block;
+            padding: 3px 10px; font-weight: bold; border-radius: 5px;">
+                Graphs</span> button to vizualize the tiles panel.</li>
+            <li class="list-group-item">Click the <span style="background-color: #5e9ca0; color: #fff; display: inline-block;
+            padding: 3px 10px; font-weight: bold; border-radius: 5px;">
+                Predictions</span> button to vizualize the predicted failure points.</li>
+        </ul>
+    </div>
 
-    <!-- welcome and intructions container-->
-    <h1 style="font-size: 50px; color: #1C2A38;">Welcome to the predictive aircraft maintenance engine!</h1>
-
-
-     <p>1.<span style="background-color: #5e9ca0; color: #fff; display: inline-block;
-    padding: 3px 10px; font-weight: bold; border-radius: 5px;">
-        Upload</span> the file containing the data describing the engine <br/>
-        Submit it and get the failure point predictions.&nbsp;</p>
-    <p>2. Click the <span style="background-color: #5e9ca0; color: #fff; display: inline-block;
-    padding: 3px 10px; font-weight: bold; border-radius: 5px;">
-        Graphs</span> button to vizualize the tiles panel.</p>
-    <p>3. Click the <span style="background-color: #5e9ca0; color: #fff; display: inline-block;
-    padding: 3px 10px; font-weight: bold; border-radius: 5px;">
-        Predictions</span> button to vizualize the predicted failure points.</p>
-    <h2 style="color: #5e9ca0;">&nbsp;</h2>
-
-
-
-</div>
 
 
 <!-- buttons for main panels controls: Graphs and Predictions -->
 <div id="secondaryMenu" class="mybox">
     <input id="tab1" type="radio" name="tabs" checked>
-    <label for="tab1" onclick="aircraftListAction()">Aircraft List</label>
+    <label for="tab1" onclick="aircraftsTabShow()">Aircraft List</label>
 
     <input id="tab2" type="radio" name="tabs">
-    <label for="tab2" onclick="tilesPanelShow()">Graphs</label>
+    <label for="tab2" onclick="graphTabShow()">Graphs</label>
 
     <input id="tab3" type="radio" name="tabs">
-    <label for="tab3"  onclick="predictionTabAction()">Predictions</label>
+    <label for="tab3" onclick="predictionTabShow()">Predictions</label>
 
 </div>
 
@@ -114,16 +118,15 @@
 <!-- the main container of the page that includes the graphs and prediction sub-panels-->
 <div class="mybox" id="mainContainer" style="margin-bottom: 200px;  height: 230px; ">
 
-    <div id="planeList" class="mybox" style= "height: 300px; background: #e6e6e6">
-    <ul class="list-group" style="width: 80%">
-  <li class="list-group-item highlight-on-hover">Cras justo odio</li>
-  <li class="list-group-item highlight-on-hover">Dapibus ac facilisis in</li>
-  <li class="list-group-item highlight-on-hover">Morbi leo risus</li>
-  <li class="list-group-item highlight-on-hover">Porta ac consectetur ac</li>
-  <li class="list-group-item highlight-on-hover">Vestibulum at eros</li>
-</ul>
+    <div id="planeList" class="mybox" style="height: 300px; background: #e6e6e6">
+        <ul class="list-group" style="width: 80%">
+            <li class="list-group-item highlight-on-hover">Cras justo odio</li>
+            <li class="list-group-item highlight-on-hover">Dapibus ac facilisis in</li>
+            <li class="list-group-item highlight-on-hover">Morbi leo risus</li>
+            <li class="list-group-item highlight-on-hover">Porta ac consectetur ac</li>
+            <li class="list-group-item highlight-on-hover">Vestibulum at eros</li>
+        </ul>
     </div>
-
 
 
     <!-- container showed on Predictions panel which contains the failure predictions-->
@@ -132,7 +135,7 @@
         <section id="searchBox" style="display: none">
             <form id="aircraftSearch">
                 <input id="searchAircraft" placeholder="Which aircraft are you looking for?">
-                <button type="reset" onclick="secificGraph()">Search</button>
+                <button type="reset" onclick="riskForOnePlaneGraph()">Search</button>
             </form>
         </section>
 
@@ -168,7 +171,13 @@
                                         </td>
                                     </tr>
 
-   </tbody></table></div></div></div></div></div>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
 
             <h1 style="text-align: left">Multi-way prediction</h1>
@@ -193,7 +202,6 @@
     </div>
     <!-- container showed on Graphs panel which contains the tile menu-->
     <div id="tilesContainer" style="display: none">
-
         <div class="first hover-expand" onclick="showGraph('1')">
             <h2> Dust exposure per cycle for each aircraft</h2>
         </div>
@@ -207,7 +215,7 @@
             <h2> Remaining cycles depending on how many working ones until now</h2>
         </div>
         <div class="last hover-expand">
-              <h2> Last tile</h2>
+            <h2> Last tile</h2>
         </div>
     </div>
     ​
