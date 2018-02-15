@@ -1,67 +1,4 @@
-<<<<<<< HEAD
 function showGraph(idGraph) {
-=======
-//is used as the base url address on which xmlhttp GET requests are sent
-var BASE_URL = 'http://127.0.0.1:5000'
-/* cache variable  at the client side - JSON that stores the data needed to plot
-the graphs once and uses it after without requesting from the server*/
-var cache = {};
-// execute the cache-cleaning method at the loading time of the file at client side
-clearCache();
-var graphID;
-
-/*function that clears the cache at every 10 minutes(is per client session)*/
-function clearCache() {
-    cache = {};
-    //repeat the cleaning at some fixed interval
-    setTimeout(clearCache, 1000 * 60 * 10);
-}
-
-/*GET request to the server that takes the data necessary for plotting "functions" and the
- * argmuent in case some part of data is requested by the user (only one aircraft for example)
- * this function also takes the cachetype which is the key of the element of the cache where this
- * particular graph data is stored
- */
-function getJSON(path, functions, argument, cachetype) {
-
-    url = BASE_URL + path;
-    xhr = new XMLHttpRequest();
-    xhr.open("GET", url + argument, true);
-
-    xhr.onreadystatechange = function () {
-        if (xhr.status == 200) {
-            if (!xhr.response) return;
-            cache[cachetype] = JSON.parse(xhr.response);
-            functions(cache[cachetype]);
-        }
-    };
-    xhr.send(null);
-}
-function sendTrainInput( ) {
-    var fileSelect = document.getElementById("file-select");
-    var myFormData = new FormData();
-    myFormData.append('thefile', fileSelect.files[0]);
-
-    $.ajax({
-        url: '/send',
-        type: 'POST',
-        processData: false, // important
-        contentType: false, // important
-        dataType: 'json',
-        data: myFormData,
-        success: function (data){
-            afterUpload();
-            handleResponsePredictions(data);
-        }
-    });
-    afterUpload();
-
-}
-/*choose graph by id and get its plot data either from the cache or request it from the server
- * then call its rendering method
- */
-function showGraph(idGraph,aircraftID) {
->>>>>>> master
       var text = "?engine=" + document.getElementById("searchAircraft").value;
 
     /*hide the right elements and show the graphContainer so the graph will appear on the page*/
@@ -112,23 +49,9 @@ function showGraph(idGraph,aircraftID) {
     }
 }
 
-<<<<<<< HEAD
 function riskForOnePlaneGraph() {
     var text = "?engine=" + document.getElementById("searchAircraft").value;
     getJSONFromBackend('/riskGraphArg', riskPlot, text);
-=======
-/* show back to the menu of the mainContainer by hidding the current displayed graph
- * which is in graphContainer
- */
-function tilesPanelShow() {
-    /*hide all the HTML elements of the "Predictions" panel*/
-    $("#graphContainer").hide();
-    $("#stats_predic_Container").hide();
-    $("#searchBox").hide();
-    $("#uploadPanel").show();
-    /*show the tiles menu*/
-    $("#tilesContainer").show();
->>>>>>> master
 }
 
 function plotRiskGraph(data) {
@@ -204,7 +127,6 @@ function plotDustVariationGraph(data) {
         legend: {},
 
         series: [
-
             {
                 name: 'Mean dust amount',
                 data: average,
@@ -459,27 +381,4 @@ function remainingCyclesNow() {
                 [50, -2.5], [60, -27.7], [70, -55.7], [80, -76.5]]
         }]
     });
-
-<<<<<<< HEAD
 }
-=======
-}
-
-
-
-function afterUpload() {
-    $("#tilesContainer").show();
-
-}
-
-function handleResponsePredictions(data) {
-
-
-
-}
-
-
-
-
-
->>>>>>> master
