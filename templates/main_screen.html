@@ -194,43 +194,24 @@
     <!-- container showed on Graphs panel which contains the tile menu-->
     <div id="tilesContainer" style="display: none">
 
-        <div class="first" onclick="showGraph('1')">
+        <div class="first hover-expand" onclick="showGraph('1')">
             <h2> Dust exposure per cycle for each aircraft</h2>
         </div>
-        <div class="third" onclick="showGraph('3')">
+        <div class="third hover-expand" onclick="showGraph('3')">
             <h2> Predicted and working cycles for aircrafts</h2>
         </div>
-        <div class="second" onclick="showGraph('2')">
+        <div class="second hover-expand" onclick="showGraph('2')">
             <h2> Chance of failure per cycle for each aircraft</h2>
         </div>
-        <div class="fourth" onclick="showGraph('4')">
+        <div class="fourth hover-expand" onclick="showGraph('4')">
             <h2> Remaining cycles depending on how many working ones until now</h2>
         </div>
-        <div class="last">
+        <div class="last hover-expand">
               <h2> Last tile</h2>
         </div>
     </div>
     ​
-</>
-
-<script>
-    /*function that assign a date picker calendar to each text field each time a new one is added*/
-    function interactiveCalendar() {
-        $(document).ready(function () {
-            for (i = 1; i <= fieldId; i++) {
-                var nameField = "field" + i;
-                var date_input = $('input[name=' + nameField + ']'); //our date input has the name "field"+ its number
-                var container = $('.bootstrap-iso form').length > 0 ? $('.bootstrap-iso form').parent() : "body";
-                date_input.datepicker({
-                    format: 'mm/dd/yyyy',
-                    container: container,
-                    todayHighlight: true,
-                    autoclose: true,
-                });
-            }
-        });
-    }
-</script>
+</div>
 
 </body>
 </html>

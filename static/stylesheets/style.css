@@ -148,41 +148,12 @@ h1 {
 
 }
 
-.first:hover {
-    transform: scale(1.2);
-    background-color: #8c8c8c;
-    opacity: 1;
-    color: #5e9ca0;
-
-}
-
-.second:hover {
-    transform: scale(1.2);
-    background-color: #8c8c8c;
-    color: #5e9ca0;
-    opacity: 1;
-
-}
-
-.third:hover {
+.hover-expand:hover {
     transform: scale(1.2);
     background-color: #8c8c8c;
     color: #5e9ca0;
     opacity: 1;
 }
-
-.fourth:hover {
-    transform: scale(1.2);
-    background-color: #8c8c8c;
-    color: #5e9ca0;
-}
-
-.last:hover {
-    transform: scale(1.2);
-    background-color: #8c8c8c;
-    color: #5e9ca0;
-}
-
 input[type=text] {
     width: 100%;
     padding: 12px 20px;
@@ -267,6 +238,6 @@ li {
 
 }
 
-.highlight-on-hover:hover{
+.highlight-on-hover: hover{
     background: #e6ffff
 }
