@@ -175,7 +175,7 @@ aircraft_list =  ["Aircraft1","Aircraft2","Aircraft2", "Aircraft3","Aircraft4","
 
 @app.route("/")
 def main():
-    return render_template('main_screen.html', itemslist = aircraft_list)
+    return render_template('main_screen.html', itemslist = backendController.getAircraftList())
 
 @app.route('/dustExposureGraph', methods=['GET'])
 def first_tile_graph():
@@ -187,25 +187,25 @@ def fifth_tile_graph():
 
 @app.route('/histogram', methods=['GET'])
 def second_tile_graph():
-        return jsonify(histogram_data)
+        return jsonify(backendController.getLifeDistHistogram())
 
 @app.route('/failchance', methods=['GET'])
 def fourth_tile_graph():
-        return jsonify(fail_chance)
+        return jsonify(backendController.getFailureProbs(2))
 
 @app.route('/dustVariation', methods=['GET'])
 def third_tile_graph():
-        return jsonify(dust_data)
+        return jsonify(backendController.getRULs(2))
 
 @app.route('/riskGraph', methods=['GET'])
 def risk_graph_upload():
-             return  jsonify(risk_graph_data)
+        return  jsonify(backendController.getRiskGraphData())
 
 @app.route('/specificRiskData', methods=['GET'])
 def rerender_risk():
         toSend =[]
         aircraft = request.args.get('engine')
-        for elem in risk_graph_data:
+        for elem in backendController.getRiskGraphData():
             if elem['category'] == aircraft:
                 toSend.append(elem)
         return  jsonify(toSend)
