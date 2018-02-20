@@ -42,6 +42,25 @@ def getAircraftList():
         lst.append(str(row[0]))
     return lst
 
+def getRiskGraphData():
+    cnxn = pyodbc.connect(SQL_connection_text)
+    cursor = cnxn.cursor()
+    aircraftLst = []
+    workingData = []
+    remainingData = []
+    
+    cursor.execute("SELECT * FROM %s JOIN (SELECT id AS mid, MAX(cycle) AS c FROM %s GROUP BY id) Q ON id = mid WHERE c = cycle ORDER BY ID; " % (RUL_DATATABLE, RUL_DATATABLE))
+    for row in cursor.fetchall():
+        aircraftLst.append(float(row[0]))
+        workingData.append(float(row[1]))
+        remainingData.append(float(row[2]))
+    riskgraph = []
+    for i in range(len(aircraftLst)):
+        riskgraph.append({"category" : aircraftLst[i], 
+                          "segments": [{"start": 0, "duration" : workingData[i], "color": "#46615e", "task": "Working"},
+                                       {"duration": remainingData[i], "color": "#727d6f", "task": "Predicted"}]})
+    return riskgraph
+
 def getLifeDistHistogram():
     cnxn = pyodbc.connect(SQL_connection_text)
     cursor = cnxn.cursor()
@@ -103,6 +122,14 @@ def getRULs(aircraftID):
     ret = [[a, round(c[0]*a+c[1]-maxerr,2), round(c[0]*a+c[1]+maxerr,2), b] for a,b in zip(x,y)]
   
     return ret
+
+def getFailureProbs(aircraftID):
+    cnxn = pyodbc.connect(SQL_connection_text)
+    cursor = cnxn.cursor()
+    cursor.execute("SELECT * FROM failure_probability WHERE id="+str(aircraftID)+";")
+    row = cursor.fetchone()
+    predictions = row[2:]
+    return [[x,y] for x,y in zip(range(0,100),predictions)]
 
 def getMultiClassPredictorForCSVdata(data):
     dataRows = data.split('\n')
