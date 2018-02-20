@@ -169,7 +169,7 @@ aircraft_list =  ["frsr","feasrd1","erdbf"]
 
 @app.route("/")
 def main():
-    return render_template('main_screen.html', itemslist = aircraft_list)
+    return render_template('main_screen.html', itemslist = getAircraftList())
 
 @app.route('/dustExposureGraph', methods=['GET', 'POST'])
 def first_tile_graph():
