@@ -1,26 +1,48 @@
-function showGraph(idGraph) {
-      var text = "?engine=" + document.getElementById("searchAircraft").value;
+//Performs cache clearing methods to cause the data for the graphs to be read from the server
+var cache = {};
+clearCache();
+function clearCache() {
+    cache = {};
+    var timeoutPeriodInMins = 10;
+    setTimeout(clearCache, 1000 * 60 * timeoutPeriodInMins);
+}
 
-      /*hide the right elements and show the graphContainer so the graph will appear on the page*/
+function getJSONFromBackend(path, functions, argument, cachetype) {
+    url = BASE_URL + path;
+    xhr = new XMLHttpRequest();
+    xhr.open("GET", url + argument, true);
+
+    xhr.onreadystatechange = function () {
+        if (xhr.status == 200) {
+            if (!xhr.response) return;
+            cache[cachetype] = JSON.parse(xhr.response);
+            functions(cache[cachetype]);
+        }
+    };
+    xhr.send(null);
+}
+
+function showGraph(idGraph) {
+     /*hide the right elements and show the graphContainer so the graph will appear on the page*/
     $("#tilesContainer").hide();
 
     if (idGraph == 1) {
         if (cache['data_dust'] == undefined)
             getJSONFromBackend('/dustExposureGraph', plotDustVariationGraph, "", 'data_dust');
         else
-            dust_per_cycle_Graph(cache['data_dust']);
+            plotDustVariationGraph(cache['data_dust']);
+    }
+     if (idGraph == 2) {
+        if (cache['data_dust_variation'] == undefined)
+            getJSONFromBackend('/dustVariation', dustGraph, "", 'data_dust_variation');
+        else
+            dustGraph(cache['data_dust_variation']);
     }
     if (idGraph == 3) {
         if (cache['data_histogram'] == undefined)
             getJSONFromBackend('/histogram', plotDistributionOfCyclesGraph, "", 'data_histogram');
         else
-            remainingCyclesNow(cache['data_histogram']);
-    }
-    if (idGraph == 2) {
-        if (cache['data_dust_variation'] == undefined)
-            getJSONFromBackend('/dustVariation', dustGraph, "", 'data_dust_variation');
-        else
-            dustVariation(cache['data_dust_variation']);
+            plotDistributionOfCyclesGraph(cache['data_histogram']);
     }
     if (idGraph == 4) {
         if (cache['fail_percent_chance'] == undefined)
@@ -34,7 +56,6 @@ function showGraph(idGraph) {
         else
             remainingCyclesNow(cache['remaining_cycles']);
     }
-
     $("#graphContainer").show();
 }
 
@@ -43,21 +64,19 @@ function showGraph(idGraph) {
  */
 
 function showRiskGraph() {
-    if (cache['data_risk_graph'] == undefined)
-        getJSONFromBackend('/riskGraph', riskPlot, "", 'data_risk_graph');
+    if (cache['data_risk_graph'] == undefined) {
+        getJSONFromBackend('/riskGraph', plotRiskGraph, "", 'data_risk_graph');
+           }
+
     else
-        riskPlot(cache['data_risk_graph']);
+        plotRiskGraph(cache['data_risk_graph']);
 }
 
 //PLOTS THE RISK GRAPH THAT SHOWS FOR A PARTICULAR ENGINE GIVEN AS INPUT BY THE USER
 function riskForOnePlaneGraph() {
     var text = "?engine=" + document.getElementById("searchAircraft").value;
-    getJSONFromBackend('/specificRiskData', riskPlot, text);
+    getJSONFromBackend('/specificRiskData', plotRiskGraph, text);
 }
 
-//PLOTS THE RISK GRAPH THAT SHOWS FOR EACH ENGINE THE FAILURE DATE IN A VISUAL WAY
-function riskPlot(data) {
-    var chart = AmCharts.makeChart("riskGraphContainer", {
-    })
-}
+
 
