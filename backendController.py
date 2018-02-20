@@ -6,13 +6,56 @@ import csv
 ############
 # TODO this will need rewriting to update when the server changes so that it passes it 4 values
 ############
-url3a = 'https://europewest.services.azureml.net/workspaces/007b0d03320845ccb46681a9b36a2a90/services/dae44509e8974e23bdeebe3e4df72380/execute?api-version=2.0&details=true'
-api_key3a = 'dc/2D4A866/zjc/Hio+lu+lk441UgUDc0xgsdN3e07WpmkOFQbEhQSpJ3IDV3eq/QXkvy2iIRkii+8wCBz+LvA=='
+url3a = 'https://europewest.services.azureml.net/workspaces/007b0d03320845ccb46681a9b36a2a90/services/8ff2c315926a4cd58d6b2aee4105e836/execute?api-version=2.0&details=true'
+api_key3a = 'iesWvACrhJUYrNT1sa/ua5YdaUx8MpPUlmPoQrodJJzWxcGrSUor2nKlGNMjlLmE8pBpEJn3cRXrf2fxHg0eJA==' # Replace this with the API key for the web service
 headers3a = {'Content-Type':'application/json', 'Authorization':('Bearer '+ api_key3a)}
 
 url3c = 'https://europewest.services.azureml.net/workspaces/007b0d03320845ccb46681a9b36a2a90/services/ab53de31a7f94c5aa7383230c1d95483/execute?api-version=2.0&details=true'
 api_key3c = 'cAmIZyceyWVTsdW/OUqRUXfCRu1MtUqx9ZqWhk32wrxkGgMHQSoeAyCQ5xxG5WDANcJYu8z+DyesFkHGXzUXAw=='
 headers3c = {'Content-Type':'application/json', 'Authorization':('Bearer '+ api_key3c)}
+
+def activateModel(url, headers):
+    data =  { "GlobalParameters": {  }  } 
+    body = str.encode(json.dumps(data))
+    req = urllib.request.Request(url, body, headers) 
+    response = urllib.request.urlopen(req)
+    print(response.read())
+    return
+    
+### SQL Connection data ###
+SQL_server = 'pm-aerospace.database.windows.net'
+SQL_database = 'PredictiveMaintenanceDB'
+SQL_username = 'ServerAdmin@pm-aerospace'
+SQL_password = '73WhVmRRm'
+SQL_driver= '{ODBC Driver 13 for SQL Server}'
+SQL_connection_text = 'DRIVER='+SQL_driver+';PORT=1433;SERVER='+SQL_server+';PORT=1443;DATABASE='+SQL_database+';UID='+SQL_username+';PWD='+SQL_password
+
+def updateDatabaseWithCSV(filename):
+    cnxn = pyodbc.connect(SQL_connection_text)
+    cursor = cnxn.cursor()
+    cursor.execute("SELECT * from plane_data where id < 5")
+    row = cursor.fetchone()
+    while row:
+        print (str(row[0]) + " " + str(row[1]))
+        row = cursor.fetchone()
+        
+    with open(filename) as csvfile:
+        reader = csv.reader(csvfile)
+        dataArray = []
+        for row in reader:
+            datarow = row[0].split(' ')
+            if (len(datarow) != 28): raise Exception("Missing Data in columns")
+            dataArray.append(datarow)
+        #if uploaded data is empty
+        if (len(dataArray) == 0): return 
+        #convert to float
+        dataArray = list(map(lambda x : list(map(float, x)), dataArray))
+#        for row in dataArray:
+            #cursor.execute("INSERT INTO %s VALUES (%s)" % (HISTORICAL_DATATABLE, str(row)[1:-1]))
+    return
+    
+def getFailureProbs(aircraftID):
+    #TODO
 
 def getMultiClassPredictorForCSVdata(data):
     dataRows = data.split('\n')
