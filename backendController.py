@@ -129,7 +129,7 @@ def getFailureProbs(aircraftID):
     cursor.execute("SELECT * FROM failure_probability WHERE id="+str(aircraftID)+";")
     row = cursor.fetchone()
     predictions = row[2:]
-    return [[x,y] for x,y in zip(range(0,100),predictions)]
+    return [[x*10,y*100] for x,y in zip(range(0,100),predictions)]
 
 def getMultiClassPredictorForCSVdata(data):
     dataRows = data.split('\n')
