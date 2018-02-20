@@ -3,6 +3,7 @@ import urllib
 import json
 import pyodbc
 import csv
+import numpy
 
 HISTORICAL_DATATABLE = "plane_data"
 FAILURE_DATATABLE = "failure_probability"
@@ -32,16 +33,43 @@ def activateModel(url, headers):
     print(response.read())
     return
 
-	
-def getDustData(engineId):
+def getAircraftList():
     cnxn = pyodbc.connect(SQL_connection_text)
     cursor = cnxn.cursor()
-    cursor.execute("SELECT * FROM %s WHERE ID = %s" % (HISTORICAL_DATATABLE, str(engineId)))
+    lst = []
+    cursor.execute("SELECT DISTINCT ID FROM %s ORDER BY ID" % (HISTORICAL_DATATABLE))
+    row = cursor.fetchone()	
+    while row:
+        lst.append(str(row[0]))
+        row = cursor.fetchone()
+    return lst
+
+def getLifeDistHistogram():
+    cnxn = pyodbc.connect(SQL_connection_text)
+    cursor = cnxn.cursor()
+    workingData = []
+    remainingData = []
+    
+    cursor.execute("SELECT * FROM %s JOIN (SELECT id AS mid, MAX(cycle) AS c FROM %s GROUP BY id) Q ON id = mid WHERE c = cycle ORDER BY ID; " % (RUL_DATATABLE, RUL_DATATABLE))
+    row = cursor.fetchone()	
+    while row:
+        workingData.append(float(row[1]))
+        remainingData.append(float(row[2]))
+        row = cursor.fetchone()
+    histogram = [{"name" : "Working", "data" : workingData},
+                 {"name" : "Predicted until failure", "data" : remainingData}, 
+                 {"name" : "Total", "data" : [x + y for x, y in zip(workingData, remainingData)]}]
+    return histogram
+    
+def getDustData(aircraftID):
+    cnxn = pyodbc.connect(SQL_connection_text)
+    cursor = cnxn.cursor()
+    cursor.execute("SELECT * FROM %s WHERE ID = %s" % (HISTORICAL_DATATABLE, str(aircraftID)))
     row = cursor.fetchone()	
     while row:
         print (str(row[26]) + " " + str(row[27]))
         row = cursor.fetchone()
-        
+    return
 	
 def updateDatabaseWithCSV(filename):
     cnxn = pyodbc.connect(SQL_connection_text)
@@ -65,14 +93,23 @@ def updateDatabaseWithCSV(filename):
 
 #updateDatabaseWithCSV("D:\\Users\\Kuro\\Downloads\\Single_Engine_Test_Data.csv")
     
-def getFailureProbs(aircraftID):
+def getRULs(aircraftID):
     cnxn = pyodbc.connect(SQL_connection_text)
     cursor = cnxn.cursor()
-    cursor.execute("SELECT * from  where id = "+aircraftID)
-    row = cursor.fetchone()
-    while row:
-        print (str(row[0]) + " " + str(row[1]))
+    cursor.execute("SELECT cycle,RUL FROM rul WHERE id = "+aircraftID+" ORDER BY cycle;")
+    x = []
+    y = []
+    for row in cursor.all():
+        x.append(row[0])
+        y.append(row[1])
         row = cursor.fetchone()
+    c = numpy.polyfit(x,y,1)
+
+    maxerr = max([abs((c[0]*a + c[1]) - b) for a,b in zip(x,y)])
+
+    ret = [[a, round(c[0]*a+c[1]-maxerr,2), round(c[0]*a+c[1]+maxerr,2), b] for a,b in zip(x,y)]
+  
+    return ret
 
 def getMultiClassPredictorForCSVdata(data):
     dataRows = data.split('\n')
