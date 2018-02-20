@@ -38,10 +38,8 @@ def getAircraftList():
     cursor = cnxn.cursor()
     lst = []
     cursor.execute("SELECT DISTINCT ID FROM %s ORDER BY ID" % (HISTORICAL_DATATABLE))
-    row = cursor.fetchone()	
-    while row:
+    for row in cursor.fetchall():
         lst.append(str(row[0]))
-        row = cursor.fetchone()
     return lst
 
 def getLifeDistHistogram():
@@ -51,11 +49,9 @@ def getLifeDistHistogram():
     remainingData = []
     
     cursor.execute("SELECT * FROM %s JOIN (SELECT id AS mid, MAX(cycle) AS c FROM %s GROUP BY id) Q ON id = mid WHERE c = cycle ORDER BY ID; " % (RUL_DATATABLE, RUL_DATATABLE))
-    row = cursor.fetchone()	
-    while row:
+    for row in cursor.fetchall():
         workingData.append(float(row[1]))
         remainingData.append(float(row[2]))
-        row = cursor.fetchone()
     histogram = [{"name" : "Working", "data" : workingData},
                  {"name" : "Predicted until failure", "data" : remainingData}, 
                  {"name" : "Total", "data" : [x + y for x, y in zip(workingData, remainingData)]}]
