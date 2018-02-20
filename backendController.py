@@ -65,10 +65,8 @@ def getDustData(aircraftID):
     cnxn = pyodbc.connect(SQL_connection_text)
     cursor = cnxn.cursor()
     cursor.execute("SELECT * FROM %s WHERE ID = %s" % (HISTORICAL_DATATABLE, str(aircraftID)))
-    row = cursor.fetchone()	
-    while row:
+    for row in cursor.fetchall():
         print (str(row[26]) + " " + str(row[27]))
-        row = cursor.fetchone()
     return
 	
 def updateDatabaseWithCSV(filename):
@@ -96,13 +94,12 @@ def updateDatabaseWithCSV(filename):
 def getRULs(aircraftID):
     cnxn = pyodbc.connect(SQL_connection_text)
     cursor = cnxn.cursor()
-    cursor.execute("SELECT cycle,RUL FROM rul WHERE id = "+aircraftID+" ORDER BY cycle;")
+    cursor.execute("SELECT cycle,RUL FROM rul WHERE id = "+str(aircraftID)+" ORDER BY cycle;")
     x = []
     y = []
-    for row in cursor.all():
+    for row in cursor.fetchall():
         x.append(row[0])
         y.append(row[1])
-        row = cursor.fetchone()
     c = numpy.polyfit(x,y,1)
 
     maxerr = max([abs((c[0]*a + c[1]) - b) for a,b in zip(x,y)])
