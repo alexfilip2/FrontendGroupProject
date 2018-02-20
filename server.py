@@ -221,7 +221,6 @@ def upload():
         file = request.files['thefile'].read()
         csvString = file.decode("utf-8")
         print(csvString)
-       # print (backendController.getMultiClassPredictorForCSVdata(csvString))
         new_aircraft = 'Aircraft22'
         return  jsonify(new_aircraft)
 

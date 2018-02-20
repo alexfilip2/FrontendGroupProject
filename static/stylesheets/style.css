@@ -1,3 +1,8 @@
+body{
+    background-color:#fff;
+    margin:0;
+}
+
 * {
     -webkit-box-sizing: content-box;
     -moz-box-sizing: content-box;
@@ -51,7 +56,11 @@ li {
     padding: 10px 20px;
 
     border-bottom: 1px solid #ccc;
+}
 
+.welcomeTitle {
+    color: mintcream;
+    font-size: 50px
 }
 
 .col-sm-offset-2 {
@@ -65,6 +74,29 @@ li {
     padding-right: 10%;
     clear: left;
     display: block;
+}
+
+.titlesContainer {
+    padding-top: 15px;
+    background-color:#1D364E;
+    position: relative;
+    height: 350px
+}
+
+.instructionsList li:before {
+    content: "\e080";
+    font-family: 'Glyphicons Halflings';
+    float: left;
+    margin-right: 5px
+}
+
+.instructionsList {
+    width:80%;
+    border:none
+}
+
+.instructionsContainer {
+    margin-bottom: 50px
 }
 
 #containerTitle {
@@ -150,7 +182,7 @@ li {
     padding-right: 10%;
     padding-top: 60px;
     padding-bottom: 60px;
-    height: 500px;
+    height: 200px;
     min-height: 100%;
     background-color: #e6e6e6;
 }
@@ -279,5 +311,5 @@ input[type=submit]:hover {
 }
 
 .highlight-on-hover:hover {
-    background: #e6ffff;
+    background: #e6ffff
 }

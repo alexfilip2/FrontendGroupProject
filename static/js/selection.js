@@ -1,11 +1,13 @@
 var once = true;
 var fieldId = 1;
+
  /* the button that produces the default field and the submit button
  * when pressed the second time should only collapse the panel
  * that's why the "once" variable
  */
+
 function showCalendarOnce() {
-      if (!once) return;
+    if (!once) return;
     once = false;
     document.getElementById('newContent').innerHTML += "<!DOCTYPE html>\n" +
           "<html lang=\"en\">\n" +
@@ -52,8 +54,8 @@ function showCalendarOnce() {
           "</body>\n" +
           "</html> ";
 
-     interactiveCalendar();
-    }
+     showDatePicker();
+}
 // adds a new filed on the page, there will be still one submit button
 function addNewField() {
     fieldId += 1;
@@ -69,20 +71,16 @@ function addNewField() {
         "       </div>\n" +
         "      </div>\n" +
         "     </div>\n";
-    interactiveCalendar();
+    showDatePicker();
 }
-/* get the input typed by the user into the fields
- */
-function getAllDates() {
+
+function getDateInput() {
     for (i = 1; i <= fieldId; i++) {
         var input = document.getElementById("field" + i).value;
         alert(input);
     }
 }
-/*remove the last input filed for the Date of prediction if there
- * are extra fields apart from the default one
- * decrement also the fieldId that keeps track of how many were created
- */
+
 function removeLastField() {
     if (fieldId == 1) return;
     var form = document.getElementById("formDate" + fieldId);
@@ -93,5 +91,3 @@ function removeLastField() {
     delete intro;
     fieldId -= 1;
 }
-
-
