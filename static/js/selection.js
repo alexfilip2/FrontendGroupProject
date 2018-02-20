@@ -13,7 +13,6 @@ function showCalendarOnce() {
           "<head>\n" +
           "  <meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\">\n" +
           "  <meta charset=\"utf-8\">\n" +
-          "  <title>FormDen Example</title>\n" +
           "</head>\n" +
           "<body>\n" +
           "<!-- Inline CSS based on choices in \"Settings\" tab -->\n" +

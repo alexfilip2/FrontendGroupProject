@@ -13,6 +13,7 @@ from flask import Flask, jsonify, render_template, request
 app = Flask(__name__)
 
 import urllib.request, json
+
 #data for the first tile plot
 url = urllib.request.urlopen("https://cdn.rawgit.com/highcharts/highcharts/v6.0.5/samples/data/usdeur.json")
 dust_exposure_data = json.loads(url.read().decode())
@@ -92,49 +93,137 @@ dust_data =[
         [12, 11.6, 21.8,15],
         [15, 10.7, 23.7,16],
         [15, 11.0, 23.3,17] ]
-aircraft_list =  ["frsr","feasrd1","erdbf"]
+
+fail_chance = [
+    [0.0, 225],
+    [0.1, 226],
+    [0.2, 228],
+    [0.3, 228],
+    [0.4, 229],
+    [0.5, 229],
+    [0.6, 230],
+    [0.7, 234],
+    [0.8, 235],
+    [0.9, 236],
+    [1.0, 235],
+    [1.1, 232],
+    [1.2, 228],
+    [1.3, 223],
+    [1.4, 218],
+    [1.5, 214],
+    [1.6, 207],
+    [1.7, 202],
+    [1.8, 198],
+    [1.9, 196],
+    [2.0, 197],
+    [2.1, 200],
+    [2.2, 205],
+    [2.3, 206],
+    [2.4, 210],
+    [2.5, 210],
+    [2.6, 210],
+    [2.7, 209],
+    [2.8, 208],
+    [2.9, 207],
+    [3.0, 209],
+    [3.1, 208],
+    [3.2, 207],
+    [3.3, 207],
+    [3.4, 206],
+    [3.5, 206],
+    [3.6, 205],
+    [3.7, 201],
+    [3.8, 195],
+    [3.9, 191],
+    [4.0, 191],
+    [4.1, 195],
+    [4.2, 199],
+    [4.3, 203],
+    [4.4, 208],
+    [4.5, 208],
+    [4.6, 208],
+    [4.7, 208],
+    [4.8, 209],
+    [4.9, 207],
+    [5.0, 207],
+    [5.1, 208],
+    [5.2, 209],
+    [5.3, 208],
+    [5.4, 210],
+    [5.5, 209],
+    [5.6, 209],
+    [5.7, 206],
+    [5.8, 207],
+    [5.9, 209],
+    [6.0, 211],
+    [6.1, 206],
+    [6.2, 201],
+    [6.3, 199],
+    [6.4, 200],
+    [6.5, 202],
+    [6.6, 203],
+    [6.7, 202],
+    [6.8, 204],
+    [6.9, 206],
+    [7.0, 208],
+    [7.1, 205],]
+
+remaining_cycles = [[0, 15], [10, -50], [20, -56.5], [30, -46.5], [40, -22.1],
+                [50, -2.5], [60, -27.7], [70, -55.7], [80, -76.5]]
+
+aircraft_list =  ["Aircraft1","Aircraft2","Aircraft2", "Aircraft3","Aircraft4","Aircraft5","Aircraft6","Aircraft7" ]
 
 @app.route("/")
 def main():
     return render_template('main_screen.html', itemslist = aircraft_list)
 
-@app.route('/dustExposureGraph', methods=['GET', 'POST'])
+@app.route('/dustExposureGraph', methods=['GET'])
 def first_tile_graph():
-    if request.method == 'GET':
-             return  jsonify(dust_exposure_data)
+             return jsonify(dust_exposure_data)
 
-@app.route('/riskGraph', methods=['GET', 'POST'])
+@app.route('/remainingCycles', methods=['GET'])
+def fifth_tile_graph():
+        return jsonify(remaining_cycles)
+
+@app.route('/histogram', methods=['GET'])
+def second_tile_graph():
+        return jsonify(histogram_data)
+
+@app.route('/failchance', methods=['GET'])
+def fourth_tile_graph():
+        return jsonify(fail_chance)
+
+@app.route('/dustVariation', methods=['GET'])
+def third_tile_graph():
+        return jsonify(dust_data)
+
+@app.route('/riskGraph', methods=['GET'])
 def risk_graph_upload():
-    if request.method == 'GET':
              return  jsonify(risk_graph_data)
-@app.route('/riskGraphArg', methods=['GET', 'POST'])
+
+@app.route('/specificRiskData', methods=['GET'])
 def rerender_risk():
-    if request.method == 'GET':
-        tosend =[]
-        aircraft =request.args.get('engine')
+        toSend =[]
+        aircraft = request.args.get('engine')
         for elem in risk_graph_data:
             if elem['category'] == aircraft:
-                tosend.append(elem)
-        return  jsonify(tosend)
+                toSend.append(elem)
+        return  jsonify(toSend)
 
-@app.route('/histogram', methods=['GET', 'POST'])
-def second_tile_graph():
-    if request.method == 'GET':
-             return  jsonify(histogram_data)
+@app.route('/newEngineRequested', methods=['GET'])
+def new_engine_request():
+        aircraft = request.args.get('engine')
+        return 'The engine selected: ' + aircraft + ' was processed by the server'
 
-@app.route('/dustVariation', methods=['GET', 'POST'])
-def third_tile_graph():
-    if request.method == 'GET':
-             return  jsonify(dust_data)
-
-
-@app.route('/send', methods=['POST'])
+@app.route('/send', methods=['GET','POST'])
 def upload():
     if request.method == 'POST':
         file = request.files['thefile'].read()
         csvString = file.decode("utf-8")
-        print (backendController.getMultiClassPredictorForCSVdata(csvString))
-        return  jsonify(dust_data)
+        print(csvString)
+       # print (backendController.getMultiClassPredictorForCSVdata(csvString))
+        new_aircraft = 'Aircraft22'
+        return  jsonify(new_aircraft)
 
 if __name__ == "__main__":
      app.run(debug=True)

@@ -5,8 +5,6 @@ the graphs once and uses it after without requesting from the server*/
 var cache = {};
 // execute the cache-cleaning method at the loading time of the file at client side
 clearCache();
-var graphID;
-
 /*function that clears the cache at every 10 minutes(is per client session)*/
 function clearCache() {
     cache = {};
@@ -34,11 +32,14 @@ function getJSON(path, functions, argument, cachetype) {
     };
     xhr.send(null);
 }
-function sendTrainInput( ) {
+
+/*send the uploaded file contents on a POST to the server
+ *and get back from server the id of the new aircraft resulted from predictions
+ */
+function sendTestingInputFile() {
     var fileSelect = document.getElementById("file-select");
     var myFormData = new FormData();
     myFormData.append('thefile', fileSelect.files[0]);
-
     $.ajax({
         url: '/send',
         type: 'POST',
@@ -46,104 +47,120 @@ function sendTrainInput( ) {
         contentType: false, // important
         dataType: 'json',
         data: myFormData,
-        success: function (data){
-            afterUpload();
-            handleResponsePredictions(data);
-        }
+        success: [function (response) { addNewAircraftItems(response);
+         alert("New aircraft just added: " + response);}]
     });
-    afterUpload();
-
 }
+/*sends a async GET to the server on some url, with some arguments
+ *and applying the callback function on the server's response content
+ */
+function httpGetAsync(theUrl, callback, argument) {
+    // var url = BASE_URL + theUrl + "?" + argument;
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.onreadystatechange = function () {
+        if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+            callback(xmlHttp.responseText);
+    }
+    xmlHttp.open("GET", theUrl + argument, true); // true for asynchronous
+    xmlHttp.send(null);
+}
+
+
 /*choose graph by id and get its plot data either from the cache or request it from the server
  * then call its rendering method
  */
-function showGraph(idGraph,aircraftID) {
-      var text = "?engine=" + document.getElementById("searchAircraft").value;
-
+function showGraph(idGraph) {
     /*hide the right elements and show the graphContainer so the graph will appear on the page*/
     $("#tilesContainer").hide();
-    $("#uploadPanel").hide();
-    $("#graphContainer").show();
 
     if (idGraph == 1) {
-        graphID = 1;
         if (cache['data_dust'] == undefined)
-            getJSON('/dustExposureGraph', dustGraph, "", 'data_dust');
+            getJSON('/dustExposureGraph', dust_per_cycle_Graph, "", 'data_dust');
         else
-            dustGraph(cache['data_dust']);
-         $("#searchBox").show();
-
+            dust_per_cycle_Graph(cache['data_dust']);
     }
-
-    if (idGraph == 6) {
-        if (cache['data_risk_graph'] == undefined)
-            getJSON('/riskGraph', riskPlot, "", 'data_risk_graph');
-        else
-            riskPlot(cache['data_risk_graph']);
-        $("#searchBox").show();
-        $("#stats_predic_Container").show();
-    }
-
     if (idGraph == 3) {
         if (cache['data_histogram'] == undefined)
-            getJSON('/histogram', histoCycles, "", 'data_histogram');
+            getJSON('/histogram', histogramCycles, "", 'data_histogram');
         else
-            histoCycles(cache['data_histogram']);
-         $("#searchBox").show();
+            histogramCycles(cache['data_histogram']);
     }
-
     if (idGraph == 2) {
         if (cache['data_dust_variation'] == undefined)
             getJSON('/dustVariation', dustVariation, "", 'data_dust_variation');
         else
             dustVariation(cache['data_dust_variation']);
-         $("#searchBox").show();
     }
     if (idGraph == 4) {
         if (cache['fail_percent_chance'] == undefined)
             getJSON('/failchance', failureChance, "", 'fail_percent_chance');
         else
             failureChance(cache['fail_percent_chance']);
-        failureChance();
-         $("#searchBox").show();
     }
-}
-//PLOTS THE RISK GRAPH THAT SHOWS FOR A PARTICULAR ENGINE GIVEN AS INPUT BY THE USER
-function secificGraph() {
-    var text = "?engine=" + document.getElementById("searchAircraft").value;
-    getJSON('/riskGraphArg', riskPlot, text);
-}
-function displayUpload() {
-    $("#collapsedUploadPanel").show();
+    if (idGraph == 5) {
+        if (cache['remaining_cycles'] == undefined)
+            getJSON('/remainingCycles', remainingCyclesNow, "", 'remaining_cycles');
+        else
+            remainingCyclesNow(cache['remaining_cycles']);
+    }
 
+    $("#graphContainer").show();
 }
 
 /* show back to the menu of the mainContainer by hidding the current displayed graph
  * which is in graphContainer
  */
-function tilesPanelShow() {
+function showGraphsPanel() {
     /*hide all the HTML elements of the "Predictions" panel*/
+    $("#predictionsPanel").hide();
+    $("#aircraftPanel").hide();
     $("#graphContainer").hide();
-    $("#stats_predic_Container").hide();
-    $("#searchBox").hide();
-    $("#uploadPanel").show();
-    /*show the tiles menu*/
+
+    $("#graphsPanel").show();
     $("#tilesContainer").show();
+}
+
+function showPredictionsPanel() {
+
+    showRiskGraph();
+    $("#graphsPanel").hide();
+    $("#aircraftPanel").hide();
+    $("#predictionsPanel").show();
+}
+
+function showAircraftListPanel() {
+    $("#graphsPanel").hide();
+    $("#predictionsPanel").hide();
+    $("#aircraftPanel").show();
+}
+
+function showRiskGraph() {
+    if (cache['data_risk_graph'] == undefined)
+        getJSON('/riskGraph', riskPlot, "", 'data_risk_graph');
+    else
+        riskPlot(cache['data_risk_graph']);
+}
+
+//PLOTS THE RISK GRAPH THAT SHOWS FOR A PARTICULAR ENGINE GIVEN AS INPUT BY THE USER
+function specificRiskGraph() {
+    var text = "?engine=" + document.getElementById("searchAircraft").value;
+    getJSON('/specificRiskData', riskPlot, text);
 }
 
 //PLOTS THE RISK GRAPH THAT SHOWS FOR EACH ENGINE THE FAILURE DATE IN A VISUAL WAY
 function riskPlot(data) {
-    var chart = AmCharts.makeChart("graphContainer", {
+    var chart = AmCharts.makeChart("riskGraphContainer", {
         "type": "gantt",
         "theme": "light",
         "marginRight": 70,
-        "period": "DD",
-        "dataDateFormat": "YYYY-MM-DD",
-        "balloonDateFormat": "JJ:NN",
         "columnWidth": 0.5,
         "gradientOrientation": "vertical",
-        "valueAxis": {
-            "type": "date"
+        "valueAxis": [{
+            "type": "value",
+            "title": "Cycle"
+        }],
+        "categoryAxis": {
+            "title": "Individual aircrafts"
         },
         "brightnessStep": 10,
         "graph": {
@@ -154,7 +171,7 @@ function riskPlot(data) {
         "categoryField": "category",
         "segmentsField": "segments",
         "colorField": "color",
-        "startDate": "2015-01-01",
+        "startDate": "0",
         "startField": "start",
         "endField": "end",
         "durationField": "duration",
@@ -233,7 +250,8 @@ function dustVariation(data) {
 }
 
 //PLOTS A HISTOGRAM WITH THE PREDICTED,WORKING UNTIL KNOW AND TOTAL FOR EACH ENGINE
-function histoCycles(data) {
+function histogramCycles(data) {
+
     Highcharts.chart('graphContainer', {
         chart: {
             type: 'column'
@@ -275,12 +293,10 @@ function histoCycles(data) {
         },
         series: data
     });
-
 }
 
 //PLOTS AN AREA GRAPH OF THE DUST EXPOSURE PER CYCLE
-function dustGraph(data) {
-
+function dust_per_cycle_Graph(data) {
 
     Highcharts.chart('graphContainer', {
         chart: {
@@ -340,7 +356,6 @@ function dustGraph(data) {
             data: data
         }]
     });
-
 }
 
 function failureChance(data) {
@@ -414,9 +429,9 @@ function failureChance(data) {
 
 }
 
-function remainingCyclesNow() {
+function remainingCyclesNow(data) {
 
-    Highcharts.chart('container', {
+    Highcharts.chart('graphContainer', {
         chart: {
             type: 'spline',
             inverted: false
@@ -464,25 +479,64 @@ function remainingCyclesNow() {
         },
         series: [{
             name: 'Current-Remaining ',
-            data: [[0, 15], [10, -50], [20, -56.5], [30, -46.5], [40, -22.1],
-                [50, -2.5], [60, -27.7], [70, -55.7], [80, -76.5]]
+            data: data
         }]
     });
 
 }
 
-
-
-function afterUpload() {
-    $("#tilesContainer").show();
-
+/*add all the database aircrafts to lists and add listeners to both lists */
+function onStartFillLists(aircraftList) {
+    addAircraftItems(aircraftList);
+    addListenersToDropdownItems();
+    addListenersToListItems();
 }
 
-function handleResponsePredictions(data) {
-
-
-
+/*fills the lists with the list of aircrafts already in the database on web page open*/
+function addAircraftItems(data) {
+    for (i = 0; i < data.length; i++) {
+         addNewAircraftItems(data[i]);
+    }
 }
+
+/* adds event listener on the list of Aircrafts panel so it handles dynamically added items*/
+function addListenersToListItems() {
+     var dropmenu = document.getElementById('itemlist');
+    dropmenu.addEventListener("click", function (e) {
+
+        if (e.target && e.target.matches("li.highlight-on-hover")) {
+             showGraphsPanel();
+            document.getElementById("tab2").checked = true;
+            event.preventDefault();
+            var argument = "?engine=" + e.target.innerHTML;
+            httpGetAsync("/newEngineRequested", alert, argument);
+        }
+    });
+}
+
+/* adds event listener on the dropdown of Graphs panel so it handles dynamically added items*/
+function addListenersToDropdownItems() {
+    var dropmenu = document.getElementById('dropDownList');
+    dropmenu.addEventListener("click", function (e) {
+        if (e.target && e.target.matches("li.highlight-on-hover")) {
+             event.preventDefault();
+            var argument = "?engine=" + e.target.innerHTML;
+            httpGetAsync("/newEngineRequested", alert, argument);
+        }
+    });
+}
+
+/*takes an aircraft id and adds it to the list and dropdown- after new testing data is uploaded and predictions computed */
+function addNewAircraftItems(newAircraft) {
+    document.getElementById('dropDownList').innerHTML += "<li class = \"highlight-on-hover\">" + newAircraft + "</li>";
+    document.getElementById('itemlist').innerHTML += "<li class = \"highlight-on-hover\">" + newAircraft + "</li>";
+}
+
+
+
+
+
+
 
 
 

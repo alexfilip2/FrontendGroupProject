@@ -1,20 +1,12 @@
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:400,600,700');
 
-
-body {
-  font: 14px/1 'Open Sans', sans-serif;
-  color: #555;
- }
-
-h1 {
-  padding: 50px 0;
-  font-weight: 400;
-  text-align: center;
-}
-
-p {
-  margin: 0 0 20px;
-  line-height: 1.5;
+span-custom{
+  background-color: #5e9ca0;
+  color: #fff;
+  display: inline-block;
+  padding: 3px 10px;
+  font-weight: bold;
+  border-radius: 5px;
 }
 
 main {
@@ -26,7 +18,6 @@ main {
 }
 
 section {
-
   padding: 20px 0 0;
   border-top: 1px solid #ddd;
 }
@@ -42,7 +33,6 @@ label {
   font-weight: 600;
   text-align: center;
   color: #bbb;
-
 }
 
 label:before {
@@ -51,10 +41,10 @@ label:before {
   font-weight: normal;
   margin-right: 10px;
 }
+
 label[for*='1']:before { content: '\f072'; }
 label[for*='2']:before { content: '\f080'; }
 label[for*='3']:before { content: '\f0ce'; }
-
 
 label:hover {
   color: #888;
@@ -70,8 +60,7 @@ input:checked + label {
 
 #tab1:checked ~ #content1,
 #tab2:checked ~ #content2,
-#tab3:checked ~ #content3
-{
+#tab3:checked ~ #content3 {
   display: block;
 }
 
@@ -90,16 +79,17 @@ input:checked + label {
     padding: 15px;
   }
 }
+
 .topbtn{
   color:#999;
   background:rgba(0, 0, 0, 0.5);
+
   padding:10px 20px;
   font-size:12px;
   text-decoration:none;
   letter-spacing:2px;
   text-transform:uppercase;
 }
-
 .topbtn:hover{
   border:none;
   background:rgba(0, 0, 0, 0.4);
@@ -109,8 +99,8 @@ input:checked + label {
 }
 
 .btn-info {
-  margin-top: 40px;
-  background-color:#1D364E;
+  margin-top: 0px;
+  background-color:#111B25;
   width:200px;
   margin-left: 10px;
 }
