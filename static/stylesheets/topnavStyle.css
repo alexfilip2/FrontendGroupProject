@@ -1,5 +1,14 @@
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:400,600,700');
 
+span-custom{
+  background-color: #5e9ca0;
+  color: #fff;
+  display: inline-block;
+  padding: 3px 10px;
+  font-weight: bold;
+  border-radius: 5px;
+}
+
 main {
   min-width: 320px;
   max-width: 800px;
@@ -95,12 +104,4 @@ input:checked + label {
   width:200px;
   margin-left: 10px;
 }
-.span-custom{
-  background-color: #5e9ca0;
-  color: #fff;
-  display: inline-block;
-  padding: 3px 10px;
-  font-weight: bold;
-  border-radius: 5px;
-
-}
+ 
