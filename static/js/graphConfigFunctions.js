@@ -1,5 +1,5 @@
 function plotRiskGraph(data) {
-    var chart = AmCharts.makeChart("graphContainer", {
+    var chart = AmCharts.makeChart("riskGraphContainer", {
         "type": "gantt",
         "theme": "light",
         "marginRight": 70,
