@@ -179,13 +179,13 @@ def first_tile_graph():
 @app.route('/riskGraph', methods=['GET', 'POST'])
 def risk_graph_upload():
     if request.method == 'GET':
-             return  jsonify(risk_graph_data)
+             return  jsonify(getRiskGraphData())
 @app.route('/riskGraphArg', methods=['GET', 'POST'])
 def rerender_risk():
     if request.method == 'GET':
         tosend =[]
         aircraft =request.args.get('engine')
-        for elem in risk_graph_data:
+        for elem in getRiskGraphData():
             if elem['category'] == aircraft:
                 tosend.append(elem)
         return  jsonify(tosend)
@@ -193,17 +193,17 @@ def rerender_risk():
 @app.route('/histogram', methods=['GET', 'POST'])
 def second_tile_graph():
     if request.method == 'GET':
-             return  jsonify(histogram_data)
+             return  jsonify(getLifeDistHistogram())
 
 @app.route('/dustVariation', methods=['GET', 'POST'])
 def third_tile_graph():
     if request.method == 'GET':
-             return  jsonify(dust_data)
+             return  jsonify(getRULs(2))
      
 @app.route('/failchance', methods=['GET', 'POST'])
 def fourth_tile_graph():
     if request.method == 'GET':
-             return  jsonify(fail_chance)
+             return  jsonify(getFailureProbs(2))
 
 @app.route('/send', methods=['POST'])
 def upload():
