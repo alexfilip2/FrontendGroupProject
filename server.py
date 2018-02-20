@@ -169,7 +169,7 @@ aircraft_list =  ["frsr","feasrd1","erdbf"]
 
 @app.route("/")
 def main():
-    return render_template('main_screen.html', itemslist = getAircraftList())
+    return render_template('main_screen.html', itemslist = backendController.getAircraftList())
 
 @app.route('/dustExposureGraph', methods=['GET', 'POST'])
 def first_tile_graph():
@@ -179,13 +179,13 @@ def first_tile_graph():
 @app.route('/riskGraph', methods=['GET', 'POST'])
 def risk_graph_upload():
     if request.method == 'GET':
-             return  jsonify(getRiskGraphData())
+             return  jsonify(backendController.getRiskGraphData())
 @app.route('/riskGraphArg', methods=['GET', 'POST'])
 def rerender_risk():
     if request.method == 'GET':
         tosend =[]
         aircraft =request.args.get('engine')
-        for elem in getRiskGraphData():
+        for elem in backendController.getRiskGraphData():
             if elem['category'] == aircraft:
                 tosend.append(elem)
         return  jsonify(tosend)
@@ -193,17 +193,17 @@ def rerender_risk():
 @app.route('/histogram', methods=['GET', 'POST'])
 def second_tile_graph():
     if request.method == 'GET':
-             return  jsonify(getLifeDistHistogram())
+             return  jsonify(backendController.getLifeDistHistogram())
 
 @app.route('/dustVariation', methods=['GET', 'POST'])
 def third_tile_graph():
     if request.method == 'GET':
-             return  jsonify(getRULs(2))
+             return  jsonify(backendController.getRULs(2))
      
 @app.route('/failchance', methods=['GET', 'POST'])
 def fourth_tile_graph():
     if request.method == 'GET':
-             return  jsonify(getFailureProbs(2))
+             return  jsonify(backendController.getFailureProbs(2))
 
 @app.route('/send', methods=['POST'])
 def upload():
