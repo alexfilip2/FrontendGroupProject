@@ -3,6 +3,7 @@ function onStartFillLists(aircraftList) {
     addAircraftItems(aircraftList);
     addListenersToDropdownItems();
     addListenersToListItems();
+    addSelfRemoveListener();
 }
 
 /*fills the lists with the list of aircrafts already in the database on web page open*/
@@ -21,6 +22,7 @@ function addListenersToListItems() {
              graphTabShow();
             document.getElementById("tab2").checked = true;
             event.preventDefault();
+            cache ={}
             var argument = "?engine=" + e.target.innerHTML;
             httpGetAsync("/newEngineRequested", alert, argument);
         }
@@ -33,6 +35,7 @@ function addListenersToDropdownItems() {
     dropmenu.addEventListener("click", function (e) {
         if (e.target && e.target.matches("li.highlight-on-hover")) {
              event.preventDefault();
+             cache ={}
             var argument = "?engine=" + e.target.innerHTML;
             httpGetAsync("/newEngineRequested", alert, argument);
         }

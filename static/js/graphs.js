@@ -28,15 +28,15 @@ function showGraph(idGraph) {
 
     if (idGraph == 1) {
         if (cache['data_dust'] == undefined)
-            getJSONFromBackend('/dustExposureGraph', plotDustVariationGraph, "", 'data_dust');
+            getJSONFromBackend('/dustExposureGraph', dustGraph, "", 'data_dust');
         else
-            plotDustVariationGraph(cache['data_dust']);
+            dustGraph(cache['data_dust']);
     }
      if (idGraph == 2) {
-        if (cache['data_dust_variation'] == undefined)
-            getJSONFromBackend('/dustVariation', dustGraph, "", 'data_dust_variation');
+        if (cache['RULVariation'] == undefined)
+            getJSONFromBackend('/RULVariation', plotRULVariationGraph, "", 'RULVariation');
         else
-            dustGraph(cache['data_dust_variation']);
+            plotRULVariationGraph(cache['RULVariation']);
     }
     if (idGraph == 3) {
         if (cache['data_histogram'] == undefined)
