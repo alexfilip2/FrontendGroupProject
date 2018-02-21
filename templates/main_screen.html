@@ -4,6 +4,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" charset="UTF-8">
     <!-- Include CSS files: custom or libraries; the order of the imports matters as some default attributes
     are overwritten by custom ones-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/css/bootstrap.min.css">
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -28,6 +29,7 @@
     <script src="{{ url_for('static', filename='js/tabs.js') }}"></script>
     <script src="{{ url_for('static', filename='js/graphs.js') }}"></script>
     <script src="{{ url_for('static', filename='js/aircraftLists.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/multi_input.js') }}"></script>
     <script src="{{ url_for('static', filename='js/graphConfigFunctions.js') }}"></script>
     <!-- Include the javascript libraries for plots from highcharts and amcharts-->
     <script src="https://code.highcharts.com/highcharts.js"></script>
@@ -112,18 +114,33 @@
 <div id="aircraftPanel" style="height: 350px; padding-top: 30px; background: #e6e6e6">
     <h3 style="padding-top: 20px"> Choose one aircraft from the ones available</h3>
     <ul class="list-group" id="itemlist"></ul>
+
 </div>
 
 <!------- The Graphs panel------->
 <div id="graphsPanel">
-    <div class="container">
-        <div class="dropdown" style="margin-top: 30px">
-            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Available
-                aircrafts
-                <span class="caret"></span></button>
-            <ul class="dropdown-menu" id="dropDownList"></ul>
+
+    <div style="height: 200px">
+        <div class="container" style="float: left; width: 55%  ">
+            <div class="dropdown" style="margin-top: 30px">
+                <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Available
+                    aircrafts
+                    <span class="caret"></span></button>
+                <ul class="dropdown-menu" id="dropDownList"></ul>
+            </div>
+        </div>
+
+        <div style="display: inline;float: right; position:relative;width: 40%">
+            <div class="panel-heading"><strong>Search multiple aircrafts</strong></div>
+            <form>
+                <input type="text" id="textBoxTags">
+                <button class="multi_button" type="reset" onclick="addTagElement()">Add</button>
+                <button class="multi_button" type="reset" onclick="renderSpecificAircrafts()">Search</button>
+            </form>
+            <ul class="multi_input_list" id="tagList"></ul>
         </div>
     </div>
+
 
     <!-- container showed on Graphs panel which contains the tile menu-->
     <div id="tilesContainer" style="display: none">
@@ -144,7 +161,8 @@
         </div>
     </div>
 
-    <div class="mybox" id="graphContainer"></div>
+
+    <div id="graphContainer"></div>
 </div>
 
 <!------- The Predictions panel------->
