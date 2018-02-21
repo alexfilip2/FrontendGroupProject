@@ -89,3 +89,35 @@
         box-shadow: 0 0 20px rgba(0, 255, 0, .6), inset 0 0 10px rgba(0, 255, 0, .4), 0 2px 0 #000;
     }
 }
+
+.multi_button {
+  background-color:turquoise;
+  border: 0;
+    margin-top: 20px;
+  padding: 8px 20px;
+  color: white;
+  text-transform: uppercase;
+  cursor: pointer;
+
+}
+.multi_input_list {
+  list-style: none;
+  padding-left: 0;
+  margin-top: 25px;}
+
+.multi_input_tagElem {
+  border: 1px solid black;
+  display: inline-block;
+  padding: 5px 10px;
+  margin-right: 5px;
+  margin-bottom: 5px;
+  text-transform: capitalize;
+}
+
+.fa-close {
+  cursor: pointer;
+}
+
+
+
+
