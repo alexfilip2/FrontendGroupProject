@@ -14,6 +14,7 @@ app = Flask(__name__)
 
 import urllib.request, json
 
+MODELAPITHREADS = []
 aircraft = 2
 
 @app.route('/', methods=['GET'])
@@ -65,7 +66,10 @@ def upload():
     if request.method == 'POST':
         file = request.files['thefile'].read()
         csvString = file.decode("utf-8")
-        backendController.getMultiClassPredictorForCSVdata(csvString)
+        try: 
+            MODELAPITHREADS = backendController.updateDatabaseWithCSV(csvString)
+        except Exception as e:
+            print(e) #Missing column data
         new_aircraft = 'Aircraft22'
         return jsonify(new_aircraft)
 
