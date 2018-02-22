@@ -55,7 +55,7 @@ def updateDatabaseWithCSV(filename):
         # convert to float
         dataArray = list(map(lambda x: list(map(float, x)), dataArray))
         sqlquery = ""
-        for r in list(map(lambda r: "id = %s AND cycle = %s" % (str(int(r[0])), str(int(r[1]))), dataArray))
+        for r in list(map(lambda r: "id = %s AND cycle = %s" % (str(int(r[0])), str(int(r[1]))), dataArray)):
             sqlquery += r + " OR "
         sqlquery = sqlquery[:-4]
         cursor.execute("DELETE FROM %s WHERE %s" % (HISTORICAL_DATATABLE, sqlquery))
@@ -70,7 +70,7 @@ def updateDatabaseWithCSV(filename):
         activateModel(url3c, headers3c)
     return
 
-# updateDatabaseWithCSV("D:\\Users\\Kuro\\Downloads\\Single_Engine_Test_Data.csv")
+updateDatabaseWithCSV("D:\\Users\\Kuro\\Downloads\\Single_Engine_Test_Data.csv")
 
 
 def getAircraftList():
