@@ -29,32 +29,30 @@ def fifth_tile_graph():
 
 @app.route('/histogram', methods=['GET'])
 def second_tile_graph():
-        return jsonify(backendController.getLifeDistHistogram())
+    return jsonify(backendController.getLifeDistHistogram())
 
 @app.route('/failchance', methods=['GET'])
 def fourth_tile_graph():
-        return jsonify(backendController.getFailureProbs(aircraft))
+    return jsonify(backendController.getFailureProbs(aircraft))
 
 @app.route('/RULVariation', methods=['GET'])
 def third_tile_graph():
-        return jsonify(backendController.getRULs(aircraft))
+    return jsonify(backendController.getRULs(aircraft))
 
 @app.route('/riskGraph', methods=['GET'])
 def risk_graph_upload():
-
-        return jsonify( backendController.getRiskGraphData())
+    return jsonify( backendController.getRiskGraphData())
 
 @app.route('/specificRiskData', methods=['GET'])
 def render_specific_risk():
-        aircraftID = request.args.get('engine')
-
-        return jsonify(backendController.getRiskGraphData([aircraftID]))
+    aircraftID = request.args.get('engine')
+    return jsonify(backendController.getRiskGraphData([aircraftID]))
 
 @app.route('/newEngineRequested', methods=['GET'])
 def new_engine_request():
-        global aircraft
-        aircraft = request.args.get('engine')
-        return 'The engine selected: ' + aircraft + ' was processed by the server'
+    global aircraft
+    aircraft = request.args.get('engine')
+    return 'The engine selected: ' + aircraft + ' was processed by the server'
 
 @app.route('/send', methods=['GET','POST'])
 def upload():
