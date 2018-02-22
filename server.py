@@ -13,8 +13,6 @@ from flask import Flask, jsonify, render_template, request
 app = Flask(__name__)
 
 import urllib.request, json
-remaining_cycles = [[0, 15], [10, -50], [20, -56.5], [30, -46.5], [40, -22.1],
-                [50, -2.5], [60, -27.7], [70, -55.7], [80, -76.5]]
 aircraft = 2
 
 @app.route('/', methods=['GET'])
@@ -27,8 +25,7 @@ def first_tile_graph():
 
 @app.route('/remainingCycles', methods=['GET'])
 def fifth_tile_graph():
-    remaining_cycles = backendController.getRULs(aircraft)
-    return jsonify(remaining_cycles)
+    return jsonify(backendController.getSimpleRULs(aircraft))
 
 @app.route('/histogram', methods=['GET'])
 def second_tile_graph():
