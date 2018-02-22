@@ -11,13 +11,13 @@ FAILURE_DATATABLE = "failure_probability"
 RUL_DATATABLE = "rul"
 
 ### Model API url and headers ###
-url3a = 'https://europewest.services.azureml.net/workspaces/007b0d03320845ccb46681a9b36a2a90/services/8ff2c315926a4cd58d6b2aee4105e836/execute?api-version=2.0&details=true'
-api_key3a = 'iesWvACrhJUYrNT1sa/ua5YdaUx8MpPUlmPoQrodJJzWxcGrSUor2nKlGNMjlLmE8pBpEJn3cRXrf2fxHg0eJA=='  # Replace this with the API key for the web service
-headers3a = {'Content-Type': 'application/json', 'Authorization': ('Bearer ' + api_key3a)}
+url_regression = 'https://europewest.services.azureml.net/workspaces/007b0d03320845ccb46681a9b36a2a90/services/10578fdf792c4382a716c0a406550e7a/execute?api-version=2.0&details=true'
+api_key_regression = '+dp1pYmEFBTZNgxzYyhcLcjHYjGpBsaqPxXVtpriQBDPg2PEyS6trkf0BiNDc3Pn+il/JvR5TD6sS/hN4XHYdw=='  # Replace this with the API key for the web service
+headers_regression = {'Content-Type': 'application/json', 'Authorization': ('Bearer ' + api_key_regression)}
 
-url3c = 'https://europewest.services.azureml.net/workspaces/007b0d03320845ccb46681a9b36a2a90/services/ab53de31a7f94c5aa7383230c1d95483/execute?api-version=2.0&details=true'
-api_key3c = 'cAmIZyceyWVTsdW/OUqRUXfCRu1MtUqx9ZqWhk32wrxkGgMHQSoeAyCQ5xxG5WDANcJYu8z+DyesFkHGXzUXAw=='
-headers3c = {'Content-Type': 'application/json', 'Authorization': ('Bearer ' + api_key3c)}
+url_multiclass = 'https://europewest.services.azureml.net/workspaces/007b0d03320845ccb46681a9b36a2a90/services/7414a8ff63ae4673b14c06635d6ce67d/execute?api-version=2.0&details=true'
+api_key_multiclass = '87+RaG3Z1gOYEEz0CdKKgBHjzPU3AdHZoknGidMJkR0+ASE5dDBSiDIYsgAT2S74WaW0n/YOsCnys1l05mVOVA=='
+headers_multiclass = {'Content-Type': 'application/json', 'Authorization': ('Bearer ' + api_key_multiclass)}
 
 ### SQL Connection data ###
 SQL_server = 'pm-aerospace.database.windows.net'
@@ -66,12 +66,11 @@ def updateDatabaseWithCSV(filename):
             cursor.execute("INSERT INTO %s VALUES (%s)" % (HISTORICAL_DATATABLE, str(row)[1:-1]))
         cursor.commit()
         
-        activateModel(url3a, headers3a)
-        activateModel(url3c, headers3c)
+        activateModel(url_regression, headers_regression)
+        activateModel(url_multiclass, headers_multiclass)
     return
 
-updateDatabaseWithCSV("D:\\Users\\Kuro\\Downloads\\Single_Engine_Test_Data.csv")
-
+#updateDatabaseWithCSV("D:\\Users\\Kuro\\Downloads\\Single_Engine_Test_Data.csv")
 
 def getAircraftList():
     cnxn = pyodbc.connect(SQL_connection_text)
