@@ -4,6 +4,8 @@ import json
 import pyodbc
 import csv
 import numpy
+import threading
+from socket import timeout
 
 ### Database tables names ###
 HISTORICAL_DATATABLE = "plane_data"
@@ -30,47 +32,63 @@ SQL_connection_text = 'DRIVER=' + SQL_driver + ';PORT=1433;SERVER=' + SQL_server
 ### Display Variables ###
 DISPLAY_LIMIT = 10
 
-def activateModel(url, headers):
+def activateModelWorker(url, headers):
     ### Call the model api to initialise the predications process (return when the predictions are saved into the database)
+    ### Return 0 if it run successfully and 1 if there is a timeout and 2 for other errors
     data = {"GlobalParameters": {}}
     body = str.encode(json.dumps(data))
     req = urllib.request.Request(url, body, headers)
-    response = urllib.request.urlopen(req)
-    # print(response.read())
-    return
+    try: 
+        response = urllib.request.urlopen(req)
+    except timeout as e:
+        return 1
+    except:
+        return 2
+    #print(response.read())
+    return 0
     
-def updateDatabaseWithCSV(filename):
-    ### Given a filepath, parse the file and upload the data into the HISTORICAL_DATATABLE
+def updateDatabaseWithCSV(csvString):
+    ### Given a csvString (decoded utf-8), parse the string
+    ### remove any duplicate data in the database and upload the data into the HISTORICAL_DATATABLE
+    ### raise Exception("Missing Data in Columns") if there are empty data in the columns
+    ### Return a list of threads which are calling the model api web service
+    csvArray = csvString.split('\n')[:-1]
+    dataArray = []
     cnxn = pyodbc.connect(SQL_connection_text)
     cursor = cnxn.cursor()
-    with open(filename) as csvfile:
-        reader = csv.reader(csvfile)
-        dataArray = []
-        for row in reader:
-            datarow = row[0].split(' ')
-            if (len(datarow) != 28): raise Exception("Missing Data in columns")
-            dataArray.append(datarow)
-        # if uploaded data is empty
-        if (len(dataArray) == 0): return
-        # convert to float
-        dataArray = list(map(lambda x: list(map(float, x)), dataArray))
-        sqlquery = ""
-        for r in list(map(lambda r: "id = %s AND cycle = %s" % (str(int(r[0])), str(int(r[1]))), dataArray)):
-            sqlquery += r + " OR "
-        sqlquery = sqlquery[:-4]
-        cursor.execute("DELETE FROM %s WHERE %s" % (HISTORICAL_DATATABLE, sqlquery))
-        cursor.execute("DELETE FROM %s WHERE %s" % (FAILURE_DATATABLE, sqlquery))
-        cursor.execute("DELETE FROM %s WHERE %s" % (RUL_DATATABLE, sqlquery))
+   
+    # check if all the data is present
+    for row in csvArray:
+        datarow = row[:-1].split(' ')
+        if (len(datarow) != 28): raise Exception("Missing Data in Columns")
+        dataArray.append(datarow)
+    # convert to float
+    dataArray = list(map(lambda x: list(map(float, x)), dataArray))
+    sqlquery = ""
+   
+    # remove duplicate data from database
+    for r in list(map(lambda r: "id = %s AND cycle = %s" % (str(int(r[0])), str(int(r[1]))), dataArray)):
+        sqlquery += r + " OR "
+    sqlquery = sqlquery[:-4]
+    cursor.execute("DELETE FROM %s WHERE %s" % (HISTORICAL_DATATABLE, sqlquery))
+    cursor.execute("DELETE FROM %s WHERE %s" % (FAILURE_DATATABLE, sqlquery))
+    cursor.execute("DELETE FROM %s WHERE %s" % (RUL_DATATABLE, sqlquery))
 
-        for row in dataArray:
-            cursor.execute("INSERT INTO %s VALUES (%s)" % (HISTORICAL_DATATABLE, str(row)[1:-1]))
-        cursor.commit()
-        
-        activateModel(url_regression, headers_regression)
-        activateModel(url_multiclass, headers_multiclass)
-    return
+    # add the data into the historical datatable
+    for row in dataArray:
+        cursor.execute("INSERT INTO %s VALUES (%s)" % (HISTORICAL_DATATABLE, str(row)[1:-1]))
+    cursor.commit()
+   
+    # create threads to call the model API 
+    threads = []
+    model_api = [(url_regression, headers_regression) , (url_multiclass, headers_multiclass)]
+    
+    for (url, headers) in model_api:
+       t = threading.Thread(target=activateModelWorker, args=(url,headers))
+       threads.append(t)
+       t.start()  
+    return threads
 
-#updateDatabaseWithCSV("D:\\Users\\Kuro\\Downloads\\Single_Engine_Test_Data.csv")
 
 def getAircraftList():
     cnxn = pyodbc.connect(SQL_connection_text)
