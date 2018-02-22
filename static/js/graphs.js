@@ -62,7 +62,6 @@ function showGraph(idGraph) {
         else
             remainingCyclesNow(cache['remaining_cycles']);
     }
-
     $("#graphContainer").show();
 }
 
@@ -97,8 +96,4 @@ function multiChoice() {
         asyncPOSTRequest(multi_list, '/multiChoice?type=risk', plotRiskGraph, 'choices');
 
 }
-
-
-
-
 

@@ -22,8 +22,7 @@ function addListenersToListItems() {
              graphTabShow();
             document.getElementById("tab2").checked = true;
             event.preventDefault();
-            cache ={}
-           var argument = "?engine=" + (e.target.innerHTML).split(' ')[3];
+            var argument = "?engine=" + e.target.innerHTML;
             httpGetAsync("/newEngineRequested", alert, argument);
         }
     });
@@ -35,9 +34,7 @@ function addListenersToDropdownItems() {
     dropmenu.addEventListener("click", function (e) {
         if (e.target && e.target.matches("li.highlight-on-hover")) {
              event.preventDefault();
-             cache ={}
-
-            var argument = "?engine=" + (e.target.innerHTML).split(' ')[3];
+            var argument = "?engine=" + e.target.innerHTML;
             httpGetAsync("/newEngineRequested", alert, argument);
         }
     });

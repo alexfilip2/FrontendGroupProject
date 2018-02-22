@@ -1,7 +1,3 @@
-
-
-
-
 function plotRiskGraph(data) {
     var chart = AmCharts.makeChart("riskGraphContainer", {
         "type": "gantt",
@@ -149,7 +145,6 @@ function plotDistributionOfCyclesGraph(data) {
 }
 
 function dustGraph(data) {
-
     Highcharts.chart('graphContainer', {
         chart: {
             zoomType: 'x'
@@ -198,7 +193,6 @@ function dustGraph(data) {
                         [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
                     ]
                 },
-
                 marker: {
                     radius: 2
                 },
@@ -255,8 +249,6 @@ function failureChance(data) {
             startOnTick: true,
             endOnTick: false,
             maxPadding: 0.35,
-            min: 0,
-            max: 100,
             title: {
                 text: 'Chance of engine failure'
             },
@@ -373,7 +365,3 @@ function remainingCyclesNow(data) {
         }]
     });
 }
-
-
-
-

@@ -68,7 +68,7 @@ li {
 }
 
 .welcomeTitle {
-    color: #d0d6e2;
+    color: mintcream;
     font-size: 50px
 }
 
@@ -211,8 +211,6 @@ li {
 
 }
 
-/*******************************************************************************/
-
 .tile{
     background-color: #ffffff;
     margin-bottom: 3%;
@@ -275,7 +273,7 @@ li {
     max-height: 70%;
 }
 
-/***********************************************************************/
+
 
 .highlight-on-hover {
     background-color: #4B515D;
@@ -290,7 +288,7 @@ li {
     font-size: 25px;
     color: #b1bace;
 }
-/***********************************************************************/
+
 
 .instructionsList li:before {
     content: "\e080";
@@ -305,8 +303,6 @@ li {
     margin-top: 50px;
 }
 
-
-/***********************************************************************/
 .panel-body {
     padding: 15px;
     padding-top: 25px;
