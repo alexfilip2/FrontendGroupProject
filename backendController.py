@@ -129,7 +129,7 @@ def getDustExposureData(aircraftID):
     cursor.execute("SELECT * FROM %s WHERE ID = %s" % (HISTORICAL_DATATABLE, str(aircraftID)))
     data = []
     for row in cursor.fetchall():
-        data.append([str(row[1]), str(row[26])])
+        data.append([row[1], row[26]])
     return data
     
 def getAccumulatedDustData(aircraftID):
@@ -138,7 +138,7 @@ def getAccumulatedDustData(aircraftID):
     cursor.execute("SELECT * FROM %s WHERE ID = %s" % (HISTORICAL_DATATABLE, str(aircraftID)))
     data = []
     for row in cursor.fetchall():
-        data.append([str(row[1]), str(row[27])])
+        data.append([row[1], row[27]])
     return data
 
 def getRULs(aircraftID):
