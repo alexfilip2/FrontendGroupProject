@@ -5,10 +5,13 @@ import pyodbc
 import csv
 import numpy
 
+
+### Database tables names ###
 HISTORICAL_DATATABLE = "plane_data"
 FAILURE_DATATABLE = "failure_probability"
 RUL_DATATABLE = "rul"
 
+### Model API url and headers ###
 url3a = 'https://europewest.services.azureml.net/workspaces/007b0d03320845ccb46681a9b36a2a90/services/8ff2c315926a4cd58d6b2aee4105e836/execute?api-version=2.0&details=true'
 api_key3a = 'iesWvACrhJUYrNT1sa/ua5YdaUx8MpPUlmPoQrodJJzWxcGrSUor2nKlGNMjlLmE8pBpEJn3cRXrf2fxHg0eJA==' # Replace this with the API key for the web service
 headers3a = {'Content-Type':'application/json', 'Authorization':('Bearer '+ api_key3a)}
@@ -24,67 +27,12 @@ SQL_username = 'ServerAdmin@pm-aerospace'
 SQL_password = '73WhVmRRm'
 SQL_driver= '{ODBC Driver 13 for SQL Server}'
 SQL_connection_text = 'DRIVER='+SQL_driver+';PORT=1433;SERVER='+SQL_server+';PORT=1443;DATABASE='+SQL_database+';UID='+SQL_username+';PWD='+SQL_password
-    
-def activateModel(url, headers):
-    data =  { "GlobalParameters": {  }  } 
-    body = str.encode(json.dumps(data))
-    req = urllib.request.Request(url, body, headers) 
-    response = urllib.request.urlopen(req)
-    print(response.read())
-    return
 
-def getAircraftList():
-    cnxn = pyodbc.connect(SQL_connection_text)
-    cursor = cnxn.cursor()
-    lst = []
-    cursor.execute("SELECT DISTINCT ID FROM %s ORDER BY ID" % (HISTORICAL_DATATABLE))
-    for row in cursor.fetchall():
-        lst.append(str(row[0]))
-    return lst
+### Display Variables ###
+DISPLAY_LIMIT = 10
 
-def getRiskGraphData():
-    cnxn = pyodbc.connect(SQL_connection_text)
-    cursor = cnxn.cursor()
-    aircraftLst = []
-    workingData = []
-    remainingData = []
-    
-    cursor.execute("SELECT * FROM %s JOIN (SELECT id AS mid, MAX(cycle) AS c FROM %s GROUP BY id) Q ON id = mid WHERE c = cycle ORDER BY ID; " % (RUL_DATATABLE, RUL_DATATABLE))
-    for row in cursor.fetchall():
-        aircraftLst.append(float(row[0]))
-        workingData.append(float(row[1]))
-        remainingData.append(float(row[2]))
-    riskgraph = []
-    for i in range(len(aircraftLst)):
-        riskgraph.append({"category" : aircraftLst[i], 
-                          "segments": [{"start": 0, "duration" : workingData[i], "color": "#46615e", "task": "Working"},
-                                       {"duration": remainingData[i], "color": "#727d6f", "task": "Predicted"}]})
-    return riskgraph
-
-def getLifeDistHistogram():
-    cnxn = pyodbc.connect(SQL_connection_text)
-    cursor = cnxn.cursor()
-    workingData = []
-    remainingData = []
-    
-    cursor.execute("SELECT * FROM %s JOIN (SELECT id AS mid, MAX(cycle) AS c FROM %s GROUP BY id) Q ON id = mid WHERE c = cycle ORDER BY ID; " % (RUL_DATATABLE, RUL_DATATABLE))
-    for row in cursor.fetchall():
-        workingData.append(float(row[1]))
-        remainingData.append(float(row[2]))
-    histogram = [{"name" : "Working", "data" : workingData},
-                 {"name" : "Predicted until failure", "data" : remainingData}, 
-                 {"name" : "Total", "data" : [x + y for x, y in zip(workingData, remainingData)]}]
-    return histogram
-    
-def getDustData(aircraftID):
-    cnxn = pyodbc.connect(SQL_connection_text)
-    cursor = cnxn.cursor()
-    cursor.execute("SELECT * FROM %s WHERE ID = %s" % (HISTORICAL_DATATABLE, str(aircraftID)))
-    for row in cursor.fetchall():
-        print (str(row[26]) + " " + str(row[27]))
-    return
-	
 def updateDatabaseWithCSV(filename):
+    ### Given a filepath, parse the file and upload the data into the HISTORICAL_DATATABLE
     cnxn = pyodbc.connect(SQL_connection_text)
     cursor = cnxn.cursor()     
     with open(filename) as csvfile:
@@ -103,9 +51,85 @@ def updateDatabaseWithCSV(filename):
             cursor.execute("INSERT INTO %s VALUES (%s)" % (HISTORICAL_DATATABLE, str(row)[1:-1]))
         cursor.commit()
     return
-
 #updateDatabaseWithCSV("D:\\Users\\Kuro\\Downloads\\Single_Engine_Test_Data.csv")
     
+def activateModel(url, headers):
+    ### Call the model api to initialise the predications process (return when the predictions are saved into the database)
+    data =  { "GlobalParameters": {  }  } 
+    body = str.encode(json.dumps(data))
+    req = urllib.request.Request(url, body, headers) 
+    response = urllib.request.urlopen(req)
+    #print(response.read())
+    return
+
+def getAircraftList():
+    cnxn = pyodbc.connect(SQL_connection_text)
+    cursor = cnxn.cursor()
+    lst = []
+    cursor.execute("SELECT DISTINCT ID FROM %s ORDER BY ID" % (HISTORICAL_DATATABLE))
+    for row in cursor.fetchall():
+        lst.append(str(row[0]))
+    return lst
+
+def getRiskGraphData(fleet = []):
+    ### if no fleet is provided, return the DISPLAY_LIMIT number of aircrafts ordered by id
+    cnxn = pyodbc.connect(SQL_connection_text)
+    cursor = cnxn.cursor()
+    aircraftLst = []
+    workingData = []
+    remainingData = []
+    ids = "WHERE"
+    for id in fleet:
+        ids += " id = %s OR" % (id)
+    cursor.execute("SELECT * FROM %s JOIN (SELECT id AS mid, MAX(cycle) AS c FROM %s %s GROUP BY id) Q ON id = mid WHERE c = cycle ORDER BY ID; " % (RUL_DATATABLE, RUL_DATATABLE, ids[:-2]))
+    for row in cursor.fetchmany(DISPLAY_LIMIT if fleet == [] else min(DISPLAY_LIMIT, len(fleet))):
+        aircraftLst.append(float(row[0]))
+        workingData.append(float(row[1]))
+        remainingData.append(float(row[2]))
+    riskgraph = []
+    for i in range(min(DISPLAY_LIMIT, len(aircraftLst))):
+        riskgraph.append({"category" : aircraftLst[i], 
+                          "segments": [{"start": 0, "duration" : workingData[i], "color": "#46615e", "task": "Working"},
+                                       {"duration": remainingData[i], "color": "#727d6f", "task": "Predicted"}]})
+    return riskgraph
+    
+def getLifeDistHistogram(fleet = []):
+    ### if no fleet is provided, return the DISPLAY_LIMIT number of aircrafts ordered by id
+    cnxn = pyodbc.connect(SQL_connection_text)
+    cursor = cnxn.cursor()
+    workingData = []
+    remainingData = []
+    ids = "WHERE"
+    for id in fleet:
+        ids += " id = %s OR" % (id)
+    cursor.execute("SELECT * FROM %s JOIN (SELECT id AS mid, MAX(cycle) AS c FROM %s %s GROUP BY id) Q ON id = mid WHERE c = cycle ORDER BY ID; " % (RUL_DATATABLE, RUL_DATATABLE, ids[:-2]))
+    for row in cursor.fetchmany(DISPLAY_LIMIT if fleet == [] else min(DISPLAY_LIMIT, len(fleet))):
+        workingData.append(float(row[1]))
+        remainingData.append(float(row[2]))
+    print(workingData)
+    histogram = [{"name" : "Working", "data" : workingData},
+                 {"name" : "Predicted until failure", "data" : remainingData}, 
+                 {"name" : "Total", "data" : [x + y for x, y in zip(workingData, remainingData)]}]
+    return histogram
+   
+def getDustExposureData(aircraftID):
+    cnxn = pyodbc.connect(SQL_connection_text)
+    cursor = cnxn.cursor()
+    cursor.execute("SELECT * FROM %s WHERE ID = %s" % (HISTORICAL_DATATABLE, str(aircraftID)))
+    data = []
+    for row in cursor.fetchall():
+        data.append([str(row[1]), str(row[26])])
+    return data
+    
+def getAccumulatedDustData(aircraftID):
+    cnxn = pyodbc.connect(SQL_connection_text)
+    cursor = cnxn.cursor()
+    cursor.execute("SELECT * FROM %s WHERE ID = %s" % (HISTORICAL_DATATABLE, str(aircraftID)))
+    data = []
+    for row in cursor.fetchall():
+        data.append([str(row[1]), str(row[27])])
+    return data
+
 def getRULs(aircraftID):
     cnxn = pyodbc.connect(SQL_connection_text)
     cursor = cnxn.cursor()
