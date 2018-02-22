@@ -162,7 +162,7 @@ def getSimpleRULs(aircraftID):
     cnxn = pyodbc.connect(SQL_connection_text)
     cursor = cnxn.cursor()
     cursor.execute("SELECT cycle,RUL FROM rul WHERE id = "+str(aircraftID)+" ORDER BY cycle;")
-    return cursor.fetchall()
+    return [[x,y] for x,y in cursor.fetchall()]
 
 def getFailureProbs(aircraftID):
     cnxn = pyodbc.connect(SQL_connection_text)
