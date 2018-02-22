@@ -32,9 +32,9 @@ function showGraph(idGraph) {
 
     if (idGraph == 1) {
         if (cache['data_dust'] == undefined)
-            getJSONFromBackend('/dustExposureGraph', dustGraph, "", 'data_dust');
+            getJSONFromBackend('/dustExposureGraph', dustExposureGraph, "", 'data_dust');
         else
-            dustGraph(cache['data_dust']);
+            dustExposureGraph(cache['data_dust']);
     }
     if (idGraph == 2) {
         if (cache['RULVariation'] == undefined)
@@ -43,12 +43,10 @@ function showGraph(idGraph) {
             plotRULVariationGraph(cache['RULVariation']);
     }
     if (idGraph == 3) {
-        histoOrRisk = 'histo';
-        if (cache['data_histogram'] == undefined)
-            getJSONFromBackend('/histogram', plotDistributionOfCyclesGraph, "", 'data_histogram');
+        if (cache['dust_acc'] == undefined)
+            getJSONFromBackend('/dustAccumulationGraph', dustAccumulationGraph, "", 'dust_acc');
         else
-            plotDistributionOfCyclesGraph(cache['data_histogram']);
-        $('#containerMultiInput').show();
+            dustAccumulationGraph(cache['dust_acc']);
     }
     if (idGraph == 4) {
         if (cache['fail_percent_chance'] == undefined)

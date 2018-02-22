@@ -22,16 +22,19 @@ def main():
     return render_template('main_screen.html', itemslist = backendController.getAircraftList())
 
 @app.route('/dustExposureGraph', methods=['GET'])
-def first_tile_graph():
+def getDustExposure():
     return jsonify(backendController.getDustExposureData(aircraft))
 
+@app.route('/dustAccumulationGraph', methods=['GET'])
+def getDustAccumulation():
+    return jsonify(backendController.getAccumulatedDustData(aircraft))
+    
 @app.route('/remainingCycles', methods=['GET'])
-def fifth_tile_graph():
-
+def getRemainingCycles():
     return jsonify(   backendController.getSimpleRULs(aircraft))
 
 @app.route('/histogram', methods=['GET'])
-def second_tile_graph():
+def getHistogram():
         return jsonify(backendController.getLifeDistHistogram())
 
 @app.route('/multiChoice', methods=['POST'])
@@ -44,15 +47,15 @@ def choice():
             return jsonify(backendController.getRiskGraphData(choices))
 
 @app.route('/failchance', methods=['GET'])
-def fourth_tile_graph():
+def getFailChance():
         return jsonify(backendController.getFailureProbs(aircraft))
 
 @app.route('/RULVariation', methods=['GET'])
-def third_tile_graph():
+def getRULVariation():
         return jsonify(backendController.getRULs(aircraft))
 
 @app.route('/riskGraph', methods=['GET'])
-def risk_graph_upload():
+def getRiskGraph():
         return jsonify( backendController.getRiskGraphData())
 
 @app.route('/newEngineRequested', methods=['GET'])

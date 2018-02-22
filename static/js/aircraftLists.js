@@ -15,11 +15,10 @@ function addAircraftItems(data) {
 
 /* adds event listener on the list of Aircrafts panel so it handles dynamically added items*/
 function addListenersToListItems() {
-     var dropmenu = document.getElementById('itemlist');
-    dropmenu.addEventListener("click", function (e) {
-
-        if (e.target && e.target.matches("li.highlight-on-hover")) {
-             graphTabShow();
+	var dropmenu = document.getElementById('itemlist');
+	dropmenu.addEventListener("click", function (e) {
+		if (e.target && e.target.matches("li.highlight-on-hover")) {
+			graphTabShow();
             document.getElementById("tab2").checked = true;
             event.preventDefault();
             cache={}
@@ -31,11 +30,11 @@ function addListenersToListItems() {
 
 /* adds event listener on the dropdown of Graphs panel so it handles dynamically added items*/
 function addListenersToDropdownItems() {
-    var dropmenu = document.getElementById('dropDownList');
-    dropmenu.addEventListener("click", function (e) {
-        if (e.target && e.target.matches("li.highlight-on-hover")) {
-             event.preventDefault();
-             cache ={}
+	var dropmenu = document.getElementById('dropDownList');
+	dropmenu.addEventListener("click", function (e) {
+		if (e.target && e.target.matches("li.highlight-on-hover")) {
+			event.preventDefault();
+            cache ={}
             var argument = "?engine=" + e.target.innerHTML.split(' ')[1];
             httpGetAsync("/newEngineRequested", alert, argument);
         }

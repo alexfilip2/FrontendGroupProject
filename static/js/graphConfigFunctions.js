@@ -55,19 +55,19 @@ function plotRULVariationGraph(data) {
     Highcharts.chart('graphContainer', {
 
         title: {
-            text: 'Remaining Useful Time variation'
+            text: 'Predicted number of remaining working cycles'
         },
         subtitle: {
-            text: 'against working cycles'
+            text: 'given the current cycle'
         },
         yAxis: {
             title: {
-                text: 'Predicted cycles until failure'
+                text: 'Predicted number of cycles before failure'
             }
         },
         xAxis: {
             title: {
-                text: 'Number of working cycles so far'
+                text: 'Current cycle number'
             }
         },
 
@@ -115,14 +115,14 @@ function plotDistributionOfCyclesGraph(data) {
         xAxis: {
 
             title: {
-                text: "Aircrafts ID's"
+                text: "Aircrafts IDs"
             }
 
         },
         yAxis: {
             min: 0,
             title: {
-                text: 'Cycles number'
+                text: 'Number of cycles'
             }
         },
         colors: ['#35508F', '#3A5DAD', '#253355'],
@@ -144,13 +144,13 @@ function plotDistributionOfCyclesGraph(data) {
     });
 }
 
-function dustGraph(data) {
+function dustExposureGraph(data) {
     Highcharts.chart('graphContainer', {
         chart: {
             zoomType: 'x'
         },
         title: {
-            text: 'Dust exposure on cycle number'
+            text: 'Dust exposure against cycles'
         },
         subtitle: {
             text: document.ontouchstart === undefined ?
@@ -159,13 +159,14 @@ function dustGraph(data) {
         xAxis: {
             min: 0,
             title: {
-                text: 'Cycle number'
+                text: 'Cycle Number'
             },
             type: 'linear'
         },
         yAxis: {
+			floor: 0,
             title: {
-                text: 'Dust amount'
+                text: 'Dust (grams per square metre)'
             }
         },
         legend: {
@@ -174,7 +175,7 @@ function dustGraph(data) {
         tooltip: {
             headerFormat: '<span style="font-size:13px"> Cycle number: {point.key}</span><table>',
             pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-            '<td style="padding:0"><b>{point.y:.1f} unit</b></td></tr>',
+            '<td style="padding:0"><b>{point.y:.1f} grams</b></td></tr>',
             footerFormat: '</table>',
             shared: true,
             useHTML: true
@@ -208,15 +209,84 @@ function dustGraph(data) {
 
         series: [{
             type: 'area',
-            name: 'Dust at cycle:',
+            name: 'Dust:',
+            data: data
+        }]
+    });
+}
+
+function dustAccumulationGraph(data) {
+    Highcharts.chart('graphContainer', {
+        chart: {
+            zoomType: 'x'
+        },
+        title: {
+            text: 'Dust Accumulation against cycles'
+        },
+        subtitle: {
+            text: document.ontouchstart === undefined ?
+                'Click and drag in the plot area to zoom in' : 'Pinch the chart to zoom in'
+        },
+        xAxis: {
+            min: 0,
+            title: {
+                text: 'Cycle Number'
+            },
+            type: 'linear'
+        },
+        yAxis: {
+			floor: 0,
+            title: {
+                text: 'Dust (grams per square metre)'
+            }
+        },
+        legend: {
+            enabled: false
+        },
+        tooltip: {
+            headerFormat: '<span style="font-size:13px"> Cycle number: {point.key}</span><table>',
+            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+            '<td style="padding:0"><b>{point.y:.1f} grams</b></td></tr>',
+            footerFormat: '</table>',
+            shared: true,
+            useHTML: true
+        },
+        plotOptions: {
+            area: {
+                fillColor: {
+                    linearGradient: {
+                        x1: 0,
+                        y1: 0,
+                        x2: 0,
+                        y2: 1
+                    },
+                    stops: [
+                        [0, Highcharts.getOptions().colors[0]],
+                        [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+                    ]
+                },
+                marker: {
+                    radius: 2
+                },
+                lineWidth: 1,
+                states: {
+                    hover: {
+                        lineWidth: 1
+                    }
+                },
+                threshold: 0
+            }
+        },
+
+        series: [{
+            type: 'area',
+            name: 'Dust:',
             data: data
         }]
     });
 }
 
 function failureChance(data) {
-    // Data generated from http://www.bikeforums.net/professional-cycling-fans/1113087-2017-tour-de-france-gpx-tcx-files.html
-    // Now create the chart
     Highcharts.chart('graphContainer', {
 
         chart: {
@@ -227,11 +297,11 @@ function failureChance(data) {
         },
 
         title: {
-            text: 'Chance of failure '
+            text: 'Probability of failure '
         },
 
         subtitle: {
-            text: 'based on cycle number'
+            text: 'within the next X cycles'
         },
 
 
@@ -241,16 +311,18 @@ function failureChance(data) {
             },
             minRange: 5,
             title: {
-                text: 'Worked cycles by this engine'
+                text: 'Within the next X cycles'
             }
         },
 
         yAxis: {
+			floor: 0,
+			ceiling: 100,
             startOnTick: true,
             endOnTick: false,
             maxPadding: 0.35,
             title: {
-                text: 'Chance of engine failure'
+                text: 'Probability of Engine Failure'
             },
             labels: {
                 format: '{value} %'
@@ -312,7 +384,6 @@ function failureChance(data) {
 }
 
 function remainingCyclesNow(data) {
-
     Highcharts.chart('graphContainer', {
         chart: {
             type: 'spline',
@@ -337,6 +408,7 @@ function remainingCyclesNow(data) {
             showLastLabel: true
         },
         yAxis: {
+			floor: 0,
             title: {
                 text: 'Remaining predicted cycles'
             },
