@@ -13,6 +13,7 @@ from flask import Flask, jsonify, render_template, request
 app = Flask(__name__)
 
 import urllib.request, json
+ 
 aircraft = 2
 
 @app.route('/', methods=['GET'])
@@ -25,34 +26,39 @@ def first_tile_graph():
 
 @app.route('/remainingCycles', methods=['GET'])
 def fifth_tile_graph():
-    return jsonify(backendController.getSimpleRULs(aircraft))
+
+    return jsonify(   backendController.getSimpleRULs(aircraft))
 
 @app.route('/histogram', methods=['GET'])
 def second_tile_graph():
-    return jsonify(backendController.getLifeDistHistogram())
+        return jsonify(backendController.getLifeDistHistogram())
+
+@app.route('/multiChoice', methods=['POST'])
+def second_tile_choice():
+        choices = request.form['choices'].split(",")
+        graphType = request.args.get('type')
+        if graphType =='histo' :
+            return jsonify(backendController.getLifeDistHistogram(choices))
+        else:
+            return jsonify(backendController.getRiskGraphData(choices))
 
 @app.route('/failchance', methods=['GET'])
 def fourth_tile_graph():
-    return jsonify(backendController.getFailureProbs(aircraft))
+        return jsonify(backendController.getFailureProbs(aircraft))
 
 @app.route('/RULVariation', methods=['GET'])
 def third_tile_graph():
-    return jsonify(backendController.getRULs(aircraft))
+        return jsonify(backendController.getRULs(aircraft))
 
 @app.route('/riskGraph', methods=['GET'])
 def risk_graph_upload():
-    return jsonify( backendController.getRiskGraphData())
-
-@app.route('/specificRiskData', methods=['GET'])
-def render_specific_risk():
-    aircraftID = request.args.get('engine')
-    return jsonify(backendController.getRiskGraphData([aircraftID]))
+        return jsonify( backendController.getRiskGraphData())
 
 @app.route('/newEngineRequested', methods=['GET'])
 def new_engine_request():
-    global aircraft
-    aircraft = request.args.get('engine')
-    return 'The engine selected: ' + aircraft + ' was processed by the server'
+        global aircraft
+        aircraft = request.args.get('engine')
+        return 'The engine selected: ' + aircraft + ' was processed by the server'
 
 @app.route('/send', methods=['GET','POST'])
 def upload():
