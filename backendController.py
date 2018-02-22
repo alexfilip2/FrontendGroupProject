@@ -68,7 +68,7 @@ def getAircraftList():
     lst = []
     cursor.execute("SELECT DISTINCT ID FROM %s ORDER BY ID" % (HISTORICAL_DATATABLE))
     for row in cursor.fetchall():
-        lst.append(str(row[0]))
+        lst.append("Aircraft "+str(row[0]))
     return lst
 
 def getRiskGraphData(fleet = []):
