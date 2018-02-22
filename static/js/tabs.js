@@ -3,9 +3,11 @@ function graphTabShow() {
     $("#predictionsPanel").hide();
     $("#aircraftPanel").hide();
     $("#graphContainer").hide();
+    $("#containerMultiInput").hide();
 
     $("#graphsPanel").show();
     $("#tilesContainer").show();
+     $('#containerDropDown').show();
 }
 
 function predictionTabShow() {
@@ -17,6 +19,7 @@ function predictionTabShow() {
 }
 
 function aircraftsTabShow() {
+     $("#containerMultiInput").hide();
     $("#graphsPanel").hide();
     $("#predictionsPanel").hide();
     $("#aircraftPanel").show();

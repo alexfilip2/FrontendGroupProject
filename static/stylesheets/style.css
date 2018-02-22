@@ -1,6 +1,6 @@
-body{
-    background-color:#fff;
-    margin:0;
+body {
+    background-color:#b1bace ;
+    margin: 0;
 }
 
 * {
@@ -25,22 +25,13 @@ body{
 }
 
 body {
-  font: 14px/1 'Open Sans', sans-serif;
-  color: #555;
- }
-
-p {
-  margin: 0 0 20px;
-  line-height: 1.5;
+    font: 14px/1 'Open Sans', sans-serif;
+    color: #555;
 }
 
-.h2, h2 {
-    font-size: 20px;
-    font-weight: 500;
-    -webkit-font-smoothing: antialiased;
-    display: grid;
-    color: #111111;
-    text-align: center;
+p {
+    margin: 0 0 20px;
+    line-height: 1.5;
 }
 
 h1 {
@@ -52,14 +43,32 @@ h1 {
     text-align: center;
 }
 
+
+.h2, h2 {
+    color: #2e3951;
+    font: 14px/1 'Open Sans', sans-serif;
+    font-size: 30px;
+    font-weight: 600;
+    line-height: 25px;
+    margin: 0;
+}
+
+h3 {
+    color: #2e3951;
+    font: 14px/1 'Open Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 15px;
+    margin: 0;
+}
+
 li {
     padding: 10px 20px;
-
-    border-bottom: 1px solid #ccc;
+    border-bottom: 5px solid #ccc;
 }
 
 .welcomeTitle {
-    color: mintcream;
+    color: #d0d6e2;
     font-size: 50px
 }
 
@@ -76,36 +85,15 @@ li {
     display: block;
 }
 
-.titlesContainer {
-    padding-top: 15px;
-    background-color:#1D364E;
-    position: relative;
-    height: 350px
-}
-
-.instructionsList li:before {
-    content: "\e080";
-    font-family: 'Glyphicons Halflings';
-    float: left;
-    margin-right: 5px
-}
-
-.instructionsList {
-    width:80%;
-    border:none
-}
-
-.instructionsContainer {
-    margin-bottom: 50px
-}
 
 #containerTitle {
-    background-color: #ffffff;
+    background-color: #d0d6e2;
     width: 20%;
     padding-left: 10%;
+    padding-top: 20px;
     padding-right: 70%;
     text-align: left;
-    height: 100%;
+    height: 80px;
     clear: left;
     display: block;
     text-align: left;
@@ -144,17 +132,16 @@ li {
 #itemlist {
     overflow: scroll;
     width: 80%;
-    max-height: 250px;
-    margin-bottom: 200px;
+    max-height: 300px;
+    margin-bottom: 50px;
+    margin-top: 50px;
     position: relative;
-    top: 20px;
-    bottom: 20px;
-    left: 20px;
-    right: 20px;
-    padding: 0;
-    border: 2px solid #ccc;
-    font-size: 16px;
-    font-family: Arial, sans-serif;
+    margin-left: 10%;
+    margin-right: 10%;
+    border: 5px solid #ccc;
+    border-radius: 10px;
+    font: 14px/1 'Open Sans', sans-serif;
+    font-weight: 500;
     list-style-position: inside;
     -webkit-overflow-scrolling: touch;
 }
@@ -166,8 +153,9 @@ li {
     margin-right: 10%;
     clear: left;
     display: none;
-    margin-bottom: 200px;
-    height: 230px;
+    padding-bottom: 5%;
+    margin-bottom: 100px;
+    height: auto;
 }
 
 #dropDownList {
@@ -181,18 +169,19 @@ li {
     padding-left: 10%;
     padding-right: 10%;
     padding-top: 60px;
-    padding-bottom: 60px;
-    height: 200px;
+    padding-bottom: 200px;
+    height: 500px;
     min-height: 100%;
     background-color: #e6e6e6;
 }
 
 #graphContainer {
-
+    padding-left: 5%;
+    padding-right: 5%;
     margin: 0;
-    height: 500px;
-    padding-top: 60px;
-    padding-bottom: 60px;
+    height: 600px;
+    padding-top: 5%;
+    padding-bottom: 5%;
     min-height: 100%;
     background-color: #e6e6e6;
 
@@ -209,9 +198,9 @@ li {
 
 #riskGraphContainer {
     margin: 0;
-    height: 350px;
-    padding-top: 60px;
-    padding-bottom: 60px;
+    height: 500px;
+    padding-bottom: 5%;
+    padding-top: 5%;
     background-color: #e6e6e6;
 
 }
@@ -222,21 +211,25 @@ li {
 
 }
 
-.first {
+/*******************************************************************************/
+
+.tile{
+    background-color: #ffffff;
+    margin-bottom: 3%;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.first{
     float: left;
     width: 47%;
     height: 40%;
-    background-color: #777;
-    margin-bottom: 3%;
-    border-radius: 10px;
 }
 
 .second {
     float: left;
     width: 31%;
-    height: 57%;
-    background-color: #777;
-    border-radius: 10px;
+    height: 55%;
 }
 
 .third {
@@ -244,32 +237,82 @@ li {
     width: 47%;
     height: 40%;
     margin-bottom: 3%;
-    border-radius: 10px;
-    background-color: #777;
 }
 
 .fourth {
     float: right;
     width: 31%;
-    height: 57%;
-    background-color: #777;
+    height: 55%;
     margin-left: 3.5%;
-    border-radius: 10px;
 }
 
 .last {
     float: right;
     width: 31%;
-    height: 57%;
-    background-color: #777;
-    border-radius: 10px;
+    height: 55%;
 }
 
 .hover-expand:hover {
+    color: mintcream;
+    background-size: contain;
+    -webkit-transition: transform 0.5s ease-in-out;
     transform: scale(1.2);
-    background-color: #8c8c8c;
-    color: #5e9ca0;
+    background-color: #ffffff;
     opacity: 1;
+}
+
+.tile > h3 {
+    border-bottom: 2px solid black;
+    margin-top: 10px;
+    font-size: 20px;
+    line-height: 20px;
+    position: relative;
+
+}
+.tile > img {
+    position: relative;
+    max-width: 100%;
+    max-height: 70%;
+}
+
+/***********************************************************************/
+
+.highlight-on-hover {
+    background-color: #4B515D;
+    text-align: center;
+    font-size: 18px;
+    color: #929fba;
+
+}
+
+.highlight-on-hover:hover {
+    background: #3E4551;
+    font-size: 25px;
+    color: #b1bace;
+}
+/***********************************************************************/
+
+.instructionsList li:before {
+    content: "\e080";
+    font-family: 'Glyphicons Halflings';
+    float: left;
+    margin-right: 5px
+}
+
+.instructionsList {
+    width: 80%;
+    border: none;
+    margin-top: 50px;
+}
+
+
+/***********************************************************************/
+.panel-body {
+    padding: 15px;
+    padding-top: 25px;
+    padding-right: 15px;
+    padding-bottom: 25px;
+    padding-left: 30px;
 }
 
 input[type=text] {
@@ -302,14 +345,4 @@ input[type=submit]:hover {
     background-color: #111;
 }
 
-.panel-body {
-    padding: 15px;
-    padding-top: 25px;
-    padding-right: 15px;
-    padding-bottom: 25px;
-    padding-left: 30px;
-}
 
-.highlight-on-hover:hover {
-    background: #e6ffff
-}

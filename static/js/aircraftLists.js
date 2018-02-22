@@ -3,6 +3,7 @@ function onStartFillLists(aircraftList) {
     addAircraftItems(aircraftList);
     addListenersToDropdownItems();
     addListenersToListItems();
+    addSelfRemoveListener();
 }
 
 /*fills the lists with the list of aircrafts already in the database on web page open*/
@@ -21,7 +22,8 @@ function addListenersToListItems() {
              graphTabShow();
             document.getElementById("tab2").checked = true;
             event.preventDefault();
-            var argument = "?engine=" + e.target.innerHTML;
+            cache ={}
+           var argument = "?engine=" + (e.target.innerHTML).split(' ')[3];
             httpGetAsync("/newEngineRequested", alert, argument);
         }
     });
@@ -33,7 +35,9 @@ function addListenersToDropdownItems() {
     dropmenu.addEventListener("click", function (e) {
         if (e.target && e.target.matches("li.highlight-on-hover")) {
              event.preventDefault();
-            var argument = "?engine=" + e.target.innerHTML;
+             cache ={}
+
+            var argument = "?engine=" + (e.target.innerHTML).split(' ')[3];
             httpGetAsync("/newEngineRequested", alert, argument);
         }
     });
@@ -41,6 +45,6 @@ function addListenersToDropdownItems() {
 
 /*takes an aircraft id and adds it to the list and dropdown- after new testing data is uploaded and predictions computed */
 function addNewAircraftItems(newAircraft) {
-    document.getElementById('dropDownList').innerHTML += "<li class = \"highlight-on-hover\">" + newAircraft + "</li>";
-    document.getElementById('itemlist').innerHTML += "<li class = \"highlight-on-hover\">" + newAircraft + "</li>";
+    document.getElementById('dropDownList').innerHTML += "<li class = \"highlight-on-hover\">" + "Aircraft ID number: "+ newAircraft + "</li>";
+    document.getElementById('itemlist').innerHTML += "<li class = \"highlight-on-hover\">"+ "Aircraft ID number: "+  newAircraft + "</li>";
 }

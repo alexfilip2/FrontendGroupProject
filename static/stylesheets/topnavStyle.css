@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:400,600,700');
 
 span-custom{
-  background-color: #5e9ca0;
+  background-color: #607d8b ;
   color: #fff;
   display: inline-block;
   padding: 3px 10px;
@@ -32,7 +32,7 @@ label {
   padding: 15px 25px;
   font-weight: 600;
   text-align: center;
-  color: #bbb;
+  color: #888 ;
 }
 
 label:before {
@@ -47,7 +47,7 @@ label[for*='2']:before { content: '\f080'; }
 label[for*='3']:before { content: '\f0ce'; }
 
 label:hover {
-  color: #888;
+  color: #616161;
   cursor: pointer;
 }
 
@@ -104,3 +104,28 @@ input:checked + label {
   width:200px;
   margin-left: 10px;
 }
+list-group-item
+{
+  color: #1D364E;
+
+}
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+

@@ -1,5 +1,9 @@
+
+
+
+
 function plotRiskGraph(data) {
-    var chart = AmCharts.makeChart("graphContainer", {
+    var chart = AmCharts.makeChart("riskGraphContainer", {
         "type": "gantt",
         "theme": "light",
         "marginRight": 70,
@@ -10,7 +14,7 @@ function plotRiskGraph(data) {
             "title": "Cycle"
         }],
         "categoryAxis": {
-            "title": "Individual aircrafts"
+            "title": "Individual aircrafts ID's"
         },
         "brightnessStep": 10,
         "graph": {
@@ -45,7 +49,7 @@ function plotRiskGraph(data) {
     });
 }
 
-function plotDustVariationGraph(data) {
+function plotRULVariationGraph(data) {
     var len = data.length;
     var average = [];
     for (i = 0; i < len; i++) {
@@ -55,11 +59,19 @@ function plotDustVariationGraph(data) {
     Highcharts.chart('graphContainer', {
 
         title: {
-            text: 'Dust exposure'
+            text: 'Remaining Useful Time variation'
+        },
+        subtitle: {
+            text: 'against working cycles'
         },
         yAxis: {
             title: {
-                text: null
+                text: 'Predicted cycles until failure'
+            }
+        },
+        xAxis: {
+            title: {
+                text: 'Number of working cycles so far'
             }
         },
 
@@ -72,7 +84,7 @@ function plotDustVariationGraph(data) {
 
         series: [
             {
-                name: 'Mean dust amount',
+                name: 'Predicted RUL',
                 data: average,
                 zIndex: 1,
                 marker: {
@@ -81,7 +93,7 @@ function plotDustVariationGraph(data) {
                     lineColor: Highcharts.getOptions().colors[0]
                 }
             }, {
-                name: 'Range',
+                name: 'Bounds of prediction: ',
                 data: data,
                 type: 'arearange',
                 lineWidth: 0,
@@ -105,14 +117,11 @@ function plotDistributionOfCyclesGraph(data) {
             text: 'Distribution of cycles'
         },
         xAxis: {
-            categories: [
-                'engine1',
-                'engine2',
-                'engine3',
-                'engine4',
-                'engine5',
-            ],
-            crosshair: true
+
+            title: {
+                text: "Aircrafts ID's"
+            }
+
         },
         yAxis: {
             min: 0,
@@ -122,9 +131,9 @@ function plotDistributionOfCyclesGraph(data) {
         },
         colors: ['#35508F', '#3A5DAD', '#253355'],
         tooltip: {
-            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+            headerFormat: '<span style="font-size:16px"> Aircraft number: {point.key}</span><table>',
             pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-            '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
+            '<td style="padding:0"><b>{point.y:.1f} cycles</b></td></tr>',
             footerFormat: '</table>',
             shared: true,
             useHTML: true
@@ -140,6 +149,7 @@ function plotDistributionOfCyclesGraph(data) {
 }
 
 function dustGraph(data) {
+
     Highcharts.chart('graphContainer', {
         chart: {
             zoomType: 'x'
@@ -152,6 +162,7 @@ function dustGraph(data) {
                 'Click and drag in the plot area to zoom in' : 'Pinch the chart to zoom in'
         },
         xAxis: {
+            min: 0,
             title: {
                 text: 'Cycle number'
             },
@@ -164,6 +175,14 @@ function dustGraph(data) {
         },
         legend: {
             enabled: false
+        },
+        tooltip: {
+            headerFormat: '<span style="font-size:13px"> Cycle number: {point.key}</span><table>',
+            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+            '<td style="padding:0"><b>{point.y:.1f} unit</b></td></tr>',
+            footerFormat: '</table>',
+            shared: true,
+            useHTML: true
         },
         plotOptions: {
             area: {
@@ -179,6 +198,7 @@ function dustGraph(data) {
                         [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
                     ]
                 },
+
                 marker: {
                     radius: 2
                 },
@@ -227,7 +247,7 @@ function failureChance(data) {
             },
             minRange: 5,
             title: {
-                text: 'Chance'
+                text: 'Worked cycles by this engine'
             }
         },
 
@@ -235,8 +255,10 @@ function failureChance(data) {
             startOnTick: true,
             endOnTick: false,
             maxPadding: 0.35,
+            min: 0,
+            max: 100,
             title: {
-                text: null
+                text: 'Chance of engine failure'
             },
             labels: {
                 format: '{value} %'
@@ -244,7 +266,7 @@ function failureChance(data) {
         },
 
         tooltip: {
-            headerFormat: 'Cycle: {point.x:.1f}  <br>',
+            headerFormat: ' Working cycles so far: {point.x:.1f}  <br>',
             pointFormat: ' Chance of failure {point.y}%',
             shared: true
         },
@@ -252,11 +274,39 @@ function failureChance(data) {
         legend: {
             enabled: false
         },
+        plotOptions: {
+            area: {
+                fillColor: {
+                    linearGradient: {
+                        x1: 0,
+                        y1: 0,
+                        x2: 0,
+                        y2: 1
+
+                    },
+                    fillOpacity: 0.5,
+                    stops: [
+                        [0, '#AE002C'],
+                        [1, '#45AD3A']
+                    ]
+                },
+                marker: {
+                    radius: 2
+                },
+                lineWidth: 1,
+                states: {
+                    hover: {
+                        lineWidth: 1
+                    }
+                },
+                threshold: 50
+            }
+        },
 
         series: [{
             data: data,
-            lineColor: Highcharts.getOptions().colors[1],
-            color: Highcharts.getOptions().colors[2],
+            lineColor: Highcharts.getOptions().colors[0],
+            color: 'black',
             fillOpacity: 0.5,
             name: 'Elevation',
             marker: {
@@ -323,3 +373,7 @@ function remainingCyclesNow(data) {
         }]
     });
 }
+
+
+
+

@@ -14,204 +14,49 @@ app = Flask(__name__)
 
 import urllib.request, json
 
-#data for the first tile plot
-url = urllib.request.urlopen("https://cdn.rawgit.com/highcharts/highcharts/v6.0.5/samples/data/usdeur.json")
-dust_exposure_data = json.loads(url.read().decode())
-#data for the risk (when engines will fail on a horizontal stacked bar) plot
-risk_graph_data = [ {
-        "category": "Aircraft1",
-        "segments": [ {
-            "start": 17,
-            "duration": 2,
-            "color": "#46615e",
-            "task": "Task #1"
-        }, {
-            "duration": 2,
-            "color": "#727d6f",
-            "task": "Task #2"
-        }, {
-            "duration": 2,
-            "color": "#8dc49f",
-            "task": "Task #3"
-        } ]
-    }, {
-        "category": "Aircraft2",
-        "segments": [ {
-            "start": 13,
-            "duration": 2,
-            "color": "#727d6f",
-            "task": "Task #2"
-        }, {
-            "duration": 1,
-            "color": "#8dc49f",
-            "task": "Task #3"
-        }, {
-            "duration": 4,
-            "color": "#46615e",
-            "task": "Task #1"
-        } ]
-    }, {
-        "category": "Aircraft3",
-        "segments": [ {
-            "start": 40,
-            "duration": 3,
-            "color": "#727d6f",
-            "task": "Task #2"
-        }, {
-            "start": 17,
-            "duration": 4,
-            "color": "#FFE4C4",
-            "task": "Task #4"
-        } ]
-    } ]
-#data for the risk (working-predicted cycles) plot
-histogram_data = [{
-        "name": 'Working',
-        "data": [49.9, 71.5, 106.4, 129.2, 144.0]
+aircraft = 2
 
-    }, {
-
-        "name": 'Predicted until failure',
-        "data": [83.6, 78.8, 98.5, 93.4, 106.0]
-
-    }, {
-        "name": 'Total',
-        "data": [48.9, 38.8, 39.3, 41.4, 47.0]
-
-    }]
-#data for the failure chance on dust plot
-dust_data =[
-        [1, 14.3, 27.7, 21.5],
-        [2, 14.5, 27.8 , 22.1],
-        [2, 15.5, 29.6, 20],
-        [3, 16.7, 30.7, 20],
-        [3, 16.5, 25.0, 21],
-        [5, 17.8, 25.7, 18],
-        [6, 13.5, 24.8, 23],
-        [6, 10.5, 21.4, 12],
-        [8, 9.2, 23.8, 10],
-        [12, 11.6, 21.8,15],
-        [15, 10.7, 23.7,16],
-        [15, 11.0, 23.3,17] ]
-
-fail_chance = [
-    [0.0, 225],
-    [0.1, 226],
-    [0.2, 228],
-    [0.3, 228],
-    [0.4, 229],
-    [0.5, 229],
-    [0.6, 230],
-    [0.7, 234],
-    [0.8, 235],
-    [0.9, 236],
-    [1.0, 235],
-    [1.1, 232],
-    [1.2, 228],
-    [1.3, 223],
-    [1.4, 218],
-    [1.5, 214],
-    [1.6, 207],
-    [1.7, 202],
-    [1.8, 198],
-    [1.9, 196],
-    [2.0, 197],
-    [2.1, 200],
-    [2.2, 205],
-    [2.3, 206],
-    [2.4, 210],
-    [2.5, 210],
-    [2.6, 210],
-    [2.7, 209],
-    [2.8, 208],
-    [2.9, 207],
-    [3.0, 209],
-    [3.1, 208],
-    [3.2, 207],
-    [3.3, 207],
-    [3.4, 206],
-    [3.5, 206],
-    [3.6, 205],
-    [3.7, 201],
-    [3.8, 195],
-    [3.9, 191],
-    [4.0, 191],
-    [4.1, 195],
-    [4.2, 199],
-    [4.3, 203],
-    [4.4, 208],
-    [4.5, 208],
-    [4.6, 208],
-    [4.7, 208],
-    [4.8, 209],
-    [4.9, 207],
-    [5.0, 207],
-    [5.1, 208],
-    [5.2, 209],
-    [5.3, 208],
-    [5.4, 210],
-    [5.5, 209],
-    [5.6, 209],
-    [5.7, 206],
-    [5.8, 207],
-    [5.9, 209],
-    [6.0, 211],
-    [6.1, 206],
-    [6.2, 201],
-    [6.3, 199],
-    [6.4, 200],
-    [6.5, 202],
-    [6.6, 203],
-    [6.7, 202],
-    [6.8, 204],
-    [6.9, 206],
-    [7.0, 208],
-    [7.1, 205],]
-
-remaining_cycles = [[0, 15], [10, -50], [20, -56.5], [30, -46.5], [40, -22.1],
-                [50, -2.5], [60, -27.7], [70, -55.7], [80, -76.5]]
-
-aircraft_list =  ["Aircraft1","Aircraft2","Aircraft2", "Aircraft3","Aircraft4","Aircraft5","Aircraft6","Aircraft7" ]
-
-@app.route("/")
+@app.route('/', methods=['GET'])
 def main():
-    return render_template('main_screen.html', itemslist = aircraft_list)
+    return render_template('main_screen.html', itemslist = backendController.getAircraftList())
 
 @app.route('/dustExposureGraph', methods=['GET'])
 def first_tile_graph():
-             return jsonify(dust_exposure_data)
+    return jsonify(backendController.getDustExposureData(aircraft))
 
 @app.route('/remainingCycles', methods=['GET'])
 def fifth_tile_graph():
-        return jsonify(remaining_cycles)
+
+    return jsonify(   backendController.getSimpleRULs(aircraft))
 
 @app.route('/histogram', methods=['GET'])
 def second_tile_graph():
-        return jsonify(histogram_data)
+        return jsonify(backendController.getLifeDistHistogram())
+
+@app.route('/multiChoice', methods=['POST'])
+def choice():
+        choices = request.form['choices'].split(",")
+        graphType = request.args.get('type')
+        if graphType =='histo' :
+            return jsonify(backendController.getLifeDistHistogram(choices))
+        else:
+            return jsonify(backendController.getRiskGraphData(choices))
 
 @app.route('/failchance', methods=['GET'])
 def fourth_tile_graph():
-        return jsonify(fail_chance)
+        return jsonify(backendController.getFailureProbs(aircraft))
 
-@app.route('/dustVariation', methods=['GET'])
+@app.route('/RULVariation', methods=['GET'])
 def third_tile_graph():
-        return jsonify(dust_data)
+        return jsonify(backendController.getRULs(aircraft))
 
 @app.route('/riskGraph', methods=['GET'])
 def risk_graph_upload():
-             return  jsonify(risk_graph_data)
-
-@app.route('/specificRiskData', methods=['GET'])
-def rerender_risk():
-        toSend =[]
-        aircraft = request.args.get('engine')
-        for elem in risk_graph_data:
-            if elem['category'] == aircraft:
-                toSend.append(elem)
-        return  jsonify(toSend)
+        return jsonify( backendController.getRiskGraphData())
 
 @app.route('/newEngineRequested', methods=['GET'])
 def new_engine_request():
+        global aircraft
         aircraft = request.args.get('engine')
         return 'The engine selected: ' + aircraft + ' was processed by the server'
 
@@ -220,9 +65,9 @@ def upload():
     if request.method == 'POST':
         file = request.files['thefile'].read()
         csvString = file.decode("utf-8")
-        print(csvString)
+        backendController.getMultiClassPredictorForCSVdata(csvString)
         new_aircraft = 'Aircraft22'
-        return  jsonify(new_aircraft)
+        return jsonify(new_aircraft)
 
 if __name__ == "__main__":
      app.run(debug=True)
