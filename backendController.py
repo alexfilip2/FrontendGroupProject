@@ -30,7 +30,15 @@ SQL_connection_text = 'DRIVER=' + SQL_driver + ';PORT=1433;SERVER=' + SQL_server
 ### Display Variables ###
 DISPLAY_LIMIT = 10
 
-
+def activateModel(url, headers):
+    ### Call the model api to initialise the predications process (return when the predictions are saved into the database)
+    data = {"GlobalParameters": {}}
+    body = str.encode(json.dumps(data))
+    req = urllib.request.Request(url, body, headers)
+    response = urllib.request.urlopen(req)
+    # print(response.read())
+    return
+    
 def updateDatabaseWithCSV(filename):
     ### Given a filepath, parse the file and upload the data into the HISTORICAL_DATATABLE
     cnxn = pyodbc.connect(SQL_connection_text)
@@ -46,23 +54,23 @@ def updateDatabaseWithCSV(filename):
         if (len(dataArray) == 0): return
         # convert to float
         dataArray = list(map(lambda x: list(map(float, x)), dataArray))
+        sqlquery = ""
+        for r in list(map(lambda r: "id = %s AND cycle = %s" % (str(int(r[0])), str(int(r[1]))), dataArray))
+            sqlquery += r + " OR "
+        sqlquery = sqlquery[:-4]
+        cursor.execute("DELETE FROM %s WHERE %s" % (HISTORICAL_DATATABLE, sqlquery))
+        cursor.execute("DELETE FROM %s WHERE %s" % (FAILURE_DATATABLE, sqlquery))
+        cursor.execute("DELETE FROM %s WHERE %s" % (RUL_DATATABLE, sqlquery))
 
         for row in dataArray:
             cursor.execute("INSERT INTO %s VALUES (%s)" % (HISTORICAL_DATATABLE, str(row)[1:-1]))
         cursor.commit()
+        
+        activateModel(url3a, headers3a)
+        activateModel(url3c, headers3c)
     return
-
 
 # updateDatabaseWithCSV("D:\\Users\\Kuro\\Downloads\\Single_Engine_Test_Data.csv")
-
-def activateModel(url, headers):
-    ### Call the model api to initialise the predications process (return when the predictions are saved into the database)
-    data = {"GlobalParameters": {}}
-    body = str.encode(json.dumps(data))
-    req = urllib.request.Request(url, body, headers)
-    response = urllib.request.urlopen(req)
-    # print(response.read())
-    return
 
 
 def getAircraftList():
@@ -71,7 +79,7 @@ def getAircraftList():
     lst = []
     cursor.execute("SELECT DISTINCT ID FROM %s ORDER BY ID" % (HISTORICAL_DATATABLE))
     for row in cursor.fetchall():
-        lst.append(str(row[0]))
+        lst.append("Aircraft " +str(row[0]))
     return lst
 
 
@@ -138,7 +146,7 @@ def getAccumulatedDustData(aircraftID):
     cursor.execute("SELECT * FROM %s WHERE ID = %s" % (HISTORICAL_DATATABLE, str(aircraftID)))
     data = []
     for row in cursor.fetchall():
-        data.append([row[1], row[27]])
+        data.append([row[1],row[27]])
     return data
 
 
