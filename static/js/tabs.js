@@ -7,11 +7,12 @@ function graphTabShow() {
 
     $("#graphsPanel").show();
     $("#tilesContainer").show();
-     $('#containerDropDown').show();
+    $('#containerDropDown').show();
 }
 
 function predictionTabShow() {
-    showRiskGraph();
+    showRiskAndHisto();
+    $('#containerMultiInput').show();
     $("#graphsPanel").hide();
     $("#aircraftPanel").hide();
     $("#graphContainer").hide();
@@ -19,7 +20,7 @@ function predictionTabShow() {
 }
 
 function aircraftsTabShow() {
-     $("#containerMultiInput").hide();
+    $("#containerMultiInput").hide();
     $("#graphsPanel").hide();
     $("#predictionsPanel").hide();
     $("#aircraftPanel").show();

@@ -194,14 +194,16 @@ li {
     margin-right: 10%;
     clear: left;
     display: none;
+    height: 100%;
 }
 
-#riskGraphContainer {
+.predictionsGraphContainer {
     margin: 0;
     height: 500px;
     padding-bottom: 5%;
     padding-top: 5%;
     background-color: #e6e6e6;
+    margin-bottom: 5%;
 
 }
 

@@ -4,25 +4,25 @@ function onStartFillLists(aircraftList) {
     addListenersToDropdownItems();
     addListenersToListItems();
     addSelfRemoveListener();
+    showRiskAndHisto();
 }
 
 /*fills the lists with the list of aircrafts already in the database on web page open*/
 function addAircraftItems(data) {
     for (i = 0; i < data.length; i++) {
-         addNewAircraftItems(data[i]);
+        addNewAircraftItems(data[i]);
     }
 }
 
 /* adds event listener on the list of Aircrafts panel so it handles dynamically added items*/
 function addListenersToListItems() {
-     var dropmenu = document.getElementById('itemlist');
+    var dropmenu = document.getElementById('itemlist');
     dropmenu.addEventListener("click", function (e) {
-
         if (e.target && e.target.matches("li.highlight-on-hover")) {
-             graphTabShow();
+            graphTabShow();
             document.getElementById("tab2").checked = true;
             event.preventDefault();
-            cache={}
+            clearIndividualAircraftCache();
             var argument = "?engine=" + e.target.innerHTML.split(' ')[1];
             httpGetAsync("/newEngineRequested", alert, argument);
         }
@@ -34,16 +34,21 @@ function addListenersToDropdownItems() {
     var dropmenu = document.getElementById('dropDownList');
     dropmenu.addEventListener("click", function (e) {
         if (e.target && e.target.matches("li.highlight-on-hover")) {
-             event.preventDefault();
-             cache ={}
+            event.preventDefault();
+            clearIndividualAircraftCache();
             var argument = "?engine=" + e.target.innerHTML.split(' ')[1];
             httpGetAsync("/newEngineRequested", alert, argument);
         }
     });
 }
 
+function clearIndividualAircraftCache() {
+    var cacheTypesToClear = ['data_dust', 'RULVariation', 'dust_acc', 'fail_percent_chance', 'remaining_cycles'];
+    for (i=0;i<5;i++) delete cache[cacheTypesToClear[i]];
+}
+
 /*takes an aircraft id and adds it to the list and dropdown- after new testing data is uploaded and predictions computed */
 function addNewAircraftItems(newAircraft) {
     document.getElementById('dropDownList').innerHTML += "<li class = \"highlight-on-hover\">" + newAircraft + "</li>";
-    document.getElementById('itemlist').innerHTML += "<li class = \"highlight-on-hover\">"+  newAircraft + "</li>";
+    document.getElementById('itemlist').innerHTML += "<li class = \"highlight-on-hover\">" + newAircraft + "</li>";
 }
