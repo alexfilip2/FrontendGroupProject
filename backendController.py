@@ -189,8 +189,19 @@ def getSimpleRULs(aircraftID):
     cursor = cnxn.cursor()
     cursor.execute("SELECT cycle,RUL FROM rul WHERE id = "+str(aircraftID)+" ORDER BY cycle;")
     return [[x,y] for x,y in cursor.fetchall()]
-
-
+    
+def getRULwithDust(aircraftID):
+    cnxn = pyodbc.connect(SQL_connection_text)
+    cursor = cnxn.cursor()
+    cursor.execute("SELECT cycle, rul, s22 FROM %s JOIN (SELECT id AS mid, cycle as c, s22 FROM %s) Q ON id = mid and cycle = c where id = %s ORDER BY cycle;" 
+                    % (RUL_DATATABLE, HISTORICAL_DATATABLE, aircraftID))
+    cycles = []
+    dust = []
+    for x,y,z in cursor.fetchall():
+        cycles.append([x,y])
+        dust.append([x,z*10])
+    return [cycles,dust]
+    
 def getFailureProbs(aircraftID):
     cnxn = pyodbc.connect(SQL_connection_text)
     cursor = cnxn.cursor()

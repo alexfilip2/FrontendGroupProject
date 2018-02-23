@@ -55,10 +55,10 @@ function showGraph(idGraph) {
             failureChance(cache['fail_percent_chance']);
     }
     if (idGraph == 5) {
-        if (cache['remaining_cycles'] == undefined)
-            getJSONFromBackend('/remainingCycles', remainingCyclesNow, "", 'remaining_cycles');
+        if (cache['RUL_with_dust'] == undefined)
+            getJSONFromBackend('/rulWithDust', RULwithDust, "", 'RUL_with_dust');
         else
-            remainingCyclesNow(cache['remaining_cycles']);
+            RULwithDust(cache['RUL_with_dust']);
     }
     $("#graphContainer").show();
 }

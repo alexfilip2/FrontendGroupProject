@@ -82,31 +82,31 @@
             <li class="list-group-item"><h3>
                 <span-custom>Upload</span-custom>
                 the file containing the data describing the engine <br/>
-                Submit it and get the failure point predictions.&nbsp;</h3>
+                Submit it and get the failure point predictions.</h3>
             </li>
             <li class="list-group-item"> <h3>Click the
-                <span-custom>Graphs</span-custom>
+                <span-custom>Insights</span-custom>
                 button to vizualize the tiles panel.</h3>
             </li>
             <li class="list-group-item"><h3>Click the
-                <span-custom>Predictions</span-custom>
+                <span-custom>Comparisons</span-custom>
                 button to vizualize the predicted failure points.</h3>
             </li>
         </ul>
     </div>
 </div>
 
-<!-- buttons for main panels controls: Graphs and Predictions -->
+<!-- buttons for main panels controls: Insights and Comparisons -->
 <div id="secondaryMenu" class="mybox">
     <input id="tab1" type="radio" name="tabs" checked>
 
     <label for="tab1" onclick="aircraftsTabShow()">Aircraft List</label>
 
     <input id="tab2" type="radio" name="tabs">
-    <label for="tab2" onclick="graphTabShow()">Graphs</label>
+    <label for="tab2" onclick="graphTabShow()">Insights</label>
 
     <input id="tab3" type="radio" name="tabs">
-    <label for="tab3" onclick="predictionTabShow()">Predictions</label>
+    <label for="tab3" onclick="predictionTabShow()">Comparisons</label>
 </div>
 
 
@@ -133,7 +133,7 @@
 
 </div>
 
-<!------- The Graphs panel------->
+<!------- The Insights panel------->
 <div id="graphsPanel">
     <div >
         <div id="containerDropDown" class="container" style="float: left; width: 55%;margin-bottom: 50px  ">
@@ -146,7 +146,7 @@
         </div>
     </div>
 
-    <!-- container showed on Graphs panel which contains the tile menu-->
+    <!-- container showed on Insights panel which contains the tile menu-->
     <div id="tilesContainer" style="display: none">
         <div class="first tile hover-expand" onclick="showGraph('1')">
             <img src="../static/photos/graph1_unhover.png">

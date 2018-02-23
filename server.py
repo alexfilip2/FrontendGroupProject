@@ -29,9 +29,9 @@ def getDustExposure():
 def getDustAccumulation():
     return jsonify(backendController.getAccumulatedDustData(aircraft))
     
-@app.route('/remainingCycles', methods=['GET'])
-def getRemainingCycles():
-    return jsonify(   backendController.getSimpleRULs(aircraft))
+@app.route('/rulWithDust', methods=['GET'])
+def getRULWithDust():
+    return jsonify(backendController.getRULwithDust(aircraft))
 
 @app.route('/histogram', methods=['GET'])
 def getHistogram():
