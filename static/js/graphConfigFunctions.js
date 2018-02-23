@@ -384,8 +384,12 @@ function failureChance(data) {
 }
 
 function RULwithDust(data) {
+	values = data[0].map(function(elt) { return elt[1]; });
+	ub = Math.max.apply(null, values)
+	lb = Math.min.apply(null, values)
+	lb = 1.5*lb - 0.5*ub
 	values = data[1].map(function(elt) { return elt[1]; });
-	ub = Math.max.apply(null, values)*3
+	dustUb = Math.max.apply(null, values)*3
     Highcharts.chart('graphContainer', {
         title: {
             text: 'Predicted number of cycles before failure'
@@ -406,7 +410,8 @@ function RULwithDust(data) {
             showLastLabel: true
         },
         yAxis: [{ // Primary yAxis
-       		floor: 0,
+			min: lb,
+			max: ub,
             title: {
                 text: 'Remaining predicted cycles'
             },
@@ -415,10 +420,8 @@ function RULwithDust(data) {
             },
             lineWidth: 2
         }, { // Secondary yAxis
-
-
 			floor: 0,
-			max: ub,
+			max: dustUb,
 			title: {
 				text: 'Dust',
 			},
