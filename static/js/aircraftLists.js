@@ -4,7 +4,7 @@ function onStartFillLists(aircraftList) {
     addListenersToDropdownItems();
     addListenersToListItems();
     addSelfRemoveListener();
-    showRiskAndHisto();
+    AIRCRAFTLIST = aircraftList;
 }
 
 /*fills the lists with the list of aircrafts already in the database on web page open*/
@@ -19,32 +19,30 @@ function addListenersToListItems() {
     var dropmenu = document.getElementById('itemlist');
     dropmenu.addEventListener("click", function (e) {
         if (e.target && e.target.matches("li.highlight-on-hover")) {
-            graphTabShow();
+            insightsTabShow();
             document.getElementById("tab2").checked = true;
             event.preventDefault();
-            clearIndividualAircraftCache();
+            cache = {};
             var argument = "?engine=" + e.target.innerHTML.split(' ')[1];
-            httpGetAsync("/newEngineRequested", alert, argument);
+            httpGetAsync("/newEngineRequested", displayInfoToUser, argument);
+            document.getElementById('dropDownButton').innerHTML = e.target.innerHTML + " <span class=\"caret\"></span>";
         }
     });
 }
 
-/* adds event listener on the dropdown of Graphs panel so it handles dynamically added items*/
+/* adds event listener on the dropdown of Insights panel so it handles dynamically added items*/
 function addListenersToDropdownItems() {
     var dropmenu = document.getElementById('dropDownList');
     dropmenu.addEventListener("click", function (e) {
         if (e.target && e.target.matches("li.highlight-on-hover")) {
             event.preventDefault();
-            clearIndividualAircraftCache();
+            cache = {};
             var argument = "?engine=" + e.target.innerHTML.split(' ')[1];
-            httpGetAsync("/newEngineRequested", alert, argument);
+            httpGetAsync("/newEngineRequested", displayInfoToUser, argument);
+            document.getElementById('dropDownButton').innerHTML = e.target.innerHTML + " <span class=\"caret\"></span>";
+            showGraph();
         }
     });
-}
-
-function clearIndividualAircraftCache() {
-    var cacheTypesToClear = ['data_dust', 'RULVariation', 'dust_acc', 'fail_percent_chance', 'remaining_cycles'];
-    for (i=0;i<5;i++) delete cache[cacheTypesToClear[i]];
 }
 
 /*takes an aircraft id and adds it to the list and dropdown- after new testing data is uploaded and predictions computed */

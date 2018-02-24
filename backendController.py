@@ -32,21 +32,23 @@ SQL_connection_text = 'DRIVER=' + SQL_driver + ';PORT=1433;SERVER=' + SQL_server
 ### Display Variables ###
 DISPLAY_LIMIT = 10
 
+
 def activateModelWorker(url, headers):
     ### Call the model api to initialise the predications process (return when the predictions are saved into the database)
     ### Return 0 if it run successfully and 1 if there is a timeout and 2 for other errors
     data = {"GlobalParameters": {}}
     body = str.encode(json.dumps(data))
     req = urllib.request.Request(url, body, headers)
-    try: 
+    try:
         response = urllib.request.urlopen(req)
     except timeout as e:
         return 1
     except:
         return 2
-    #print(response.read())
+    # print(response.read())
     return 0
-    
+
+
 def updateDatabaseWithCSV(csvString):
     ### Given a csvString (decoded utf-8), parse the string
     ### remove any duplicate data in the database and upload the data into the HISTORICAL_DATATABLE
@@ -56,7 +58,7 @@ def updateDatabaseWithCSV(csvString):
     dataArray = []
     cnxn = pyodbc.connect(SQL_connection_text)
     cursor = cnxn.cursor()
-   
+
     # check if all the data is present
     for row in csvArray:
         datarow = row[:-1].split(' ')
@@ -65,7 +67,7 @@ def updateDatabaseWithCSV(csvString):
     # convert to float
     dataArray = list(map(lambda x: list(map(float, x)), dataArray))
     sqlquery = ""
-   
+
     # remove duplicate data from database
     for r in list(map(lambda r: "id = %s AND cycle = %s" % (str(int(r[0])), str(int(r[1]))), dataArray)):
         sqlquery += r + " OR "
@@ -78,15 +80,15 @@ def updateDatabaseWithCSV(csvString):
     for row in dataArray:
         cursor.execute("INSERT INTO %s VALUES (%s)" % (HISTORICAL_DATATABLE, str(row)[1:-1]))
     cursor.commit()
-   
-    # create threads to call the model API 
+
+    # create threads to call the model API
     threads = []
-    model_api = [(url_regression, headers_regression) , (url_multiclass, headers_multiclass)]
-    
+    model_api = [(url_regression, headers_regression), (url_multiclass, headers_multiclass)]
+
     for (url, headers) in model_api:
-       t = threading.Thread(target=activateModelWorker, args=(url,headers))
-       threads.append(t)
-       t.start()  
+        t = threading.Thread(target=activateModelWorker, args=(url, headers))
+        threads.append(t)
+        t.start()
     return threads
 
 
@@ -96,7 +98,7 @@ def getAircraftList():
     lst = []
     cursor.execute("SELECT DISTINCT ID FROM %s ORDER BY ID" % (HISTORICAL_DATATABLE))
     for row in cursor.fetchall():
-        lst.append("Aircraft " +str(row[0]))
+        lst.append("Aircraft " + str(row[0]))
     return lst
 
 
@@ -112,7 +114,7 @@ def getRiskGraphData(fleet=[]):
         ids += " id = %s OR" % (id)
     cursor.execute(
         "SELECT * FROM %s JOIN (SELECT id AS mid, MAX(cycle) AS c FROM %s %s GROUP BY id) Q ON id = mid WHERE c = cycle ORDER BY ID; " % (
-        RUL_DATATABLE, RUL_DATATABLE, ids[:-2]))
+            RUL_DATATABLE, RUL_DATATABLE, ids[:-2]))
     for row in cursor.fetchmany(DISPLAY_LIMIT if fleet == [] else min(DISPLAY_LIMIT, len(fleet))):
         aircraftLst.append(float(row[0]))
         workingData.append(float(row[1]))
@@ -136,7 +138,7 @@ def getLifeDistHistogram(fleet=[]):
         ids += " id = %s OR" % (id)
     cursor.execute(
         "SELECT * FROM %s JOIN (SELECT id AS mid, MAX(cycle) AS c FROM %s %s GROUP BY id) Q ON id = mid WHERE c = cycle ORDER BY ID; " % (
-        RUL_DATATABLE, RUL_DATATABLE, ids[:-2]))
+            RUL_DATATABLE, RUL_DATATABLE, ids[:-2]))
     for row in cursor.fetchmany(DISPLAY_LIMIT if fleet == [] else min(DISPLAY_LIMIT, len(fleet))):
         workingData.append(float(row[1]))
         remainingData.append(float(row[2]))
@@ -153,7 +155,7 @@ def getDustExposureData(aircraftID):
     cursor.execute("SELECT * FROM %s WHERE ID = %s" % (HISTORICAL_DATATABLE, str(aircraftID)))
     data = []
     for row in cursor.fetchall():
-        data.append([row[1],row[26]])
+        data.append([row[1], row[26] * 10])
     return data
 
 
@@ -163,7 +165,7 @@ def getAccumulatedDustData(aircraftID):
     cursor.execute("SELECT * FROM %s WHERE ID = %s" % (HISTORICAL_DATATABLE, str(aircraftID)))
     data = []
     for row in cursor.fetchall():
-        data.append([row[1],row[27]])
+        data.append([row[1], row[27] * 10])
     return data
 
 
@@ -184,11 +186,26 @@ def getRULs(aircraftID):
 
     return ret
 
+
 def getSimpleRULs(aircraftID):
     cnxn = pyodbc.connect(SQL_connection_text)
     cursor = cnxn.cursor()
-    cursor.execute("SELECT cycle,RUL FROM rul WHERE id = "+str(aircraftID)+" ORDER BY cycle;")
-    return [[x,y] for x,y in cursor.fetchall()]
+    cursor.execute("SELECT cycle,RUL FROM rul WHERE id = " + str(aircraftID) + " ORDER BY cycle;")
+    return [[x, y] for x, y in cursor.fetchall()]
+
+
+def getRULwithDust(aircraftID):
+    cnxn = pyodbc.connect(SQL_connection_text)
+    cursor = cnxn.cursor()
+    cursor.execute(
+        "SELECT cycle, rul, s22 FROM %s JOIN (SELECT id AS mid, cycle as c, s22 FROM %s) Q ON id = mid and cycle = c where id = %s ORDER BY cycle;"
+        % (RUL_DATATABLE, HISTORICAL_DATATABLE, aircraftID))
+    cycles = []
+    dust = []
+    for x, y, z in cursor.fetchall():
+        cycles.append([x, y])
+        dust.append([x, z * 10])
+    return [cycles, dust]
 
 
 def getFailureProbs(aircraftID):
@@ -197,67 +214,4 @@ def getFailureProbs(aircraftID):
     cursor.execute("SELECT * FROM failure_probability WHERE id=" + str(aircraftID) + ";")
     row = cursor.fetchone()
     predictions = row[2:]
-    return [[x * 10, y * 100] for x, y in zip(range(0, 100), predictions)]
-
-
-def getMultiClassPredictorForCSVdata(data):
-    dataRows = data.split('\n')
-    dataRows = dataRows[:-1]
-    dataArray = []
-    for i in range(0, len(dataRows)):
-        dataArray.append(dataRows[i].split(' '))
-    return getMultiClassPredictorForValues(dataArray)
-
-
-def csvTest():
-    with open('/Users/james_hargreaves/Desktop/engine_data/singlePlaneData.csv', 'rt', encoding='utf8') as csvfile:
-        print(getMultiClassPredictorForCSVdata(csvfile))
-
-
-def getMultiClassPredictorForValues(arrayOfValues):
-    dataObject = getDataObjectForValues(arrayOfValues)
-    response = makeMultiClassRequestForData(dataObject)
-    return getIntResultsFromStringList(getValueArrayFromResponse(response))
-
-
-def getDataObjectForValues(arrayOfValues):
-    object = {
-        "Inputs": {
-            "input1":
-                {
-                    "ColumnNames": ["id", "cycle", "setting1", "setting2", "setting3", "s1", "s2", "s3", "s4", "s5",
-                                    "s6", "s7", "s8", "s9", "s10", "s11", "s12", "s13", "s14", "s15", "s16", "s17",
-                                    "s18", "s19", "s20", "s21", "s22", "s23"],
-                    "Values": arrayOfValues
-                }, },
-        "GlobalParameters": {
-        }
-    }
-    return object
-
-
-def makeMultiClassRequestForData(data):
-    body = str.encode(json.dumps(data))
-    # try:
-    #     req = urllib.request.Request(url3c, body, headers3c)
-    #     response = urllib.request.urlopen(req)
-    #     return response
-    # except urllib.error.HTTPError as err:
-    #     print(err)
-    #     return ""
-    #
-    req = urllib.request.Request(url3c, body, headers3c)
-    response = urllib.request.urlopen(req)
-    return response
-
-
-def getValueArrayFromResponse(response):
-    respData = response.read().decode('utf-8')
-    respJson = json.loads(respData)
-    valuesArray = respJson["Results"]["output1"]["value"]["Values"][0]
-    return valuesArray
-
-
-def getIntResultsFromStringList(strList):
-    intList = list(map(float, strList))
-    return intList
+    return [0, 0] + [[(x + 1) * 10, y * 100] for x, y in zip(range(0, 100), predictions)]

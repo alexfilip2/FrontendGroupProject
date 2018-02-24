@@ -1,6 +1,5 @@
 function plotRiskGraph(data) {
-
-    var chart = AmCharts.makeChart("riskGraphContainer", {
+    var chart = AmCharts.makeChart("comparisonGraphContainer", {
         "type": "gantt",
         "theme": "light",
         "marginRight": 70,
@@ -106,8 +105,12 @@ function plotRULVariationGraph(data) {
 }
 
 function plotDistributionOfCyclesGraph(data) {
-
-    Highcharts.chart('histogramContainer', {
+    aircrafts = (SELECTEDAIRCRAFTS.sort().length == 0) ? (AIRCRAFTLIST.map(x => x.split(" ")[1])
+).
+    slice(0, 10)
+:
+    SELECTEDAIRCRAFTS;
+    Highcharts.chart('comparisonGraphContainer', {
         chart: {
             type: 'column'
         },
@@ -115,7 +118,7 @@ function plotDistributionOfCyclesGraph(data) {
             text: 'Distribution of cycles'
         },
         xAxis: {
-
+            categories: aircrafts,
             title: {
                 text: "Aircrafts IDs"
             }
@@ -385,17 +388,23 @@ function failureChance(data) {
 
 }
 
-function remainingCyclesNow(data) {
+function RULwithDust(data) {
+    values = data[0].map(function (elt) {
+        return elt[1];
+    });
+    ub = Math.max.apply(null, values)
+    lb = Math.min.apply(null, values)
+    lb = 1.5 * lb - 0.5 * ub
+    values = data[1].map(function (elt) {
+        return elt[1];
+    });
+    dustUb = Math.max.apply(null, values) * 3
     Highcharts.chart('graphContainer', {
-        chart: {
-            type: 'spline',
-            inverted: false
-        },
         title: {
-            text: 'Remaining useful cycles'
+            text: 'Predicted number of cycles before failure'
         },
         subtitle: {
-            text: 'According to the working        cycles until now'
+            text: 'Dust data'
         },
         xAxis: {
             reversed: false,
@@ -409,8 +418,9 @@ function remainingCyclesNow(data) {
             maxPadding: 0.05,
             showLastLabel: true
         },
-        yAxis: {
-            floor: 0,
+        yAxis: [{ // Primary yAxis
+            min: lb,
+            max: ub,
             title: {
                 text: 'Remaining predicted cycles'
             },
@@ -418,13 +428,23 @@ function remainingCyclesNow(data) {
                 format: '{value}'
             },
             lineWidth: 2
-        },
+        }, { // Secondary yAxis
+            floor: 0,
+            max: dustUb,
+            title: {
+                text: 'Dust',
+            },
+            labels: {
+                format: '{value} grams'
+            },
+            opposite: true
+        }],
         legend: {
             enabled: false
         },
         tooltip: {
             headerFormat: '<b>{series.name}</b><br/>',
-            pointFormat: '{point.x} -{point.y}'
+            pointFormat: '{point.x}, {point.y:.1f}'
         },
         plotOptions: {
             spline: {
@@ -434,8 +454,14 @@ function remainingCyclesNow(data) {
             }
         },
         series: [{
-            name: 'Current-Remaining ',
-            data: data
+            type: 'spline',
+            name: 'Cycle, Remaining',
+            data: data[0]
+        }, {
+            type: 'area',
+            name: 'Cycle, Dust (g): ',
+            yAxis: 1,
+            data: data[1]
         }]
     });
 }

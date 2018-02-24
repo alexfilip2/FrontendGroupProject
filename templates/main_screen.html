@@ -22,15 +22,15 @@
     <script type="text/javascript"
             src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
     <!-- Include the javascript custom files for the custom functions-->
-    <script src="{{ url_for('static', filename='js/constants.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/globals.js') }}"></script>
     <script src="{{ url_for('static', filename='js/graphs-data-fetch.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/selection.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/calendar.js') }}"></script>
     <script src="{{ url_for('static', filename='js/tabs.js') }}"></script>
     <script src="{{ url_for('static', filename='js/graphs.js') }}"></script>
     <script src="{{ url_for('static', filename='js/aircraftLists.js') }}"></script>
     <script src="{{ url_for('static', filename='js/multi_input.js') }}"></script>
     <script src="{{ url_for('static', filename='js/graphConfigFunctions.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/userInfo.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/textContent.js') }}"></script>
     <!-- Include the javascript libraries for plots from highcharts and amcharts-->
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://code.highcharts.com/highcharts-more.js"></script>
@@ -53,7 +53,8 @@
     </div>
 </div>
 <!-- top navigation with links buttons that move to another web page-->
-<div class="mybox" id="topNavigation">
+
+<div class=" mybox" id="topNavigation">
     <a href="#" class="topbtn">Home</a>
     <a href="#" class="topbtn">About</a>
     <a href="#" class="topbtn">Services</a>
@@ -69,7 +70,8 @@
                 <h4>Select files from your computer</h4>
                 <div style="display: block; text-align: left">
                     <input type="file" enctype="multipart/form-data" id="file-select" name="thefile">
-                    <button class="btn btn-info" type="reset" style="margin-top: 30px" onclick="sendCSVToBackend();"> Upload
+                    <button class="btn btn-default btn-medium"  type="reset" style="margin-top: 30px" onclick="sendCSVToBackend();">
+                        <span class="glyphicon glyphicon-cloud-upload"></span> Upload
                     </button>
                 </div>
             </div>
@@ -79,52 +81,43 @@
     <h1 class="welcomeTitle">Welcome to the predictive aircraft maintenance engine!</h1>
     <div class="instructionsContainer">
         <ul class="instructionsList">
-            <li class="list-group-item"><h3>
-                <span-custom>Upload</span-custom>
-                the file containing the data describing the engine <br/>
-                Submit it and get the failure point predictions.&nbsp;</h3>
+            <li class="list-group-item">
+                <h3>
+                    <span-custom>Upload</span-custom>
+                    the file containing the data describing the engine <br/>
+                    Submit it and get the failure point predictions.
+                </h3>
             </li>
-            <li class="list-group-item"> <h3>Click the
-                <span-custom>Graphs</span-custom>
-                button to vizualize the tiles panel.</h3>
+            <li class="list-group-item">
+                <h3>Click the
+                    <span-custom>Insights</span-custom>
+                    button to vizualize the tiles panel.
+                </h3>
             </li>
-            <li class="list-group-item"><h3>Click the
-                <span-custom>Predictions</span-custom>
-                button to vizualize the predicted failure points.</h3>
+            <li class="list-group-item">
+                <h3>Click the
+                    <span-custom>Comparisons</span-custom>
+                    button to vizualize the predicted failure points.
+                </h3>
             </li>
         </ul>
     </div>
 </div>
 
-<!-- buttons for main panels controls: Graphs and Predictions -->
-<div id="secondaryMenu" class="mybox">
+
+<!-- buttons for main panels controls: Insights and Comparisons -->
+<div id="secondaryMenu" class="mybox" >
     <input id="tab1" type="radio" name="tabs" checked>
 
     <label for="tab1" onclick="aircraftsTabShow()">Aircraft List</label>
 
     <input id="tab2" type="radio" name="tabs">
-    <label for="tab2" onclick="graphTabShow()">Graphs</label>
+    <label for="tab2" onclick="insightsTabShow()">Insights</label>
 
     <input id="tab3" type="radio" name="tabs">
-    <label for="tab3" onclick="predictionTabShow()">Predictions</label>
+    <label for="tab3" onclick="comparisonsTabShow()">Comparisons</label>
 </div>
 
-
-<div class="mybox" >
-    <div id="containerMultiInput">
-            <div class="panel-heading" ><strong>Select multiple aircrafts by numeric ID</strong></div>
-            <form>
-                <input type="text" id="textBoxTags">
-
-                <button class="multi_button" type="reset" onclick="addTagElement()" >Add</button>
-
-                <div><ul class="multi_input_list" id="tagList"></ul></div>
-
-                <button class="multi_button" type="reset" onclick="multiChoice()">Display selected</button>
-            </form>
-
-    </div>
-        </div>
 
 <!------- The Aircraft List panel------->
 <div id="aircraftPanel" style="height: 500px; padding-top: 30px; margin-bottom: 50px; background: #e6e6e6">
@@ -133,12 +126,17 @@
 
 </div>
 
-<!------- The Graphs panel------->
-<div id="graphsPanel">
-    <div >
-        <div id="containerDropDown" class="container" style="float: left; width: 55%;margin-bottom: 50px  ">
+
+<!------- The Insights panel------->
+
+<div id="insightsPanel">
+
+    <div>
+        <div id="aircraftSelector" class="container" style="float: left; width:100%; margin-bottom: 50px  ">
+            <div id="userMessage" class="alert info userMessage" hidden="true"></div>
             <div class="dropdown" style="margin-top: 30px">
-                <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Available
+                <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"
+                        id="dropDownButton">Available
                     aircrafts
                     <span class="caret"></span></button>
                 <ul class="dropdown-menu" id="dropDownList"></ul>
@@ -146,24 +144,26 @@
         </div>
     </div>
 
-    <!-- container showed on Graphs panel which contains the tile menu-->
+     <div id="includeTextInsightDescription"></div>
+
+    <!-- container showed on Insights panel which contains the tile menu-->
     <div id="tilesContainer" style="display: none">
-        <div class="first tile hover-expand" onclick="showGraph('1')">
+        <div class="first tile hover-expand" onclick="SELECTEDGRAPH = 1; showGraph()">
             <img src="../static/photos/graph1_unhover.png">
-            <h3 > Dust exposure against cycles</h3>
+            <h3> Dust exposure against cycles</h3>
         </div>
-        <div class="third tile hover-expand" onclick="showGraph('3')">
-             <img src="../static/photos/graph2_unhover.png">
+        <div class="third tile hover-expand" onclick="SELECTEDGRAPH = 3; showGraph()">
+            <img src="../static/photos/graph2_unhover.png">
             <h3> Dust accumulation against cycles</h3>
         </div>
-        <div class="second tile hover-expand" onclick="showGraph('2')">
-             <img src="../static/photos/graph3_unhover.png">
+        <div class="second tile hover-expand" onclick="SELECTEDGRAPH = 2; showGraph()">
+            <img src="../static/photos/graph3_unhover.png">
             <h3> Predicted number of cycles before failure given the current cycle</h3>
         </div>
-        <div class="fourth tile hover-expand" onclick="showGraph('4')">
+        <div class="fourth tile hover-expand" onclick="SELECTEDGRAPH = 4;showGraph()">
             <h3> Probability of failure within the next X cycles</h3>
         </div>
-        <div class="last tile hover-expand" onclick="showGraph('5')">
+        <div class="last tile hover-expand" onclick="SELECTEDGRAPH = 5 ;showGraph()">
             <h3> Predicted number of cycles before failure with dust</h3>
         </div>
     </div>
@@ -171,65 +171,45 @@
     <div id="graphContainer"></div>
 </div>
 
-<!------- The Predictions panel------->
-<div id="predictionsPanel">
+<!------- The Comparisons panel------->
+<div id="comparisonsPanel">
 
-    <div id="riskGraphContainer" class="predictionsGraphContainer"></div>
 
-     <div id="histogramContainer" class="predictionsGraphContainer"></div>
+    <div id="tilesContainerComparisons">
+        <div class="first tile hover-expand" onclick="showRiskGraph()">
+            <img src="../static/photos/graph1_unhover.png">
+            <h3> Risk graph for multiple aircrafts</h3>
+        </div>
+        <div class="third tile hover-expand" onclick="showHistogramGraph()">
+            <img src="../static/photos/graph2_unhover.png">
+            <h3> Distribution of cycles </h3>
+        </div>
+    </div>
 
-    <div id="stats_predic_Container">
-        <h1 style="text-align: left">Failure time prediction</h1>
-        <!------ container for displaying information about the predicted failure time------>
-        <div class="container bootstrap snippet">
-            <div class="panel-body inf-content">
-                <div class="row">
-                    <div class="col-md-6">
-                        <strong style="font-size: 20px; margin-bottom: 10px">Information</strong><br>
-                        <div class="table-responsive" style="margin-top: 20px">
-                            <table class="table table-condensed table-responsive table-user-information">
-                                <tbody>
-                                <tr>
-                                    <td>
-                                        <p>
-                                            <span class="glyphicon glyphicon-hourglass"></span>
-                                            Predicted cycle of failure from now on:
-                                        </p>
-                                    </td>
-                                    <td class="text-primary">
-                                        34
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+    <div id="comparisonInsideTileContainer">
+
+        <div id="includeTextDescription"></div>
+
+        <div id="containerMultiInput">
+            <div class="panel-heading"><strong>Select multiple aircrafts by numeric ID</strong></div>
+            <form>
+                <input type="text" id="textBoxTags">
+                <button class="multi_button" type="reset" onclick="addTagElement()">Add</button>
+                <div>
+                    <ul class="multi_input_list" id="tagList"></ul>
                 </div>
-            </div>
+            </form>
         </div>
 
-        <h1 style="text-align: left">Multi-way prediction</h1>
-        <!-- buttons for controlling the Date fields -->
-        <button type="button" id="collapseButton" class="btn btn-info" data-toggle="collapse"
-                data-target="#info"
-                onclick="showCalendarOnce();">Show detailed data
-            <span class="glyphicon glyphicon-menu-down" style="margin-left: 20px "></span></button>
-        <button type="button" class="btn btn-info" onclick="addNewField();"> Add content</button>
-        <button type="button" class="btn btn-info" onclick="removeLastField();">Remove last date</button>
+        <div id="comparisonGraphContainer" class="comparisonsGraphContainer"></div>
 
-        <!-- panel that contains the Date fields -->
-        <form id="info" class="collapse">
-            <!--wrapper for multiple fields-->
-            <div id="newContent"></div>
-        </form>
+        <button type="button" id="backbutton" class="btn btn-default btn-medium"  onclick="comparisonsTabShow()">
+            <span class="glyphicon glyphicon-chevron-left"></span> Back
+        </button>
 
+        <div id="includeTextPrediction" style="padding-top: 30px"></div>
     </div>
 </div>
 
-<script>
-
-
-</script>
-​
 </body>
 </html>

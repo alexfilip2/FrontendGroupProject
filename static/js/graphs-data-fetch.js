@@ -1,6 +1,21 @@
 /*sends a async GET to the server on some url, with some arguments
  *and applying the callback function on the server's response content
  */
+function getJSONFromBackend(path, functions, argument, cachetype) {
+    url = path;
+    xhr = new XMLHttpRequest();
+    xhr.open("POST", url + argument, true);
+
+    xhr.onreadystatechange = function () {
+        if (xhr.status == 200) {
+            if (!xhr.response) return;
+            cache[cachetype] = JSON.parse(xhr.response);
+            functions(cache[cachetype]);
+        }
+    };
+    xhr.send(null);
+}
+
 function httpGetAsync(theUrl, callback, argument) {
     // var url = BASE_URL + theUrl + "?" + argument;
     var xmlHttp = new XMLHttpRequest();
@@ -24,15 +39,15 @@ function sendCSVToBackend() {
         contentType: false,
         dataType: 'json',
         data: myFormData,
-        success: [function (data){
+        success: [function (data) {
             handleResponsePredictions(data);
         }]
     });
 }
-function asyncPOSTRequest(data,path,callback,name) {
 
-     var myFormData = new FormData();
-    myFormData.append(name,data);
+function asyncPOSTRequest(data, path, callback, name) {
+    var myFormData = new FormData();
+    myFormData.append(name, data);
     $.ajax({
         url: path,
         type: 'POST',
@@ -40,14 +55,9 @@ function asyncPOSTRequest(data,path,callback,name) {
         contentType: false,
         dataType: 'json',
         data: myFormData,
-        success: [function (response){
+        success: [function (response) {
             callback(response);
         }]
     });
-
 }
 
-function handleResponsePredictions(data){
-    addNewAircraftItems(data);
-    alert("New aircraft just added: " + data);
-}
